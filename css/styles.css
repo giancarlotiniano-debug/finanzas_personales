@@ -555,13 +555,11 @@ button.icon-btn {
 .table-wrapper {
     max-height: 750px;
     overflow-y: auto;
-    /* Para navegadores basados en WebKit (Chrome, Edge, Safari) */
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: transparent transparent; /* Firefox: oculta la barra por defecto */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
     transition: scrollbar-color 0.3s ease;
 }
 
-/* Ocultar barra en Chrome/Edge/Safari cuando no está en uso */
 .table-wrapper::-webkit-scrollbar {
     width: 6px;
 }
@@ -571,22 +569,21 @@ button.icon-btn {
 }
 
 .table-wrapper::-webkit-scrollbar-thumb {
-    background: transparent; /* Invisible por defecto */
+    background: transparent;
     border-radius: 4px;
     transition: background 0.3s ease;
 }
 
-/* Mostrar la barra y darle color solo al pasar el ratón sobre la tabla */
 .table-wrapper:hover {
-    scrollbar-color: var(--muted) transparent; /* Firefox al hacer hover */
+    scrollbar-color: var(--muted) transparent;
 }
 
 .table-wrapper:hover::-webkit-scrollbar-thumb {
-    background: var(--line); /* Color sutil al hacer hover o scrollear */
+    background: var(--line);
 }
 
 .table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: var(--muted); /* Más visible si pones el cursor justo encima de la barra */
+    background: var(--muted);
 }
 
 .table-wrapper thead th {
@@ -682,7 +679,6 @@ tr.movement-row:hover {
     color: var(--muted);
 }
 
-/* Redondea las esquinas exteriores de la fila al hacer hover */
 tr.movement-row:hover td {
     background-color: var(--table-hover);
 }
@@ -1305,7 +1301,7 @@ dialog::backdrop {
 }
 
 .category-manager-list {
-    max-height: 140px;
+    max-height: 400px; /* Lista más alta para visualizar cómodamente */
     overflow-y: auto;
     border: 1px solid var(--line);
     border-radius: 9px;

@@ -19,17 +19,15 @@ const categoryIconsMap = {
     "Auto": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l2.2-5.5A4 4 0 0 1 8.9 3h3.6a4 4 0 0 1 3.3 1.7L20 11" /><path d="M10 3v8" /><path d="M4 11h15a4 4 0 0 1 4 4v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2a3 3 0 0 1 3-3z" /><path d="M4 17v1a2.5 2.5 0 0 0 5 0v-1" /><path d="M15 17v1a2.5 2.5 0 0 0 5 0v-1" /></svg>`,
     "Casa": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7.5a2 2 0 0 0-.6-1.4l-7-6.8a2 2 0 0 0-2.8 0l-7 6.8a2 2 0 0 0-.6 1.4z"/><path d="M9 21v-5a3 3 0 0 1 6 0v5"/></svg>`,
     "Monedas": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8.5" cy="11" rx="6.5" ry="3"/><path d="M2 11v8c0 1.66 2.91 3 6.5 3s6.5-1.34 6.5-3v-8"/><path d="M2 15c0 1.66 2.91 3 6.5 3s6.5-1.34 6.5-3"/><ellipse cx="15.5" cy="5" rx="6.5" ry="3"/><path d="M9 5v3.1"/><path d="M22 5v12c0 1.66-2.91 3-6.5 3-.6 0-1.18-.04-1.73-.11"/><path d="M22 9c0 1.66-2.91 3-6.5 3-.45 0-.89-.02-1.31-.06"/><path d="M22 13c0 1.66-2.91 3-6.5 3-.17 0-.34 0-.5-.01"/></svg>`,
-    "Regalo": `<svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v4a5 5 0 0 0 5 5h6a5 5 0 0 0 5-5v-4M2 13h20v-2a3 3 0 0 0-3-3H5a3 3 0 0 0-3 3v2zM12 8v14m0-14c-1.5-2.5-2-4.5-2-5.5a2 2 0 0 1 4 0c0 1-.5 3-2 5.5zm0 0C7.5 8 5 6 5 3m7 5c4.5 0 7-2 7-5"/></svg>`,
-    "Torta": `<svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20M4 22v-7a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v7M4 16a3 3 0 0 0 3-2 3 3 0 0 0 5 0 3 3 0 0 0 5 0 3 3 0 0 0 3 2M12 10V6"/><path fill="currentColor" stroke="none" d="M12 1c-1.5 1.8-2.5 3.3-2.5 4.5a2.5 2.5 0 0 0 5 0C14.5 4.3 13.5 2.8 12 1z"/></svg>`,
-    "Restaurante": `<svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22L20 4M17 2l-5 5a4.24 4.24 0 0 0 0 6 4.24 4.24 0 0 0 6 0l5-5M7 11L2 6c0-2.5.5-4 1-4l5 5m5 9c1.2.5 2.5.6 4 .5l5 5"/></svg>`,
-    "Copas": `<svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M7 2.5l1 1.8m9-1.8l-1 1.8M5 6.5l4.8 1.5a2 2 0 0 1 1.3 2.5l-1.5 4.8a4 4 0 0 1-5 2.6 4 4 0 0 1-2.6-5l1.5-4.8A2 2 0 0 1 5 6.5zm-1.4 4.3h7M5.5 18l-1.3 4M2 21.3l4.5 1.4M19 6.5l-4.8 1.5a2 2 0 0 0-1.3 2.5l1.5 4.8a4 4 0 0 0 5 2.6 4 4 0 0 0 2.6-5l-1.5-4.8A2 2 0 0 0 19 6.5zm1.4 4.3h-7M18.5 18l1.3 4M22 21.3l-4.5 1.4"/></svg>`,
-    "Musica": `<svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M9 17.5V6a4 4 0 0 1 4-4h5a4 4 0 0 1 4 4v11.5"/></svg>`,
-    "Niño": `<svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2a3 3 0 0 0 0 6 3 3 0 0 0 2.8-2M4.3 9.2a2.5 2.5 0 0 0 0 4.6 8 8 0 0 0 15.4 0 2.5 2.5 0 0 0 0-4.6 8 8 0 0 0-15.4 0zM6.5 18.5A9 9 0 0 0 4 22m13.5-3.5A9 9 0 0 1 20 22"/><circle cx="9.5" cy="11.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="14.5" cy="11.5" r="1.2" fill="currentColor" stroke="none"/></svg>`,
-    "Avión": `<svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l-1.2-3.2A1.8 1.8 0 0 1 3.9 7.4L6 10h5.5L8.7 3.2A1.8 1.8 0 0 1 11.9 1.6L16.5 10H20a2 2 0 0 1 0 4h-3.5l-4.6 8.4a1.8 1.8 0 0 1-3.2-1.6L11.5 14H6l-2.1 2.6a1.8 1.8 0 0 1-3.1-1.4L2 12z"/></svg>`,
-    "Smartphone": `<svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="1" width="14" height="22" rx="4"/><path d="M5 17h14"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>`,
-    "Teléfono": `<svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" transform="matrix(-1 0 0 1 24 0)"/></svg>`,
-
-
+    "Regalo": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v4a5 5 0 0 0 5 5h6a5 5 0 0 0 5-5v-4M2 13h20v-2a3 3 0 0 0-3-3H5a3 3 0 0 0-3 3v2zM12 8v14m0-14c-1.5-2.5-2-4.5-2-5.5a2 2 0 0 1 4 0c0 1-.5 3-2 5.5zm0 0C7.5 8 5 6 5 3m7 5c4.5 0 7-2 7-5"/></svg>`,
+    "Torta": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20M4 22v-7a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v7M4 16a3 3 0 0 0 3-2 3 3 0 0 0 5 0 3 3 0 0 0 5 0 3 3 0 0 0 3 2M12 10V6"/><path fill="currentColor" stroke="none" d="M12 1c-1.5 1.8-2.5 3.3-2.5 4.5a2.5 2.5 0 0 0 5 0C14.5 4.3 13.5 2.8 12 1z"/></svg>`,
+    "Restaurante": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22L20 4M17 2l-5 5a4.24 4.24 0 0 0 0 6 4.24 4.24 0 0 0 6 0l5-5M7 11L2 6c0-2.5.5-4 1-4l5 5m5 9c1.2.5 2.5.6 4 .5l5 5"/></svg>`,
+    "Copas": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M7 2.5l1 1.8m9-1.8l-1 1.8M5 6.5l4.8 1.5a2 2 0 0 1 1.3 2.5l-1.5 4.8a4 4 0 0 1-5 2.6 4 4 0 0 1-2.6-5l1.5-4.8A2 2 0 0 1 5 6.5zm-1.4 4.3h7M5.5 18l-1.3 4M2 21.3l4.5 1.4M19 6.5l-4.8 1.5a2 2 0 0 0-1.3 2.5l1.5 4.8a4 4 0 0 0 5 2.6 4 4 0 0 0 2.6-5l-1.5-4.8A2 2 0 0 0 19 6.5zm1.4 4.3h-7M18.5 18l1.3 4M22 21.3l-4.5 1.4"/></svg>`,
+    "Musica": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M9 17.5V6a4 4 0 0 1 4-4h5a4 4 0 0 1 4 4v11.5"/></svg>`,
+    "Niño": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2a3 3 0 0 0 0 6 3 3 0 0 0 2.8-2M4.3 9.2a2.5 2.5 0 0 0 0 4.6 8 8 0 0 0 15.4 0 2.5 2.5 0 0 0 0-4.6 8 8 0 0 0-15.4 0zM6.5 18.5A9 9 0 0 0 4 22m13.5-3.5A9 9 0 0 1 20 22"/><circle cx="9.5" cy="11.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="14.5" cy="11.5" r="1.2" fill="currentColor" stroke="none"/></svg>`,
+    "Avión": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l-1.2-3.2A1.8 1.8 0 0 1 3.9 7.4L6 10h5.5L8.7 3.2A1.8 1.8 0 0 1 11.9 1.6L16.5 10H20a2 2 0 0 1 0 4h-3.5l-4.6 8.4a1.8 1.8 0 0 1-3.2-1.6L11.5 14H6l-2.1 2.6a1.8 1.8 0 0 1-3.1-1.4L2 12z"/></svg>`,
+    "Smartphone": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="1" width="14" height="22" rx="4"/><path d="M5 17h14"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>`,
+    "Teléfono": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" transform="matrix(-1 0 0 1 24 0)"/></svg>`,
 };
 
 /* ==========================================
@@ -66,6 +64,7 @@ let installmentsPurchases = JSON.parse(localStorage.getItem('finanzas_cuotas_v1'
 
 let editingId = null;
 let editingInstallmentId = null;
+let editingCategoryData = null;
 let currentCatKind = 'expense';
 let selectedDonutCategory = null;
 
@@ -107,7 +106,6 @@ const formatNumberDisplay = (val, currCode) => {
     return formatCurrencyCustom(val, currCode);
 };
 
-// Formato específico para el input del tipo de cambio (hasta 4 decimales exactos sin redondear)
 const formatTcInputValue = (val) => {
     if (isNaN(val) || val <= 0) return '';
     const num = Number(val);
@@ -195,7 +193,10 @@ function updateCurrencyLabels() {
 function updateCategoryOptions(prefix) {
     const kind = $(`${prefix}Kind`).value;
     const catList = appConfig.categories[kind] || [];
-    $(`${prefix}Category`).innerHTML = catList
+    const sortedCats = [...catList].sort((a, b) => 
+        a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
+    );
+    $(`${prefix}Category`).innerHTML = sortedCats
         .map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`)
         .join('');
 }
@@ -205,8 +206,12 @@ function updateMovementFilterOptions() {
     if (!filterSelect) return;
 
     const currentSelection = filterSelect.value || 'all';
-    const expenseCats = appConfig.categories.expense || [];
-    const incomeCats = appConfig.categories.income || [];
+    const expenseCats = [...(appConfig.categories.expense || [])].sort((a, b) => 
+        a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
+    );
+    const incomeCats = [...(appConfig.categories.income || [])].sort((a, b) => 
+        a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
+    );
 
     filterSelect.innerHTML = `
         <option value="all">Todos</option>
@@ -245,7 +250,7 @@ function setupMainAccordion(btnId, containerId, iconId, cardEl, stateKey) {
 }
 
 /* ==========================================
-   4. MOVIMIENTOS Y CATEGORÍAS (DONA INTERACTIVA Y LISTA CON %)
+   4. MOVIMIENTOS Y CATEGORÍAS (DONA Y LISTA)
    ========================================== */
 function setupCategoryTabs() {
     const btnExpense = $('catTabExpense');
@@ -877,7 +882,12 @@ function renderConfigCategories() {
         const title = kind === 'expense' ? 'Gastos' : 'Ingresos';
         const sectionClass = idx > 0 ? 'category-section-title category-section-divider' : 'category-section-title';
 
-        const itemsHtml = appConfig.categories[kind].map((cat, index) => {
+        const sortedCats = [...appConfig.categories[kind]].sort((a, b) => 
+            a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
+        );
+
+        const itemsHtml = sortedCats.map((cat) => {
+            const originalIndex = appConfig.categories[kind].findIndex(c => c.name === cat.name);
             const iconKey = cat.icon || 'Compras';
             const iconSvg = categoryIconsMap[iconKey] || categoryIconsMap['Compras'];
 
@@ -888,8 +898,8 @@ function renderConfigCategories() {
                         <span class="category-item-name">${escapeHtml(cat.name)}</span>
                     </div>
                     <div class="category-item-controls">
-                        <button type="button" class="danger icon-btn btn-xs" data-action="remove-category" data-kind="${kind}" data-index="${index}" title="Eliminar categoría" aria-label="Eliminar categoría">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        <button type="button" class="soft icon-btn btn-xs" data-action="open-edit-category" data-kind="${kind}" data-index="${originalIndex}" title="Editar categoría" aria-label="Editar categoría">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         </button>
                     </div>
                 </div>
@@ -901,6 +911,7 @@ function renderConfigCategories() {
 }
 
 function removeCategory(kind, index) {
+    if (!confirm('¿Estás seguro de eliminar esta categoría?')) return;
     appConfig.categories[kind].splice(index, 1);
     persistConfig();
     renderConfigCategories();
@@ -908,6 +919,34 @@ function removeCategory(kind, index) {
     updateCategoryOptions('edit');
     updateMovementFilterOptions();
     render();
+}
+
+function openEditCategoryModal(kind, index) {
+    const cat = appConfig.categories[kind][index];
+    if (!cat) return;
+
+    editingCategoryData = { kind, index };
+    
+    if ($('editCatName')) $('editCatName').value = cat.name;
+    if ($('editCatKind')) $('editCatKind').value = kind;
+
+    const gridContainer = $('editIconSelectorGrid');
+    const hiddenInput = $('editCatIcon');
+    if (gridContainer && hiddenInput) {
+        hiddenInput.value = cat.icon || 'Compras';
+        gridContainer.innerHTML = Object.keys(categoryIconsMap).map(iconKey => {
+            const svgCode = categoryIconsMap[iconKey];
+            const isSelected = iconKey === hiddenInput.value ? 'selected' : '';
+            return `
+                <div class="icon-option-item ${isSelected}" data-icon="${iconKey}" title="${iconKey}">
+                    ${svgCode}
+                </div>
+            `;
+        }).join('');
+    }
+
+    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    if ($('categoryEditDlg')) $('categoryEditDlg').showModal();
 }
 
 function renderIconSelector(selectedIcon = 'Compras') {
@@ -928,20 +967,19 @@ function renderIconSelector(selectedIcon = 'Compras') {
     }).join('');
 }
 
-function selectCategoryIcon(iconKey) {
-    const hiddenInput = $('newCatIcon');
+function selectCategoryIcon(iconKey, targetInputId, containerSelector) {
+    const hiddenInput = $(targetInputId);
     if (hiddenInput) hiddenInput.value = iconKey;
 
-    document.querySelectorAll('.icon-option-item').forEach(el => {
+    document.querySelectorAll(`${containerSelector} .icon-option-item`).forEach(el => {
         el.classList.toggle('selected', el.dataset.icon === iconKey);
     });
 }
 
 /* ==========================================
-   8. REGISTRO DE LISTENERS (DELEGACIÓN) E INICIALIZACIÓN
+   8. REGISTRO DE LISTENERS E INICIALIZACIÓN
    ========================================== */
 function bindEvents() {
-    // Acordeones principales en móvil
     setupMainAccordion('toggleMovementsBtn', 'movementsContainer', 'toggleMovementsIcon', $('movementsCard'), 'movements');
     setupMainAccordion('toggleCategoriesBtn', 'categoriesContainer', 'toggleCategoriesIcon', $('categoriesCard'), 'categories');
     setupMainAccordion('toggleRemitBtn', 'remitContainer', 'toggleRemitIcon', $('remittancesCard'), 'remit');
@@ -949,7 +987,6 @@ function bindEvents() {
 
     setupCategoryTabs();
 
-    // Delegación: Clic en segmentos de la dona SVG
     if ($('catChartWrapper')) {
         $('catChartWrapper').addEventListener('click', (e) => {
             const segment = e.target.closest('[data-donut-category]');
@@ -959,7 +996,6 @@ function bindEvents() {
         });
     }
 
-    // Delegación: clic en categorías de la lista (sincroniza con la dona)
     if ($('categories')) {
         $('categories').addEventListener('click', (e) => {
             const item = e.target.closest('[data-list-category]');
@@ -975,7 +1011,6 @@ function bindEvents() {
         });
     }
 
-    // Limpiar selección al hacer clic fuera del gráfico y de la lista
     document.addEventListener('click', (e) => {
         const chart = $('catChartWrapper');
         const list = $('categories');
@@ -991,27 +1026,167 @@ function bindEvents() {
         }
     });
 
-    // Delegación: Selector de iconos en modal de categorías
     if ($('iconSelectorGrid')) {
         $('iconSelectorGrid').addEventListener('click', (e) => {
             const item = e.target.closest('.icon-option-item');
             if (item && item.dataset.icon) {
-                selectCategoryIcon(item.dataset.icon);
+                selectCategoryIcon(item.dataset.icon, 'newCatIcon', '#iconSelectorGrid');
             }
         });
     }
 
-    // Delegación: Eliminar categorías existentes en modal
+    if ($('editIconSelectorGrid')) {
+        $('editIconSelectorGrid').addEventListener('click', (e) => {
+            const item = e.target.closest('.icon-option-item');
+            if (item && item.dataset.icon) {
+                selectCategoryIcon(item.dataset.icon, 'editCatIcon', '#editIconSelectorGrid');
+            }
+        });
+    }
+
     if ($('categoryManagerList')) {
         $('categoryManagerList').addEventListener('click', (e) => {
-            const btn = e.target.closest('[data-action="remove-category"]');
+            const btn = e.target.closest('[data-action="open-edit-category"]');
             if (btn) {
-                removeCategory(btn.dataset.kind, Number(btn.dataset.index));
+                openEditCategoryModal(btn.dataset.kind, Number(btn.dataset.index));
             }
         });
     }
 
-    // Delegación: Eventos de Remesas
+    if ($('openCreateCategoryBtn')) {
+        $('openCreateCategoryBtn').addEventListener('click', () => {
+            if ($('newCatName')) $('newCatName').value = '';
+            if ($('newCatKind')) $('newCatKind').value = 'expense';
+            renderIconSelector('Compras');
+            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            if ($('categoryCreateDlg')) $('categoryCreateDlg').showModal();
+        });
+    }
+
+    if ($('cancelCreateCategoryBtn')) {
+        $('cancelCreateCategoryBtn').addEventListener('click', () => {
+            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            if ($('categoryCreateDlg')) $('categoryCreateDlg').close();
+        });
+    }
+
+    if ($('categoryCreateForm')) {
+        $('categoryCreateForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const nameInput = $('newCatName');
+            const kindSelect = $('newCatKind');
+            const iconSelect = $('newCatIcon');
+
+            if (!nameInput || !nameInput.value.trim()) {
+                if (nameInput) {
+                    nameInput.classList.add('input-error');
+                    nameInput.focus();
+                }
+                return;
+            }
+            nameInput.classList.remove('input-error');
+
+            const name = nameInput.value.trim();
+            const kind = kindSelect ? kindSelect.value : 'expense';
+            const icon = iconSelect ? iconSelect.value : 'Compras';
+
+            const autoColors = [
+                '#3b82f6', '#10b981', '#f59e0b', '#ef4444', 
+                '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16', 
+                '#6366f1', '#d97706', '#14b8a6', '#64748b'
+            ];
+            
+            const totalCategories = appConfig.categories.expense.length + appConfig.categories.income.length;
+            const color = autoColors[totalCategories % autoColors.length];
+
+            if (!appConfig.categories[kind].some(c => c.name.toLowerCase() === name.toLowerCase())) {
+                appConfig.categories[kind].push({ name, color, icon });
+                
+                appConfig.categories[kind].sort((a, b) => 
+                    a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
+                );
+
+                persistConfig();
+                if ($('categoryCreateDlg')) $('categoryCreateDlg').close();
+                renderConfigCategories();
+                updateCategoryOptions('new');
+                updateCategoryOptions('edit');
+                updateMovementFilterOptions();
+                render();
+            } else {
+                alert('Esta categoría ya existe.');
+                nameInput.focus();
+            }
+        });
+    }
+
+    if ($('cancelEditCategoryBtn')) {
+        $('cancelEditCategoryBtn').addEventListener('click', () => {
+            $('categoryEditDlg')?.close();
+        });
+    }
+
+    if ($('deleteCategoryBtn')) {
+        $('deleteCategoryBtn').addEventListener('click', () => {
+            if (!editingCategoryData) return;
+            const { kind, index } = editingCategoryData;
+            $('categoryEditDlg')?.close();
+            removeCategory(kind, index);
+        });
+    }
+
+    if ($('categoryEditForm')) {
+        $('categoryEditForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!editingCategoryData) return;
+
+            const nameInput = $('editCatName');
+            if (!nameInput.value.trim()) {
+                nameInput.classList.add('input-error');
+                nameInput.focus();
+                return;
+            }
+            nameInput.classList.remove('input-error');
+
+            const newName = nameInput.value.trim();
+            const newKind = $('editCatKind').value;
+            const newIcon = $('editCatIcon').value;
+
+            const { kind: oldKind, index: oldIndex } = editingCategoryData;
+            const targetCat = appConfig.categories[oldKind][oldIndex];
+
+            const exists = appConfig.categories[newKind].some((c, idx) => c.name.toLowerCase() === newName.toLowerCase() && !(oldKind === newKind && idx === oldIndex));
+            if (exists) {
+                alert('Ya existe una categoría con ese nombre.');
+                nameInput.focus();
+                return;
+            }
+
+            targetCat.name = newName;
+            targetCat.icon = newIcon;
+
+            if (oldKind !== newKind) {
+                appConfig.categories[oldKind].splice(oldIndex, 1);
+                appConfig.categories[newKind].push(targetCat);
+            }
+
+            ['expense', 'income'].forEach(k => {
+                appConfig.categories[k].sort((a, b) => 
+                    a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
+                );
+            });
+
+            persistConfig();
+            $('categoryEditDlg')?.close();
+            renderConfigCategories();
+            updateCategoryOptions('new');
+            updateCategoryOptions('edit');
+            updateMovementFilterOptions();
+            render();
+        });
+    }
+
     if ($('remittancesList')) {
         const listContainer = $('remittancesList');
 
@@ -1111,7 +1286,6 @@ function bindEvents() {
         });
     }
 
-    // Delegación: Eventos de Gestor de Cuotas
     if ($('installmentsList')) {
         $('installmentsList').addEventListener('click', (e) => {
             const editBtn = e.target.closest('[data-action="edit-inst-purchase"]');
@@ -1133,7 +1307,6 @@ function bindEvents() {
         });
     }
 
-    // Botones y filtros de Movimientos
     if ($('addBtn')) $('addBtn').addEventListener('click', openNewMovement);
     
     if ($('cancelNew')) $('cancelNew').addEventListener('click', () => {
@@ -1255,7 +1428,6 @@ function bindEvents() {
         });
     }
 
-    // Configuración General
     if ($('configBtn')) {
         $('configBtn').addEventListener('click', () => {
             $('userNameInput').value = appConfig.userName;
@@ -1282,11 +1454,9 @@ function bindEvents() {
 
     if ($('cancelConfigBtn')) $('cancelConfigBtn').addEventListener('click', () => $('configDlg')?.close());
 
-    // Modal de Categorías
     if ($('editCategoriesBtn')) {
         $('editCategoriesBtn').addEventListener('click', () => {
             renderConfigCategories();
-            renderIconSelector('Compras');
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
             $('categoriesDlg')?.showModal();
         });
@@ -1297,50 +1467,6 @@ function bindEvents() {
         $('categoriesDlg')?.close();
     });
 
-    if ($('addCatBtn')) {
-        $('addCatBtn').addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            const kind = $('newCatKind').value;
-            const nameInput = $('newCatName');
-            const iconSelect = $('newCatIcon');
-
-            if (!nameInput.value.trim()) {
-                nameInput.classList.add('input-error');
-                nameInput.focus();
-                return;
-            }
-            nameInput.classList.remove('input-error');
-
-            const name = nameInput.value.trim();
-            const icon = iconSelect ? iconSelect.value : 'Compras';
-
-            const autoColors = [
-                '#3b82f6', '#10b981', '#f59e0b', '#ef4444', 
-                '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16', 
-                '#6366f1', '#d97706', '#14b8a6', '#64748b'
-            ];
-            
-            const totalCategories = appConfig.categories.expense.length + appConfig.categories.income.length;
-            const color = autoColors[totalCategories % autoColors.length];
-
-            if (!appConfig.categories[kind].some(c => c.name.toLowerCase() === name.toLowerCase())) {
-                appConfig.categories[kind].push({ name, color, icon });
-                nameInput.value = '';
-                persistConfig();
-                renderConfigCategories();
-                updateCategoryOptions('new');
-                updateCategoryOptions('edit');
-                updateMovementFilterOptions();
-                render();
-            } else {
-                alert('Esta categoría ya existe.');
-                nameInput.focus();
-            }
-        });
-    }
-
-    // Modal de Nueva Remesa
     if ($('addRemittanceBtn')) {
         $('addRemittanceBtn').addEventListener('click', () => {
             $('remitNewForm')?.reset();
@@ -1387,7 +1513,6 @@ function bindEvents() {
         });
     }
 
-    // Modales de Cuotas
     ['new', 'edit'].forEach(prefix => {
         ['FinancedAmount', 'InterestAmount', 'TotalCount'].forEach(field => {
             const el = $(`${prefix}Inst${field}`);
