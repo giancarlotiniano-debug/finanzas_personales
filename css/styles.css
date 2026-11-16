@@ -607,16 +607,16 @@ tr:last-child td {
 }
 
 .date-header-row td {
-    padding: 16px 8px 6px 8px;
+    padding: 8px 8px;
     border-bottom: none;
     font-size: 13px;
     font-weight: 650;
-    color: var(--muted);
+    color: var(--blue);
     background: transparent;
 }
 
 .date-header-row:not(:first-child) td {
-    padding-top: 22px;
+    padding-top: 8px;
 }
 
 .no-border,
@@ -1503,7 +1503,7 @@ body.dark-mode .icon-option-item.selected {
         align-items: center;
         gap: 12px;
         /* border-bottom: 1px solid var(--line); */
-        padding: 10px 0;
+        padding: 10px 12px;
         cursor: pointer;
         transition: background-color 0.15s ease;
     }
@@ -1513,7 +1513,7 @@ body.dark-mode .icon-option-item.selected {
     }
 
     tr.date-header-row td {
-        padding: 16px 0 4px 0;
+        padding: 8px 0px;
         display: block;
         border: 0;
     }
