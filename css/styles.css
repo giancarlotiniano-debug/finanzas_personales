@@ -1,39 +1,39 @@
 /* Finanzas personales — estilos principales */
 
 :root {
-    --bg: #f4f6fa;
-    --card: #fff;
-    --ink: #172033;
-    --muted: #718096;
-    --line: #e7ebf2;
+    --bg: #F5F5F5;
+    --card: #ffffff;
+    --ink: #3C3C3C;
+    --muted: #8c8287;
+    --line: #e2e2e2;
     --green: #15966b;
-    --red: #d94c5c;
-    --blue: #4868e8;
-    --shadow: 0 8px 28px #1b2b4b0b;
-    --header-bg: #fff;
-    --modal-bg: #fff;
-    --bar-bg: #edf0f6;
-    --table-hover: rgba(72, 104, 232, 0.03);
-    --cancel-btn-bg: #eef1f8;
-    --cancel-btn-color: #33415c;
+    --red: #FF5A5F;
+    --blue: #087E8B;
+    --shadow: 0 8px 28px rgba(60, 60, 60, 0.07);
+    --header-bg: #ffffff;
+    --modal-bg: #ffffff;
+    --bar-bg: #eaeaea;
+    --table-hover: rgba(8, 126, 139, 0.06);
+    --cancel-btn-bg: #eaeaea;
+    --cancel-btn-color: #3C3C3C;
 }
 
 body.dark-mode {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --ink: #f8fafc;
-    --muted: #94a3b8;
-    --line: #334155;
-    --green: #34d399;
-    --red: #f87171;
-    --blue: #60a5fa;
-    --shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
-    --header-bg: #1e293b;
-    --modal-bg: #1e293b;
-    --bar-bg: #334155;
-    --table-hover: rgba(96, 165, 250, 0.08);
-    --cancel-btn-bg: #33415c;
-    --cancel-btn-color: #f8fafc;
+    --bg: #121214;               
+    --card: #1a1a1e;             
+    --ink: #f4f4f5;              
+    --muted: #a1a1aa;            
+    --line: #27272a;             
+    --green: #34d399;            
+    --red: #f87171;              
+    --blue: #22d3ee;             
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    --header-bg: #18181b;        
+    --modal-bg: #1a1a1e;         
+    --bar-bg: #27272a;           
+    --table-hover: rgba(34, 211, 238, 0.08); 
+    --cancel-btn-bg: #27272a;
+    --cancel-btn-color: #f4f4f5;
 }
 
 * {
@@ -54,7 +54,12 @@ textarea {
     font-size: 16px;
 }
 
-/* Ocultar flechas incrementales en inputs numéricos (Chrome, Safari, Edge, Opera, Firefox) */
+/* Clase para marcar el borde del input en rojo cuando hay un error */
+input.input-error, select.input-error {
+    border-color: var(--red) !important;
+    box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.15) !important;
+}
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -64,6 +69,35 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
     appearance: textfield;
+}
+
+.is-hidden {
+    display: none;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-col-grow {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.flex-center-gap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 header {
@@ -94,8 +128,8 @@ header {
 }
 
 .logo {
-    background: #000000;
-    color: #ffffff;
+    background: #3C3C3C;
+    color: #F5F5F5;
     width: 38px;
     height: 38px;
     border-radius: 12px;
@@ -106,8 +140,8 @@ header {
 }
 
 body.dark-mode .logo {
-    background: #ffffff;
-    color: #000000;
+    background: #F5F5F5;
+    color: #3C3C3C;
 }
 
 main {
@@ -149,14 +183,7 @@ button {
     font-weight: 650;
 }
 
-button.addcat {
-    background: var(--blue);
-    color: #fff;
-    font-weight: 650;
-    width: 100px;
-    height: 44px;
-}
-
+button.addcat,
 button.aceptarmovimiento {
     background: var(--blue);
     color: #fff;
@@ -171,14 +198,103 @@ button.cancelarmovimiento {
     width: 100px;
 }
 
-button.button-add,
-.action-icon-btn,
+.btn-modal-wide {
+    width: 110px !important;
+    height: 44px;
+}
+
+.btn-delete-large {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background-color: var(--card);
+    border: 2px solid var(--red);
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: 0;
+}
+
+.btn-delete-large svg {
+    stroke: var(--red) !important;
+}
+
+.btn-xs {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 6px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
 #configBtn {
+    background: var(--card);
+    color: var(--blue);
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid var(--blue);
+}
+
+#configBtn svg {
+    stroke: var(--blue);
+    width: 20px;
+    height: 20px;
+}
+
+.action-icon-btn svg {
+    stroke: #fff;
+    width: 20px;
+    height: 20px;
+}
+
+body.dark-mode button.addcat,
+body.dark-mode button.aceptarmovimiento,
+body.dark-mode button.button-add,
+body.dark-mode .action-icon-btn:not(.mobile-toggle-btn) {
+    color: #3C3C3C;
+}
+
+body.dark-mode .action-icon-btn:not(.mobile-toggle-btn) svg {
+    stroke: #3C3C3C;
+}
+
+.action-icon-btn.mobile-toggle-btn {
+    background: var(--card);
+    color: var(--blue);
+    font-weight: 900;
+    font-size: 25px;
+    min-width: 45px;
+    height: 44px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    line-height: 1;
+    border: 1.5px solid var(--blue);
+    cursor: pointer;
+}
+
+.action-icon-btn.mobile-toggle-btn svg {
+    stroke: var(--blue);
+    width: 20px;
+    height: 20px;
+    stroke-width: 3;
+}
+
+button.button-add {
     background: var(--blue);
     color: #fff;
     font-weight: 900;
     font-size: 25px;
-    min-width: 45px;
+    width: 44px;
     height: 44px;
     padding: 0;
     display: flex;
@@ -190,25 +306,31 @@ button.button-add,
     cursor: pointer;
 }
 
-#configBtn {
-    width: 44px;
-}
-
-#configBtn svg {
+button.button-add svg {
     stroke: #fff;
     width: 20px;
     height: 20px;
+    stroke-width: 3;
 }
 
-.action-icon-btn svg {
-    stroke: #fff;
-    width: 20px;
-    height: 20px;
+body.dark-mode button.button-add {
+    color: #3C3C3C;
+}
+
+body.dark-mode button.button-add svg {
+    stroke: #3C3C3C;
 }
 
 button.danger {
-    background: rgba(217, 76, 92, 0.15);
+    background: var(--card);
     color: var(--red);
+    border: 1px solid var(--red) !important;
+}
+
+.heading-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
 
 .movement-controls {
@@ -230,7 +352,7 @@ button.danger {
     height: 44px;
     min-width: 44px;
     padding: 0;
-    border: 1px solid var(--blue);
+    border: 1.5px solid var(--blue);
     border-radius: 10px;
     background: var(--card);
     cursor: pointer;
@@ -242,6 +364,7 @@ button.danger {
     stroke: var(--blue);
     flex-shrink: 0;
     pointer-events: none;
+    stroke-width: 2.5;
 }
 
 .movement-controls input.month {
@@ -304,14 +427,12 @@ button.danger {
     color: var(--blue);
 }
 
-/* Fila superior: proporción original 1.3fr y .7fr */
 .layout {
     display: grid;
     grid-template-columns: 1.3fr .7fr;
     gap: 16px;
 }
 
-/* Contenedor de Utilidades en dos columnas simétricas (50% y 50%) */
 .utilities-layout {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -319,7 +440,6 @@ button.danger {
     margin-top: 16px;
 }
 
-/* El separador ocupa todo el ancho dentro de la sección de utilidades */
 .section-divider {
     grid-column: 1 / -1;
     display: flex;
@@ -341,7 +461,7 @@ button.danger {
 }
 
 .section-divider-title svg {
-    stroke: var(--muted);
+    stroke: var(--blue);
 }
 
 .section-divider-line {
@@ -350,11 +470,30 @@ button.danger {
     background: var(--line);
 }
 
+.utility-footer-action {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.utility-new-btn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink);
+}
+
 .remit-tc-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 0;
     padding: 12px;
     background: var(--bg);
     border-radius: 10px;
@@ -367,10 +506,10 @@ button.danger {
 }
 
 .remit-input-num {
-    width: 90px;
+    width: 120px;
     height: 40px;
     text-align: right;
-    padding: 0 8px;
+    padding: 4px 6px;
     border: 1px solid var(--line);
     border-radius: 8px;
     background: var(--card);
@@ -379,68 +518,45 @@ button.danger {
     font-size: 16px;
 }
 
-.remit-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 12px;
+.remit-items-wrapper {
+    margin-bottom: 2px;
 }
 
-.remit-table th {
-    padding: 10px 8px;
+.remit-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 0;
     border-bottom: 1px solid var(--line);
-    color: var(--muted);
-    font-size: 12px;
-    font-weight: 650;
 }
 
-.remit-table td {
-    padding: 12px 8px;
-    border-bottom: 1px solid var(--line);
-    vertical-align: middle;
+.remit-item-row.is-last {
+    border-bottom: none;
 }
 
-/* Distribución fija para la tabla de remesas */
-.remit-table th:nth-child(1),
-.remit-table td:nth-child(1) {
-    width: 40%;
-    text-align: left;
+.remit-item-concept {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
 }
 
-.remit-table th:nth-child(2),
-.remit-table td:nth-child(2) {
-    width: 25%;
-    text-align: right;
-    padding-right: 12px;
-    white-space: nowrap;
+.remit-item-send-val {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--blue);
 }
 
-.remit-table th:nth-child(3),
-.remit-table td:nth-child(3) {
-    width: 25%;
-    text-align: right;
-}
-
-.remit-table th:nth-child(4),
-.remit-table td:nth-child(4) {
-    width: 10%;
-    text-align: center;
-}
-
-.remit-table td .remit-input-num {
-    margin-left: auto;
-    display: block;
-}
-
-.remit-add-concept-row {
+.remit-new-row {
     display: flex;
     gap: 8px;
-    margin-bottom: 25px;
+    padding-bottom: 16px;
 }
 
 .remit-new-input {
     flex: 1;
     height: 40px;
-    padding: 0 10px;
+    padding: 6px 8px;
     border: 1px solid var(--line);
     border-radius: 8px;
     background: var(--card);
@@ -449,27 +565,27 @@ button.danger {
 }
 
 .remit-add-btn {
-    background: #eef1f8;
-    color: #33415c;
+    background: var(--bar-bg);
+    color: var(--blue);
     font-weight: 650;
     height: 40px;
-    padding: 0 14px;
+    padding: 6px 12px;
     border-radius: 8px;
     border: 1px solid var(--line);
     cursor: pointer;
 }
 
 body.dark-mode .remit-add-btn {
-    background: #33415c;
-    color: #f8fafc;
+    background: var(--line);
+    color: var(--blue);
 }
 
 .remit-totals-box {
     border-top: 1px solid var(--line);
-    padding-top: 18px;
+    padding-top: 12px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
 }
 
 .remit-total-line {
@@ -477,16 +593,35 @@ body.dark-mode .remit-add-btn {
     justify-content: space-between;
     align-items: center;
     font-size: 16px;
+    margin-bottom: 6px;
+}
+
+.remit-total-label {
+    font-weight: 750;
+}
+
+.remit-total-send {
+    margin-right: 8px;
+    font-weight: 750;
+    color: var(--blue);
+}
+
+.remit-total-recv {
+    font-weight: 750;
+    color: var(--ink);
 }
 
 .remit-commission-line {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 5px;
 }
 
-.remit-commission-line .remit-input-num {
-    width: 85px;
+.remit-commission-label {
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 550;
 }
 
 .remit-grand-total {
@@ -495,18 +630,22 @@ body.dark-mode .remit-add-btn {
     align-items: center;
     font-weight: 750;
     font-size: 16px;
-    margin-top: 6px;
+    margin-top: 4px;
     border-top: 1px solid var(--line);
-    padding-top: 20px;
+    padding-top: 12px;
+    padding-bottom: 3px;
 }
 
-/* Estilos para el Gestor de Cuotas */
+.remit-grand-total-val {
+    color: var(--blue);
+}
+
 .installment-purchase-card {
     border: 1px solid var(--line);
     border-radius: 10px;
     margin-bottom: 12px;
     background: var(--card);
-    overflow: hidden;
+    overflow: hidden !important;
 }
 
 .installment-purchase-header {
@@ -514,23 +653,54 @@ body.dark-mode .remit-add-btn {
     justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
-    background: rgba(0, 0, 0, 0.02);
+    background: rgba(8, 126, 139, 0.04);
     cursor: pointer;
     font-weight: 600;
+    border-radius: 10px;
+    border-bottom: 1px solid transparent;
+    transition: background-color 0.2s ease, border-radius 0.2s ease;
+}
+
+.installment-card-subtitle {
+    font-size: 12px;
+    font-weight: normal;
+    color: var(--muted);
+}
+
+.installment-purchase-card:has(.installment-installments-list[style*="display: flex"]) .installment-purchase-header,
+.installment-purchase-card:has([id*="remit_details_"][style*="display: flex"]) .installment-purchase-header {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-bottom-color: var(--line) !important;
+}
+
+.installment-purchase-card:has(.installment-installments-list[style*="display: none"]) .installment-purchase-header,
+.installment-purchase-card:has([id*="remit_details_"][style*="display: none"]) .installment-purchase-header {
+    border-radius: 10px !important;
+    border-bottom-color: transparent !important;
 }
 
 .dark-mode .installment-purchase-header {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(64, 164, 176, 0.08);
 }
 
 .installment-installments-list {
-    padding: 16px 16px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    border-top: 1px solid var(--line);
-    max-height: 395px;
-    overflow-y: auto;
+    border-top: none !important;
+    max-height: 700px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: var(--card);
+}
+
+.remit-details-body {
+    padding: 12px !important;
+    gap: 0 !important;
 }
 
 .installment-row {
@@ -539,12 +709,32 @@ body.dark-mode .remit-add-btn {
     align-items: center;
     padding: 8px 10px;
     border-radius: 6px;
-    background: rgba(0, 0, 0, 0.02);
+    background: rgba(8, 126, 139, 0.04);
     font-size: 14px;
+    cursor: pointer;
+}
+
+.installment-row-title {
+    font-weight: 600;
+}
+
+.installment-row-date {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.installment-row-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.installment-row-amount {
+    font-weight: 700;
 }
 
 .dark-mode .installment-row {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(64, 164, 176, 0.06);
 }
 
 .installment-row.paid {
@@ -557,13 +747,11 @@ body.dark-mode .installment-row.paid {
     border-color: rgba(16, 185, 129, 0.4) !important;
 }
 
-/* Cabecera completamente pagada (Modo Claro) */
 .installment-purchase-header.all-paid {
     background-color: #ecfdf5 !important;
     border-bottom-color: #10b981 !important;
 }
 
-/* Cabecera completamente pagada (Modo Oscuro) */
 body.dark-mode .installment-purchase-header.all-paid {
     background-color: rgba(16, 185, 129, 0.15) !important;
 }
@@ -669,11 +857,25 @@ button.icon-btn {
     align-items: center;
     justify-content: center;
     border-radius: 8px;
+    background: var(--card);
+    border: 1px solid var(--blue);
 }
 
 .empty {
     text-align: center;
     padding: 28px;
+    color: var(--muted);
+}
+
+.empty-compact {
+    padding: 15px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.empty-mini {
+    padding: 20px 8px;
+    text-align: center;
     color: var(--muted);
 }
 
@@ -686,6 +888,18 @@ button.icon-btn {
 
 .catname {
     flex: 1;
+}
+
+.catname-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.cat-kind-badge {
+    font-size: 11px;
+    color: var(--muted);
 }
 
 .bar {
@@ -712,13 +926,13 @@ dialog {
     border-radius: 18px;
     padding: 0;
     width: min(480px, calc(100% - 28px));
-    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 20px 70px rgba(60, 60, 60, 0.3);
     background: var(--modal-bg);
     color: var(--ink);
 }
 
 dialog::backdrop {
-    background: rgba(11, 15, 25, 0.85);
+    background: rgba(60, 60, 60, 0.75);
 }
 
 .modal {
@@ -774,6 +988,11 @@ dialog::backdrop {
     box-sizing: border-box;
 }
 
+.input-readonly {
+    background: var(--bar-bg) !important;
+    cursor: not-allowed;
+}
+
 .field input[type="date"] {
     -webkit-appearance: none;
     appearance: none;
@@ -802,11 +1021,34 @@ dialog::backdrop {
     margin-top: 20px;
 }
 
+.modal-actions-split {
+    justify-content: space-between;
+}
+
 footer {
     text-align: center;
     color: var(--muted);
     font-size: 12px;
     padding: 25px;
+}
+
+.categories-formgrid {
+    margin-bottom: 15px;
+    align-items: end;
+}
+
+.categories-add-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.category-manager-list {
+    max-height: 220px;
+    overflow-y: auto;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 10px;
 }
 
 .color-picker-box {
@@ -826,6 +1068,7 @@ footer {
     width: 100%;
     height: 100%;
     border-radius: 6px;
+    background-color: #3b82f6;
     pointer-events: none;
 }
 
@@ -868,9 +1111,25 @@ footer {
     padding: 4px 0;
 }
 
+.category-item-name {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.category-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-cat-remove {
+    width: 28px !important;
+    height: 28px !important;
+}
+
 .category-section-title {
     display: block;
-    margin: 0px 0px;
+    margin: 0;
     font-size: 13px;
     font-weight: 750;
     color: var(--ink);
@@ -909,6 +1168,38 @@ footer {
 .no-border,
 tr.no-border td {
     border-bottom: none !important;
+}
+
+.detail-modal {
+    text-align: center;
+    padding: 0 !important;
+}
+
+.detail-modal-header {
+    padding: 20px 24px 16px 24px;
+    border-bottom: 1px solid var(--line);
+}
+
+.detail-modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 650;
+}
+
+.detail-modal-body {
+    padding: 20px 24px 24px 24px;
+}
+
+.detail-concept-title {
+    font-size: 18px;
+    font-weight: 750;
+    color: var(--blue);
+    margin-bottom: 20px;
+}
+
+.detail-modal-actions {
+    justify-content: center;
+    margin-top: 22px;
 }
 
 .detail-table {
@@ -962,8 +1253,35 @@ tr.movement-row:hover {
     background-color: var(--table-hover);
 }
 
-.remit-table td:has(button.danger) {
-    padding-left: 1px;
+.installment-purchase-card button.soft.icon-btn {
+    background: var(--card) !important;
+    border: 1px solid var(--blue) !important;
+}
+
+.installment-purchase-card button.soft.icon-btn svg {
+    stroke: var(--blue) !important;
+    stroke-width: 35px;
+}
+
+#editCategoriesBtn {
+    background: var(--blue) !important;
+    color: var(--blue) !important;
+    border: 1.5px solid var(--blue) !important;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+#editCategoriesBtn svg {
+    stroke: var(--card) !important;
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.5;
 }
 
 @media (min-width: 761px) {
@@ -971,21 +1289,25 @@ tr.movement-row:hover {
         white-space: nowrap;
     }
 
-    .card > table th:nth-child(1), .card > table td:nth-child(1) {
+    .card > table th:nth-child(1),
+    .card > table td:nth-child(1) {
         width: 44%;
     }
 
-    .card > table th:nth-child(2), .card > table td:nth-child(2) {
+    .card > table th:nth-child(2),
+    .card > table td:nth-child(2) {
         width: 22%;
         text-align: right;
     }
 
-    .card > table th:nth-child(3), .card > table td:nth-child(3) {
+    .card > table th:nth-child(3),
+    .card > table td:nth-child(3) {
         width: 18%;
         text-align: right;
     }
 
-    .card > table th:nth-child(4), .card > table td:nth-child(4) {
+    .card > table th:nth-child(4),
+    .card > table td:nth-child(4) {
         width: 16%;
         text-align: center;
     }
@@ -1044,7 +1366,6 @@ tr.movement-row:hover {
         order: -1;
     }
 
-    /* Ocultar contenedores y botones en móvil solo si la tarjeta NO está expandida */
     .summary-card:not(.expanded) #movementsContainer,
     .summary-card:not(.expanded) #categoriesContainer,
     .summary-card:not(.expanded) #remitContainer,
@@ -1070,8 +1391,8 @@ tr.movement-row:hover {
     tr.movement-row {
         display: grid;
         grid-template-columns: 1fr auto auto;
-        align-items: center; 
-        gap: 8px;
+        align-items: center;
+        gap: 12px;
         border-bottom: 1px solid var(--line);
         padding: 12px 0;
         min-height: 64px;
