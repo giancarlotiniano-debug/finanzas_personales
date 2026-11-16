@@ -552,6 +552,18 @@ button.icon-btn {
     min-width: 130px;
 }
 
+.table-wrapper {
+    max-height: 750px;
+    overflow-y: auto;
+}
+
+.table-wrapper thead th {
+    position: sticky;
+    top: 0;
+    background: var(--card);
+    z-index: 1;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -567,7 +579,7 @@ th {
 }
 
 td {
-    padding: 13px 8px;
+    padding: 9px 8px;
     border-bottom: 1px solid var(--line);
     vertical-align: middle;
 }
@@ -779,11 +791,11 @@ body.dark-mode .cat-tab-btn.active {
 .cat-breakdown-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 2px;
     margin-top: 10px;
     border-top: 1px dashed var(--line);
     padding-top: 16px;
-    max-height: 280px;
+    max-height: 480px;
     overflow-y: auto;
 }
 
@@ -1420,17 +1432,17 @@ body.dark-mode .icon-option-item.selected {
 @media (min-width: 761px) {
     .section-title { white-space: nowrap; }
 
-    .card > table th:nth-child(1),
-    .card > table td:nth-child(1) { width: 44%; }
+    .card table th:nth-child(1),
+    .card table td:nth-child(1) { width: 44%; }
 
-    .card > table th:nth-child(2),
-    .card > table td:nth-child(2) { width: 22%; text-align: right; }
+    .card table th:nth-child(2),
+    .card table td:nth-child(2) { width: 22%; text-align: right; }
 
-    .card > table th:nth-child(3),
-    .card > table td:nth-child(3) { width: 18%; text-align: right; }
+    .card table th:nth-child(3),
+    .card table td:nth-child(3) { width: 18%; text-align: right; }
 
-    .card > table th:nth-child(4),
-    .card > table td:nth-child(4) { width: 16%; text-align: center; }
+    .card table th:nth-child(4),
+    .card table td:nth-child(4) { width: 16%; text-align: center; }
 
     .mobile-toggle-btn { display: none !important; }
 
@@ -1490,9 +1502,8 @@ body.dark-mode .icon-option-item.selected {
         grid-template-columns: 1fr auto auto;
         align-items: center;
         gap: 12px;
-        border-bottom: 1px solid var(--line);
-        padding: 12px 0;
-        min-height: 64px;
+        /* border-bottom: 1px solid var(--line); */
+        padding: 10px 0;
         cursor: pointer;
         transition: background-color 0.15s ease;
     }
@@ -1538,5 +1549,10 @@ body.dark-mode .icon-option-item.selected {
     .field {
         min-width: 0;
         width: 100%;
+    }
+
+    .table-wrapper {
+    max-height: 500px;
+    overflow-y: auto;
     }
 }
