@@ -331,6 +331,7 @@ function renderCategoriesRedesign() {
 
     if (listContainer) {
         listContainer.innerHTML = sortedCategories.map(([name, amount]) => {
+            const isSelected = selectedDonutCategory === name;
             const catList = appConfig.categories[currentCatKind] || [];
             const catObj = catList.find(c => c.name === name);
             const color = catObj ? catObj.color : 'var(--blue)';
@@ -339,7 +340,9 @@ function renderCategoriesRedesign() {
             const usagePercentage = totalSum > 0 ? ((amount / totalSum) * 100).toFixed(1) : 0;
 
             return `
-                <div class="cat-breakdown-item">
+                <div class="cat-breakdown-item ${isSelected ? 'selected' : ''}"
+                     data-list-category="${escapeHtml(name)}" role="button" tabindex="0"
+                     aria-pressed="${isSelected}">
                     <div class="cat-breakdown-left">
                         <span class="category-icon-wrapper" style="color: ${color};">${iconSvg}</span>
                         <span class="cat-breakdown-name">${escapeHtml(name)}</span>
@@ -903,6 +906,40 @@ function bindEvents() {
             }
         });
     }
+
+    // Delegación: clic en categorías de la lista (sincroniza con la dona)
+    if ($('categories')) {
+        $('categories').addEventListener('click', (e) => {
+            const item = e.target.closest('[data-list-category]');
+            if (item) toggleDonutSegment(item.dataset.listCategory);
+        });
+
+        $('categories').addEventListener('keydown', (e) => {
+            const item = e.target.closest('[data-list-category]');
+            if (item && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                toggleDonutSegment(item.dataset.listCategory);
+            }
+        });
+    }
+
+    // Limpiar selección al hacer clic fuera del gráfico y de la lista
+    document.addEventListener('click', (e) => {
+        const chart = $('catChartWrapper');
+        const list = $('categories');
+        // composedPath conserva los ancestros aunque el render sustituya el
+        // elemento pulsado (innerHTML) durante el evento.
+        const eventPath = e.composedPath();
+        if (
+            selectedDonutCategory &&
+            chart && list &&
+            !eventPath.includes(chart) &&
+            !eventPath.includes(list)
+        ) {
+            selectedDonutCategory = null;
+            renderCategoriesRedesign();
+        }
+    });
 
     // Delegación: Selector de iconos en modal de categorías
     if ($('iconSelectorGrid')) {

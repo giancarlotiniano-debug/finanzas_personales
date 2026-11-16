@@ -1527,3 +1527,22 @@ body.dark-mode .icon-option-item.selected {
         width: 100%;
     }
 }
+/* Selección sincronizada entre la dona y el desglose */
+.cat-breakdown-item {
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 6px 8px;
+    margin: 0 -8px;
+    transition: background-color 0.15s ease, outline-color 0.15s ease;
+}
+.cat-breakdown-item:hover {
+    background: var(--table-hover);
+}
+.cat-breakdown-item.selected {
+    background: var(--table-hover);
+    outline: 1px solid var(--line);
+}
+.cat-breakdown-item:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+}
