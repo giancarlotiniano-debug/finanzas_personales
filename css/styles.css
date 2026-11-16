@@ -779,7 +779,7 @@ body.dark-mode .cat-tab-btn.active {
 .cat-breakdown-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     margin-top: 10px;
     border-top: 1px dashed var(--line);
     padding-top: 16px;
@@ -791,7 +791,20 @@ body.dark-mode .cat-tab-btn.active {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 4px 0;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 6px 8px;
+    transition: background-color 0.15s ease, outline-color 0.15s ease;
+}
+.cat-breakdown-item:hover {
+    background: var(--table-hover);
+}
+.cat-breakdown-item.selected {
+    background: var(--table-hover);
+}
+.cat-breakdown-item:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
 }
 
 .cat-breakdown-left {
@@ -1526,23 +1539,4 @@ body.dark-mode .icon-option-item.selected {
         min-width: 0;
         width: 100%;
     }
-}
-/* Selección sincronizada entre la dona y el desglose */
-.cat-breakdown-item {
-    cursor: pointer;
-    border-radius: 10px;
-    padding: 6px 8px;
-    margin: 0 -8px;
-    transition: background-color 0.15s ease, outline-color 0.15s ease;
-}
-.cat-breakdown-item:hover {
-    background: var(--table-hover);
-}
-.cat-breakdown-item.selected {
-    background: var(--table-hover);
-    outline: 1px solid var(--line);
-}
-.cat-breakdown-item:focus-visible {
-    outline: 2px solid var(--blue);
-    outline-offset: 2px;
 }
