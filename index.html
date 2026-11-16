@@ -86,11 +86,9 @@
 
                 <div id="movementsContainer">
                     <div class="toolbar">
-                        <input id="search" placeholder="Buscar movimiento…" aria-label="Buscar movimiento">
-                        <select id="typeFilter" aria-label="Filtrar por tipo">
-                            <option value="">Todos</option>
-                            <option value="income">Ingresos</option>
-                            <option value="expense">Gastos</option>
+                        <input id="search" placeholder="Buscar" aria-label="Buscar">
+                        <select id="movementFilter" aria-label="Filtrar">
+                            <option value="all">Todos</option>
                         </select>
                     </div>
 
@@ -166,7 +164,7 @@
 
             <!-- Tarjeta Calcular remesas -->
             <section class="card summary-card" id="remittancesCard">
-                <div class="section-heading" id="remitHeading">
+                <div class="section-heading">
                     <div class="section-title">Calcular remesas</div>
                     <div class="heading-actions">
                         <button class="action-icon-btn mobile-toggle-btn" id="toggleRemitBtn" title="Desplegar calculadora" aria-label="Desplegar calculadora">
@@ -189,7 +187,7 @@
 
             <!-- Tarjeta Gestor de cuotas -->
             <section class="card summary-card" id="installmentsCard">
-                <div class="section-heading" id="installmentsHeading">
+                <div class="section-heading">
                     <div class="section-title">Gestor de cuotas</div>
                     <div class="heading-actions">
                         <button class="action-icon-btn mobile-toggle-btn" id="toggleInstallmentsBtn" title="Desplegar gestor de cuotas" aria-label="Desplegar gestor de cuotas">
@@ -217,21 +215,15 @@
         Los datos se guardan en este navegador.
     </footer>
 
-    <!-- ==========================================
-         MODALES DE MOVIMIENTOS
-         ========================================== -->
-
-    <!-- Modal: Nuevo Movimiento -->
+    <!-- Modales (Movimientos, Remesas, Cuotas, Configuración, Categorías) -->
     <dialog id="newDlg">
         <form class="modal" id="newForm" tabindex="-1">
             <h2>Nuevo movimiento</h2>
-
             <div class="formgrid">
                 <div class="field full">
                     <label for="newDesc">Concepto</label>
                     <input id="newDesc" placeholder="Ej. Compra supermercado">
                 </div>
-
                 <div class="field">
                     <label for="newKind">Tipo</label>
                     <select id="newKind">
@@ -239,28 +231,23 @@
                         <option value="income">Ingreso</option>
                     </select>
                 </div>
-
                 <div class="field">
                     <label for="newAmount" id="newAmountLabel">Importe</label>
                     <input id="newAmount" type="number" min="0.01" step="0.01" placeholder="0,00">
                 </div>
-
                 <div class="field">
                     <label for="newDate">Fecha</label>
                     <input id="newDate" type="date">
                 </div>
-
                 <div class="field">
                     <label for="newCategory">Categoría</label>
                     <select id="newCategory"></select>
                 </div>
-
                 <div class="field full">
                     <label for="newNotes">Notas</label>
                     <input id="newNotes" placeholder="(Opcional)">
                 </div>
             </div>
-
             <div class="modal-actions">
                 <button type="button" class="cancelarmovimiento" id="cancelNew">Cancelar</button>
                 <button class="aceptarmovimiento" type="submit">Aceptar</button>
@@ -268,17 +255,14 @@
         </form>
     </dialog>
 
-    <!-- Modal: Editar Movimiento -->
     <dialog id="editDlg">
         <form class="modal" id="editForm" tabindex="-1">
             <h2>Editar movimiento</h2>
-
             <div class="formgrid">
                 <div class="field full">
                     <label for="editDesc">Concepto</label>
                     <input id="editDesc" placeholder="Ej. Compra supermercado">
                 </div>
-
                 <div class="field">
                     <label for="editKind">Tipo</label>
                     <select id="editKind">
@@ -286,28 +270,23 @@
                         <option value="income">Ingreso</option>
                     </select>
                 </div>
-
                 <div class="field">
                     <label for="editAmount" id="editAmountLabel">Importe</label>
                     <input id="editAmount" type="number" min="0.01" step="0.01" placeholder="0,00">
                 </div>
-
                 <div class="field">
                     <label for="editDate">Fecha</label>
                     <input id="editDate" type="date">
                 </div>
-
                 <div class="field">
                     <label for="editCategory">Categoría</label>
                     <select id="editCategory"></select>
                 </div>
-
                 <div class="field full">
                     <label for="editNotes">Notas</label>
                     <input id="editNotes" placeholder="(Opcional)">
                 </div>
             </div>
-
             <div class="modal-actions modal-actions-split">
                 <button type="button" class="btn-delete-large" id="deleteMovementModalBtn" title="Eliminar movimiento" aria-label="Eliminar movimiento">
                     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
@@ -320,7 +299,6 @@
         </form>
     </dialog>
 
-    <!-- Modal: Detalles del Movimiento -->
     <dialog id="detailDlg">
         <div class="modal detail-modal" tabindex="-1">
             <div class="detail-modal-header">
@@ -336,21 +314,14 @@
         </div>
     </dialog>
 
-    <!-- ==========================================
-         MODALES DE UTILIDADES (REMESAS Y CUOTAS)
-         ========================================== -->
-
-    <!-- Modal: Nueva Remesa -->
     <dialog id="remitNewDlg">
         <form class="modal" id="remitNewForm" tabindex="-1">
             <h2>Calcular nueva remesa</h2>
-
             <div class="formgrid">
                 <div class="field full">
                     <label for="newRemitName">Nombre de la remesa</label>
                     <input id="newRemitName" placeholder="Ej. Noviembre 2026">
                 </div>
-
                 <div class="field">
                     <label for="newRemitSendCurr">Moneda de envío</label>
                     <select id="newRemitSendCurr">
@@ -359,7 +330,6 @@
                         <option value="PEN">Soles (S/.)</option>
                     </select>
                 </div>
-
                 <div class="field">
                     <label for="newRemitRecvCurr">Moneda de recepción</label>
                     <select id="newRemitRecvCurr">
@@ -369,7 +339,6 @@
                     </select>
                 </div>
             </div>
-
             <div class="modal-actions">
                 <button type="button" class="cancelarmovimiento" id="cancelNewRemitBtn">Cancelar</button>
                 <button class="aceptarmovimiento" type="submit">Crear</button>
@@ -377,17 +346,14 @@
         </form>
     </dialog>
 
-    <!-- Modal: Nueva Compra en Cuotas -->
     <dialog id="installmentNewDlg">
         <form class="modal" id="installmentNewForm" tabindex="-1">
             <h2>Nueva compra en cuotas</h2>
-
             <div class="formgrid">
                 <div class="field full">
                     <label for="newInstName">Nombre de la compra</label>
                     <input id="newInstName" placeholder="Ej. Televisor">
                 </div>
-
                 <div class="field">
                     <label for="newInstCurrency">Moneda</label>
                     <select id="newInstCurrency">
@@ -396,43 +362,35 @@
                         <option value="PEN">Soles (S/.)</option>
                     </select>
                 </div>
-
                 <div class="field">
                     <label for="newInstFinancedAmount">Importe financiado</label>
                     <input id="newInstFinancedAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
-
                 <div class="field">
                     <label for="newInstInterestAmount">Intereses (opcional)</label>
                     <input id="newInstInterestAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
-
                 <div class="field">
                     <label for="newInstTotalAmount">Importe total</label>
                     <input id="newInstTotalAmount" readonly type="text" placeholder="0,00" class="input-readonly">
                 </div>
-
                 <div class="field">
                     <label for="newInstTotalCount">Nº de cuotas</label>
                     <input id="newInstTotalCount" type="number" min="1" placeholder="Ej. 6">
                 </div>
-
                 <div class="field">
                     <label for="newInstRegularAmount">Importe por cuota</label>
                     <input id="newInstRegularAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
-
                 <div class="field">
                     <label for="newInstFinalAmount">Cuota final (opcional)</label>
                     <input id="newInstFinalAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
-
                 <div class="field full">
                     <label for="newInstFirstDate">Fecha del primer pago</label>
                     <input id="newInstFirstDate" type="date">
                 </div>
             </div>
-
             <div class="modal-actions">
                 <button type="button" class="cancelarmovimiento" id="cancelNewInstallmentBtn">Cancelar</button>
                 <button class="aceptarmovimiento" type="submit">Guardar</button>
@@ -440,17 +398,14 @@
         </form>
     </dialog>
 
-    <!-- Modal: Editar Compra en Cuotas -->
     <dialog id="installmentEditDlg">
         <form class="modal" id="installmentEditForm" tabindex="-1">
             <h2>Detalles de la compra</h2>
-
             <div class="formgrid">
                 <div class="field full">
                     <label for="editInstName">Nombre de la compra</label>
                     <input id="editInstName" placeholder="Ej. Televisor">
                 </div>
-
                 <div class="field">
                     <label for="editInstCurrency">Moneda</label>
                     <select id="editInstCurrency">
@@ -459,43 +414,35 @@
                         <option value="PEN">Soles (S/.)</option>
                     </select>
                 </div>
-
                 <div class="field">
                     <label for="editInstFinancedAmount">Importe financiado</label>
                     <input id="editInstFinancedAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
-
                 <div class="field">
                     <label for="editInstInterestAmount">Intereses (opcional)</label>
                     <input id="editInstInterestAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
-
                 <div class="field">
                     <label for="editInstTotalAmount">Importe total</label>
                     <input id="editInstTotalAmount" readonly type="text" placeholder="0,00" class="input-readonly">
                 </div>
-
                 <div class="field">
                     <label for="editInstTotalCount">Nº de cuotas</label>
                     <input id="editInstTotalCount" type="number" min="1" placeholder="Ej. 6">
                 </div>
-
                 <div class="field">
                     <label for="editInstRegularAmount">Importe por cuota</label>
                     <input id="editInstRegularAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
-
                 <div class="field">
                     <label for="editInstFinalAmount">Cuota final (opcional)</label>
                     <input id="editInstFinalAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
-
                 <div class="field full">
                     <label for="editInstFirstDate">Fecha del primer pago</label>
                     <input id="editInstFirstDate" type="date">
                 </div>
             </div>
-
             <div class="modal-actions modal-actions-split">
                 <button type="button" class="btn-delete-large" id="deleteInstallmentBtn" title="Eliminar compra" aria-label="Eliminar compra">
                     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
@@ -505,21 +452,14 @@
         </form>
     </dialog>
 
-    <!-- ==========================================
-         MODALES DE CONFIGURACIÓN Y CATEGORÍAS
-         ========================================== -->
-
-    <!-- Modal: Configuración General -->
     <dialog id="configDlg">
         <div class="modal" tabindex="-1">
             <h2>Configuración</h2>
-
             <div class="formgrid">
                 <div class="field full">
                     <label for="userNameInput">Nombre de usuario</label>
                     <input id="userNameInput" type="text" placeholder="Tu nombre">
                 </div>
-
                 <div class="field">
                     <label for="currencySelect">Moneda</label>
                     <select id="currencySelect">
@@ -527,7 +467,6 @@
                         <option value="PEN">Soles (S/.)</option>
                     </select>
                 </div>
-
                 <div class="field">
                     <label for="themeSelect">Modo de trabajo</label>
                     <select id="themeSelect">
@@ -536,7 +475,6 @@
                     </select>
                 </div>
             </div>
-
             <div class="modal-actions">
                 <button type="button" class="cancelarmovimiento" id="cancelConfigBtn">Cancelar</button>
                 <button type="button" class="aceptarmovimiento" id="saveConfigBtn">Guardar</button>
@@ -544,17 +482,14 @@
         </div>
     </dialog>
 
-    <!-- Modal: Gestión de Categorías -->
     <dialog id="categoriesDlg">
         <div class="modal" tabindex="-1">
             <h2>Gestión de categorías</h2>
-            
             <div class="formgrid categories-formgrid">
                 <div class="field full">
                     <label for="newCatName">Nueva categoría</label>
                     <input id="newCatName" placeholder="Ej. Mascotas">
                 </div> 
-
                 <div class="field full">
                     <label for="newCatKind">Tipo</label>
                     <select id="newCatKind">
@@ -562,20 +497,16 @@
                         <option value="income">Ingreso</option>
                     </select>
                 </div>
-
                 <div class="field full">
                     <label>Icono</label>
                     <div id="iconSelectorGrid" class="icon-selector-grid"></div>
                     <input type="hidden" id="newCatIcon" value="Compras">
                 </div>
             </div>
-
             <div class="categories-add-row">
                 <button type="button" class="addcat" id="addCatBtn">Añadir</button>
             </div>
-
             <div id="categoryManagerList" class="category-manager-list"></div>
-
             <div class="modal-actions">
                 <button type="button" class="aceptarmovimiento" id="closeCategoriesDlg">Aceptar</button>
             </div>

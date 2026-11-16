@@ -183,6 +183,30 @@ function updateCategoryOptions(prefix) {
         .join('');
 }
 
+function updateMovementFilterOptions() {
+    const filterSelect = $('movementFilter');
+    if (!filterSelect) return;
+
+    const currentSelection = filterSelect.value || 'all';
+    const expenseCats = appConfig.categories.expense || [];
+    const incomeCats = appConfig.categories.income || [];
+
+    filterSelect.innerHTML = `
+        <option value="all">Todos</option>
+        <optgroup label="Gastos">
+            <option value="type:expense">Todos los gastos</option>
+            ${expenseCats.map(c => `<option value="cat:expense:${escapeHtml(c.name)}">• ${escapeHtml(c.name)}</option>`).join('')}
+        </optgroup>
+        <optgroup label="Ingresos">
+            <option value="type:income">Todos los ingresos</option>
+            ${incomeCats.map(c => `<option value="cat:income:${escapeHtml(c.name)}">• ${escapeHtml(c.name)}</option>`).join('')}
+        </optgroup>
+    `;
+
+    const exists = Array.from(filterSelect.options).some(opt => opt.value === currentSelection);
+    filterSelect.value = exists ? currentSelection : 'all';
+}
+
 function setupMainAccordion(btnId, containerId, iconId, cardEl, stateKey) {
     const btn = $(btnId);
     if (!btn) return;
@@ -374,13 +398,23 @@ function render() {
     $('balance').textContent = formatMoney(totalIncome - totalExpenses);
 
     const query = $('search').value.toLowerCase();
-    const type = $('typeFilter').value;
+    const filterVal = $('movementFilter')?.value || 'all';
 
     const visibleMovements = monthMovements
-        .filter(item =>
-            (!query || `${item.desc} ${item.category} ${item.notes || ''}`.toLowerCase().includes(query)) &&
-            (!type || item.kind === type)
-        )
+        .filter(item => {
+            const matchesSearch = !query || `${item.desc} ${item.category} ${item.notes || ''}`.toLowerCase().includes(query);
+            if (!matchesSearch) return false;
+
+            if (filterVal === 'all') return true;
+            if (filterVal === 'type:expense') return item.kind === 'expense';
+            if (filterVal === 'type:income') return item.kind === 'income';
+            if (filterVal.startsWith('cat:')) {
+                const [, kind, ...catParts] = filterVal.split(':');
+                const catName = catParts.join(':');
+                return item.kind === kind && item.category === catName;
+            }
+            return true;
+        })
         .sort((a, b) => {
             const dateComparison = b.date.localeCompare(a.date);
             return dateComparison !== 0 ? dateComparison : (b.timestamp || 0) - (a.timestamp || 0);
@@ -855,6 +889,7 @@ function removeCategory(kind, index) {
     renderConfigCategories();
     updateCategoryOptions('new');
     updateCategoryOptions('edit');
+    updateMovementFilterOptions();
     render();
 }
 
@@ -927,8 +962,6 @@ function bindEvents() {
     document.addEventListener('click', (e) => {
         const chart = $('catChartWrapper');
         const list = $('categories');
-        // composedPath conserva los ancestros aunque el render sustituya el
-        // elemento pulsado (innerHTML) durante el evento.
         const eventPath = e.composedPath();
         if (
             selectedDonutCategory &&
@@ -1100,7 +1133,7 @@ function bindEvents() {
 
     if ($('month')) $('month').addEventListener('change', render);
     if ($('search')) $('search').addEventListener('input', render);
-    if ($('typeFilter')) $('typeFilter').addEventListener('change', render);
+    if ($('movementFilter')) $('movementFilter').addEventListener('change', render);
     if ($('closeDetailBtn')) $('closeDetailBtn').addEventListener('click', () => $('detailDlg')?.close());
 
     if ($('rows')) {
@@ -1224,6 +1257,7 @@ function bindEvents() {
             persistConfig();
             updateCategoryOptions('new');
             updateCategoryOptions('edit');
+            updateMovementFilterOptions();
             render();
             $('configDlg')?.close();
         });
@@ -1280,6 +1314,7 @@ function bindEvents() {
                 renderConfigCategories();
                 updateCategoryOptions('new');
                 updateCategoryOptions('edit');
+                updateMovementFilterOptions();
                 render();
             } else {
                 alert('Esta categoría ya existe.');
@@ -1491,6 +1526,7 @@ function init() {
     updateCurrencyLabels();
     updateCategoryOptions('new');
     updateCategoryOptions('edit');
+    updateMovementFilterOptions();
     renderRemittancesList();
     renderInstallments();
     render();
