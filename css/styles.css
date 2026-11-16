@@ -1,5 +1,6 @@
-/* Finanzas personales — estilos principales */
-
+/* ==========================================
+   1. VARIABLES Y TEMAS (CLARO / OSCURO)
+   ========================================== */
 :root {
     --bg: #F5F5F5;
     --card: #ffffff;
@@ -36,6 +37,9 @@ body.dark-mode {
     --cancel-btn-color: #f4f4f5;
 }
 
+/* ==========================================
+   2. RESET, TIPOGRAFÍA Y CLASES UTILITARIAS
+   ========================================== */
 * {
     box-sizing: border-box;
 }
@@ -48,14 +52,26 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+h1 {
+    font-size: 26px;
+    margin: 0 0 4px;
+}
+
+p {
+    margin: 0;
+    color: var(--muted);
+}
+
+button,
 input,
 select,
 textarea {
+    font: inherit;
     font-size: 16px;
 }
 
-/* Clase para marcar el borde del input en rojo cuando hay un error */
-input.input-error, select.input-error {
+input.input-error,
+select.input-error {
     border-color: var(--red) !important;
     box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.15) !important;
 }
@@ -71,17 +87,9 @@ input[type="number"] {
     appearance: textfield;
 }
 
-.is-hidden {
-    display: none;
-}
-
-.text-right {
-    text-align: right;
-}
-
-.text-center {
-    text-align: center;
-}
+.is-hidden { display: none; }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
 
 .flex-col {
     display: flex;
@@ -100,6 +108,9 @@ input[type="number"] {
     gap: 8px;
 }
 
+/* ==========================================
+   3. LAYOUT GENERAL (CABECERA, MAIN Y TARJETAS)
+   ========================================== */
 header {
     background: var(--header-bg);
     border-bottom: 1px solid var(--line);
@@ -159,22 +170,122 @@ main {
     margin-bottom: 22px;
 }
 
-h1 {
-    font-size: 26px;
-    margin: 0 0 4px;
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
 }
 
-p {
-    margin: 0;
+.balance-card {
+    grid-column: 1 / -1;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.metric-label {
     color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
 }
 
-button,
-input,
-select {
-    font: inherit;
+.metric {
+    font-size: 27px;
+    font-weight: 750;
+    margin-top: 7px;
+    letter-spacing: -0.5px;
 }
 
+.income { color: var(--green); }
+.expense { color: var(--red); }
+.balance { color: var(--blue); }
+
+.layout {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 16px;
+}
+
+.utilities-layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.section-divider {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 8px 0 4px 0;
+    padding: 0 20px;
+}
+
+.section-divider-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 750;
+    color: var(--ink);
+    white-space: nowrap;
+}
+
+.section-divider-title svg {
+    stroke: var(--blue);
+}
+
+.section-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+}
+
+.section-title {
+    font-size: 17px;
+    font-weight: 750;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 15px;
+    min-height: 44px;
+    height: auto;
+}
+
+.summary-card .section-heading {
+    margin-bottom: 0;
+    transition: margin-bottom 0.2s ease;
+}
+
+.summary-card.expanded .section-heading {
+    margin-bottom: 15px;
+}
+
+footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 25px;
+}
+
+/* ==========================================
+   4. BOTONES Y CONTROLES DE ACCIÓN
+   ========================================== */
 button {
     border: 0;
     border-radius: 10px;
@@ -327,6 +438,40 @@ button.danger {
     border: 1px solid var(--red) !important;
 }
 
+.actions button.icon-btn,
+button.icon-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--card);
+    border: 1px solid var(--blue);
+}
+
+#editCategoriesBtn {
+    background: var(--blue) !important;
+    color: var(--blue) !important;
+    border: 1.5px solid var(--blue) !important;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+#editCategoriesBtn svg {
+    stroke: var(--card) !important;
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.5;
+}
+
 .heading-actions {
     display: flex;
     gap: 8px;
@@ -382,94 +527,339 @@ button.danger {
     margin: 0;
 }
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.balance-card {
-    grid-column: 1 / -1;
-}
-
-.card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: var(--shadow);
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.metric-label {
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.metric {
-    font-size: 27px;
-    font-weight: 750;
-    margin-top: 7px;
-    letter-spacing: -.5px;
-}
-
-.income {
-    color: var(--green);
-}
-
-.expense {
-    color: var(--red);
-}
-
-.balance {
-    color: var(--blue);
-}
-
-.layout {
-    display: grid;
-    grid-template-columns: 1.3fr .7fr;
-    gap: 16px;
-}
-
-.utilities-layout {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-    margin-top: 16px;
-}
-
-.section-divider {
-    grid-column: 1 / -1;
+/* ==========================================
+   5. TABLA DE MOVIMIENTOS Y ESTADOS VACÍOS
+   ========================================== */
+.toolbar {
     display: flex;
-    align-items: center;
-    gap: 14px;
-    margin: 8px 0 4px 0;
-    padding-left: 20px;
-    padding-right: 20px;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
 }
 
-.section-divider-title {
+.toolbar input,
+.toolbar select {
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 9px;
+    background: var(--card);
+    color: var(--ink);
+    font-size: 16px;
+}
+
+.toolbar input {
+    flex: 1;
+    min-width: 130px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 650;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--line);
+}
+
+td {
+    padding: 13px 8px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
+}
+
+tr:last-child td {
+    border-bottom: 0;
+}
+
+.amount {
+    font-weight: 700;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.actions {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+.movement-name-wrapper {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.date-header-row td {
+    padding: 16px 8px 6px 8px;
+    border-bottom: none;
+    font-size: 13px;
+    font-weight: 650;
+    color: var(--muted);
+    background: transparent;
+}
+
+.date-header-row:not(:first-child) td {
+    padding-top: 22px;
+}
+
+.no-border,
+tr.no-border td {
+    border-bottom: none !important;
+}
+
+tr.movement-row {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+tr.movement-row:hover {
+    background-color: var(--table-hover);
+}
+
+.empty {
+    text-align: center;
+    padding: 28px;
+    color: var(--muted);
+}
+
+.empty-compact {
+    padding: 15px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.empty-mini {
+    padding: 20px 8px;
+    text-align: center;
+    color: var(--muted);
+}
+
+/* ==========================================
+   6. RESUMEN POR CATEGORÍAS (DONA INTERACTIVA Y LISTA)
+   ========================================== */
+.cat-type-selector {
+    display: flex;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 30px;
+    padding: 4px;
+    margin: 14px 0 18px 0;
+    gap: 4px;
+}
+
+.cat-tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-radius: 24px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 650;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cat-tab-btn.active {
+    background: var(--card);
+    color: var(--ink);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+body.dark-mode .cat-tab-btn.active {
+    background: var(--line);
+    color: var(--ink);
+}
+
+.cat-chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 15px 0;
+    padding: 10px 0;
+}
+
+.cat-chart-wrapper {
+    width: 230px;
+    height: 230px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cat-donut-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.cat-donut-segment {
+    transition: stroke-width 0.2s ease, opacity 0.2s ease;
+    cursor: pointer;
+}
+
+.cat-donut-segment:hover {
+    opacity: 0.85;
+}
+
+.cat-donut-segment.selected {
+    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.25));
+}
+
+.cat-center-info {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
+}
+
+.cat-center-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+}
+
+.cat-center-value {
     font-size: 15px;
     font-weight: 750;
     color: var(--ink);
+    margin-top: 2px;
+}
+
+.cat-floating-badge {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: var(--card);
+    border: 1.5px solid currentColor;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 750;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.cat-badge-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+}
+
+.cat-badge-icon svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 2.2;
+}
+
+.cat-badge-text {
+    font-size: 12px;
+    font-weight: 750;
+    color: var(--ink);
+}
+
+.cat-breakdown-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+    border-top: 1px dashed var(--line);
+    padding-top: 16px;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.cat-breakdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0;
+}
+
+.cat-breakdown-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.category-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.04);
+    color: currentColor;
+    flex-shrink: 0;
+}
+
+body.dark-mode .category-icon-wrapper {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.category-icon-wrapper svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2;
+    flex-shrink: 0;
+}
+
+.cat-breakdown-name {
+    font-size: 15px;
+    font-weight: 650;
+    color: var(--ink);
+}
+
+.cat-breakdown-right-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cat-breakdown-right {
+    font-size: 15px;
+    font-weight: 750;
+    color: var(--ink);
+}
+
+.cat-percentage-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.15rem 0.55rem;
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border-radius: 9999px;
     white-space: nowrap;
 }
 
-.section-divider-title svg {
-    stroke: var(--blue);
+body.dark-mode .cat-percentage-badge {
+    background-color: #374151;
+    color: #d1d5db;
 }
 
-.section-divider-line {
-    flex: 1;
-    height: 1px;
-    background: var(--line);
-}
-
+/* ==========================================
+   7. UTILIDADES: REMESAS Y GESTOR DE CUOTAS
+   ========================================== */
 .utility-footer-action {
     text-align: center;
     margin-top: 15px;
@@ -489,6 +879,7 @@ button.danger {
     color: var(--ink);
 }
 
+/* Remesas */
 .remit-tc-row {
     display: flex;
     justify-content: space-between;
@@ -518,9 +909,7 @@ button.danger {
     font-size: 16px;
 }
 
-.remit-items-wrapper {
-    margin-bottom: 2px;
-}
+.remit-items-wrapper { margin-bottom: 2px; }
 
 .remit-item-row {
     display: flex;
@@ -531,9 +920,7 @@ button.danger {
     border-bottom: 1px solid var(--line);
 }
 
-.remit-item-row.is-last {
-    border-bottom: none;
-}
+.remit-item-row.is-last { border-bottom: none; }
 
 .remit-item-concept {
     font-weight: 600;
@@ -596,20 +983,9 @@ body.dark-mode .remit-add-btn {
     margin-bottom: 6px;
 }
 
-.remit-total-label {
-    font-weight: 750;
-}
-
-.remit-total-send {
-    margin-right: 8px;
-    font-weight: 750;
-    color: var(--blue);
-}
-
-.remit-total-recv {
-    font-weight: 750;
-    color: var(--ink);
-}
+.remit-total-label { font-weight: 750; }
+.remit-total-send { margin-right: 8px; font-weight: 750; color: var(--blue); }
+.remit-total-recv { font-weight: 750; color: var(--ink); }
 
 .remit-commission-line {
     display: flex;
@@ -636,10 +1012,14 @@ body.dark-mode .remit-add-btn {
     padding-bottom: 3px;
 }
 
-.remit-grand-total-val {
-    color: var(--blue);
+.remit-grand-total-val { color: var(--blue); }
+
+.remit-details-body {
+    padding: 12px !important;
+    gap: 0 !important;
 }
 
+/* Tarjetas desplegables compartidas (Remesas y Cuotas) */
 .installment-purchase-card {
     border: 1px solid var(--line);
     border-radius: 10px;
@@ -661,12 +1041,17 @@ body.dark-mode .remit-add-btn {
     transition: background-color 0.2s ease, border-radius 0.2s ease;
 }
 
+.dark-mode .installment-purchase-header {
+    background: rgba(64, 164, 176, 0.08);
+}
+
 .installment-card-subtitle {
     font-size: 12px;
     font-weight: normal;
     color: var(--muted);
 }
 
+/* Ajuste dinámico de bordes al expandir/contraer tarjeta */
 .installment-purchase-card:has(.installment-installments-list[style*="display: flex"]) .installment-purchase-header,
 .installment-purchase-card:has([id*="remit_details_"][style*="display: flex"]) .installment-purchase-header {
     border-bottom-left-radius: 0 !important;
@@ -678,10 +1063,6 @@ body.dark-mode .remit-add-btn {
 .installment-purchase-card:has([id*="remit_details_"][style*="display: none"]) .installment-purchase-header {
     border-radius: 10px !important;
     border-bottom-color: transparent !important;
-}
-
-.dark-mode .installment-purchase-header {
-    background: rgba(64, 164, 176, 0.08);
 }
 
 .installment-installments-list {
@@ -698,11 +1079,6 @@ body.dark-mode .remit-add-btn {
     background: var(--card);
 }
 
-.remit-details-body {
-    padding: 12px !important;
-    gap: 0 !important;
-}
-
 .installment-row {
     display: flex;
     justify-content: space-between;
@@ -714,46 +1090,25 @@ body.dark-mode .remit-add-btn {
     cursor: pointer;
 }
 
-.installment-row-title {
-    font-weight: 600;
-}
-
-.installment-row-date {
-    font-size: 12px;
-    color: var(--muted);
-}
-
-.installment-row-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.installment-row-amount {
-    font-weight: 700;
-}
-
 .dark-mode .installment-row {
     background: rgba(64, 164, 176, 0.06);
 }
 
-.installment-row.paid {
+.installment-row-title { font-weight: 600; }
+.installment-row-date { font-size: 12px; color: var(--muted); }
+.installment-row-right { display: flex; align-items: center; gap: 12px; }
+.installment-row-amount { font-weight: 700; }
+
+.installment-row.paid,
+.installment-purchase-header.all-paid {
     background-color: #ecfdf5 !important;
     border-color: #10b981 !important;
 }
 
-body.dark-mode .installment-row.paid {
-    background-color: rgba(16, 185, 129, 0.15) !important;
-    border-color: rgba(16, 185, 129, 0.4) !important;
-}
-
-.installment-purchase-header.all-paid {
-    background-color: #ecfdf5 !important;
-    border-bottom-color: #10b981 !important;
-}
-
+body.dark-mode .installment-row.paid,
 body.dark-mode .installment-purchase-header.all-paid {
     background-color: rgba(16, 185, 129, 0.15) !important;
+    border-color: rgba(16, 185, 129, 0.4) !important;
 }
 
 .installment-checkbox {
@@ -763,164 +1118,19 @@ body.dark-mode .installment-purchase-header.all-paid {
     accent-color: var(--blue);
 }
 
-.section-title {
-    font-size: 17px;
-    font-weight: 750;
-    margin: 0;
-    flex: 1;
-    min-width: 0;
+.installment-purchase-card button.soft.icon-btn {
+    background: var(--card) !important;
+    border: 1px solid var(--blue) !important;
 }
 
-.section-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 15px;
-    min-height: 44px;
-    height: auto;
+.installment-purchase-card button.soft.icon-btn svg {
+    stroke: var(--blue) !important;
+    stroke-width: 35px;
 }
 
-.summary-card .section-heading {
-    margin-bottom: 0;
-    transition: margin-bottom 0.2s ease;
-}
-
-.summary-card.expanded .section-heading {
-    margin-bottom: 15px;
-}
-
-.toolbar {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 14px;
-}
-
-.toolbar input,
-.toolbar select {
-    border: 1px solid var(--line);
-    border-radius: 9px;
-    padding: 9px;
-    background: var(--card);
-    color: var(--ink);
-    font-size: 16px;
-}
-
-.toolbar input {
-    flex: 1;
-    min-width: 130px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th {
-    text-align: left;
-    color: var(--muted);
-    font-size: 12px;
-    font-weight: 650;
-    padding: 10px 8px;
-    border-bottom: 1px solid var(--line);
-}
-
-td {
-    padding: 13px 8px;
-    border-bottom: 1px solid var(--line);
-    vertical-align: middle;
-}
-
-tr:last-child td {
-    border-bottom: 0;
-}
-
-.amount {
-    font-weight: 700;
-    white-space: nowrap;
-    text-align: right;
-}
-
-.actions {
-    display: flex;
-    gap: 5px;
-    justify-content: center;
-}
-
-.actions button.icon-btn,
-button.icon-btn {
-    width: 34px;
-    height: 34px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    background: var(--card);
-    border: 1px solid var(--blue);
-}
-
-.empty {
-    text-align: center;
-    padding: 28px;
-    color: var(--muted);
-}
-
-.empty-compact {
-    padding: 15px;
-    text-align: center;
-    color: var(--muted);
-}
-
-.empty-mini {
-    padding: 20px 8px;
-    text-align: center;
-    color: var(--muted);
-}
-
-.catrow {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 20px 0;
-}
-
-.catname {
-    flex: 1;
-}
-
-.catname-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2px;
-}
-
-.cat-kind-badge {
-    font-size: 11px;
-    color: var(--muted);
-}
-
-.bar {
-    height: 8px;
-    background: var(--bar-bg);
-    border-radius: 20px;
-    overflow: hidden;
-    margin-top: 5px;
-}
-
-.fill {
-    height: 100%;
-    background: var(--blue);
-    border-radius: 20px;
-}
-
-.catvalue {
-    font-weight: 700;
-    font-size: 13px;
-}
-
+/* ==========================================
+   8. MODALES Y FORMULARIOS
+   ========================================== */
 dialog {
     border: 0;
     border-radius: 18px;
@@ -1025,13 +1235,7 @@ dialog::backdrop {
     justify-content: space-between;
 }
 
-footer {
-    text-align: center;
-    color: var(--muted);
-    font-size: 12px;
-    padding: 25px;
-}
-
+/* Modal Gestión de Categorías e Iconos */
 .categories-formgrid {
     margin-bottom: 15px;
     align-items: end;
@@ -1044,71 +1248,18 @@ footer {
 }
 
 .category-manager-list {
-    max-height: 220px;
+    max-height: 140px;
     overflow-y: auto;
     border: 1px solid var(--line);
     border-radius: 9px;
-    padding: 10px;
-}
-
-.color-picker-box {
-    position: relative;
-    width: 100%;
-    height: 54px;
-    border: 1px solid var(--line);
-    border-radius: 9px;
-    background: var(--bg);
-    padding: 6px;
-    box-sizing: border-box;
-    cursor: pointer;
-    overflow: hidden;
-}
-
-.color-picker-box-preview {
-    width: 100%;
-    height: 100%;
-    border-radius: 6px;
-    background-color: #3b82f6;
-    pointer-events: none;
-}
-
-.color-picker-container {
-    position: relative;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    overflow: hidden;
-    cursor: pointer;
-    border: 1px solid var(--line);
-    flex-shrink: 0;
-}
-
-.color-picker-preview {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-.category-color-input {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    opacity: 0;
-    cursor: pointer;
+    padding: 15px;
 }
 
 .category-item-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
-    padding: 4px 0;
+    padding: 6px 0;
 }
 
 .category-item-name {
@@ -1122,11 +1273,6 @@ footer {
     gap: 10px;
 }
 
-.btn-cat-remove {
-    width: 28px !important;
-    height: 28px !important;
-}
-
 .category-section-title {
     display: block;
     margin: 0;
@@ -1135,41 +1281,57 @@ footer {
     color: var(--ink);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    padding-top: 0;
 }
 
-.movement-name-wrapper {
+.category-section-title.category-section-divider {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.icon-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+    gap: 8px;
+    max-height: 150px;
+    overflow-y: auto;
+    padding: 6px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+}
+
+.icon-option-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-}
-
-.category-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    display: inline-block;
+    justify-content: center;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--card);
+    border: 1.5px solid var(--line);
     cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--ink);
 }
 
-.date-header-row td {
-    padding: 16px 8px 6px 8px;
-    border-bottom: none;
-    font-size: 13px;
-    font-weight: 650;
-    color: var(--muted);
-    background: transparent;
+.icon-option-item:hover {
+    border-color: var(--blue);
 }
 
-.date-header-row:not(:first-child) td {
-    padding-top: 22px;
+.icon-option-item.selected {
+    background: rgba(8, 126, 139, 0.12);
+    border-color: var(--blue);
+    color: var(--blue);
 }
 
-.no-border,
-tr.no-border td {
-    border-bottom: none !important;
+body.dark-mode .icon-option-item.selected {
+    background: rgba(34, 211, 238, 0.15);
+    border-color: var(--blue);
+    color: var(--blue);
 }
 
+/* Modal Detalles de Movimiento */
 .detail-modal {
     text-align: center;
     padding: 0 !important;
@@ -1235,86 +1397,29 @@ tr.no-border td {
     text-align: left;
 }
 
-.detail-table tr td:last-child {
-    border-right: none;
-}
-
+.detail-table tr td:last-child { border-right: none; }
 .detail-table tr:last-child th,
-.detail-table tr:last-child td {
-    border-bottom: none;
-}
+.detail-table tr:last-child td { border-bottom: none; }
 
-tr.movement-row {
-    cursor: pointer;
-    transition: background-color 0.15s ease;
-}
-
-tr.movement-row:hover {
-    background-color: var(--table-hover);
-}
-
-.installment-purchase-card button.soft.icon-btn {
-    background: var(--card) !important;
-    border: 1px solid var(--blue) !important;
-}
-
-.installment-purchase-card button.soft.icon-btn svg {
-    stroke: var(--blue) !important;
-    stroke-width: 35px;
-}
-
-#editCategoriesBtn {
-    background: var(--blue) !important;
-    color: var(--blue) !important;
-    border: 1.5px solid var(--blue) !important;
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-}
-
-#editCategoriesBtn svg {
-    stroke: var(--card) !important;
-    width: 20px;
-    height: 20px;
-    stroke-width: 2.5;
-}
-
+/* ==========================================
+   9. RESPONSIVE DESIGN (MEDIA QUERIES)
+   ========================================== */
 @media (min-width: 761px) {
-    .section-title {
-        white-space: nowrap;
-    }
+    .section-title { white-space: nowrap; }
 
     .card > table th:nth-child(1),
-    .card > table td:nth-child(1) {
-        width: 44%;
-    }
+    .card > table td:nth-child(1) { width: 44%; }
 
     .card > table th:nth-child(2),
-    .card > table td:nth-child(2) {
-        width: 22%;
-        text-align: right;
-    }
+    .card > table td:nth-child(2) { width: 22%; text-align: right; }
 
     .card > table th:nth-child(3),
-    .card > table td:nth-child(3) {
-        width: 18%;
-        text-align: right;
-    }
+    .card > table td:nth-child(3) { width: 18%; text-align: right; }
 
     .card > table th:nth-child(4),
-    .card > table td:nth-child(4) {
-        width: 16%;
-        text-align: center;
-    }
+    .card > table td:nth-child(4) { width: 16%; text-align: center; }
 
-    .mobile-toggle-btn {
-        display: none !important;
-    }
+    .mobile-toggle-btn { display: none !important; }
 
     #movementsContainer,
     #categoriesContainer,
@@ -1329,31 +1434,17 @@ tr.movement-row:hover {
 }
 
 @media (max-width: 760px) {
-    header {
-        padding: 14px 0;
-    }
-
-    .header-content {
-        padding: 0 13px;
-    }
-
-    main {
-        margin: 20px auto;
-        padding: 0 13px;
-    }
+    header { padding: 14px 0; }
+    .header-content { padding: 0 13px; }
+    main { margin: 20px auto; padding: 0 13px; }
 
     .cards {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
     }
 
-    .cards .card {
-        padding: 15px;
-    }
-
-    .cards .metric {
-        font-size: 22px;
-    }
+    .cards .card { padding: 15px; }
+    .cards .metric { font-size: 22px; }
 
     .layout,
     .utilities-layout {
@@ -1362,17 +1453,12 @@ tr.movement-row:hover {
         gap: 16px;
     }
 
-    .layout .summary-card {
-        order: -1;
-    }
+    .layout .summary-card { order: -1; }
 
     .summary-card:not(.expanded) #movementsContainer,
     .summary-card:not(.expanded) #categoriesContainer,
     .summary-card:not(.expanded) #remitContainer,
-    .summary-card:not(.expanded) #installmentsContainer {
-        display: none !important;
-    }
-
+    .summary-card:not(.expanded) #installmentsContainer,
     .summary-card:not(.expanded) .movement-controls,
     .summary-card:not(.expanded) #editCategoriesBtn {
         display: none !important;
@@ -1384,9 +1470,7 @@ tr.movement-row:hover {
         width: 100%;
     }
 
-    .card table thead {
-        display: none;
-    }
+    .card table thead { display: none; }
 
     tr.movement-row {
         display: grid;

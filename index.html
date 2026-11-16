@@ -14,6 +14,9 @@
 
 <body>
 
+    <!-- ==========================================
+         CABECERA PRINCIPAL
+         ========================================== -->
     <header>
         <div class="header-content">
             <div class="brand">
@@ -29,6 +32,9 @@
         </div>
     </header>
 
+    <!-- ==========================================
+         CONTENIDO PRINCIPAL
+         ========================================== -->
     <main>
 
         <div class="top">
@@ -38,6 +44,7 @@
             </div>
         </div>
 
+        <!-- Tarjetas de métricas (Ingresos, Gastos, Balance) -->
         <section class="cards">
             <div class="card">
                 <div class="metric-label">INGRESOS</div>
@@ -57,6 +64,7 @@
 
         <!-- Fila superior: Movimientos y Categorías -->
         <div class="layout">
+            <!-- Registro de movimientos -->
             <section class="card summary-card" id="movementsCard">
                 <div class="section-heading">
                     <div class="section-title">Registro de movimientos</div>
@@ -104,6 +112,7 @@
                 </div>
             </section>
 
+            <!-- Resumen por categorías -->
             <section class="card summary-card" id="categoriesCard">
                 <div class="section-heading">
                     <div class="section-title">Resumen por categorías</div>
@@ -117,14 +126,28 @@
                     </div>
                 </div>
                 <div id="categoriesContainer">
-                    <div id="categories">
+                    <!-- Selector de tipo (Gastos / Ingresos) -->
+                    <div class="cat-type-selector">
+                        <button type="button" class="cat-tab-btn active" data-kind="expense" id="catTabExpense">Gastos</button>
+                        <button type="button" class="cat-tab-btn" data-kind="income" id="catTabIncome">Ingresos</button>
+                    </div>
+
+                    <!-- Contenedor del Gráfico de Dona SVG -->
+                    <div class="cat-chart-container">
+                        <div id="catChartWrapper" class="cat-chart-wrapper"></div>
+                    </div>
+
+                    <!-- Lista de desglose inferior con iconos y % -->
+                    <div id="categories" class="cat-breakdown-list">
                         <div class="empty">Añade movimientos para ver el desglose.</div>
                     </div>
                 </div>
             </section>
         </div>
 
-        <!-- Utilidades -->
+        <!-- ==========================================
+             SECCIÓN DE UTILIDADES
+             ========================================== -->
         <div class="utilities-layout">
             <div class="section-divider">
                 <div class="section-divider-title">
@@ -192,7 +215,11 @@
         Los datos se guardan en este navegador.
     </footer>
 
-    <!-- Dialog para Nuevo Movimiento -->
+    <!-- ==========================================
+         MODALES DE MOVIMIENTOS
+         ========================================== -->
+
+    <!-- Modal: Nuevo Movimiento -->
     <dialog id="newDlg">
         <form class="modal" id="newForm" tabindex="-1">
             <h2>Nuevo movimiento</h2>
@@ -239,7 +266,7 @@
         </form>
     </dialog>
 
-    <!-- Dialog para Editar Movimiento -->
+    <!-- Modal: Editar Movimiento -->
     <dialog id="editDlg">
         <form class="modal" id="editForm" tabindex="-1">
             <h2>Editar movimiento</h2>
@@ -291,7 +318,27 @@
         </form>
     </dialog>
 
-    <!-- Dialog para Nueva Remesa -->
+    <!-- Modal: Detalles del Movimiento -->
+    <dialog id="detailDlg">
+        <div class="modal detail-modal" tabindex="-1">
+            <div class="detail-modal-header">
+                <h2>Detalles del movimiento</h2>
+            </div>
+            <div class="detail-modal-body">
+                <p id="detailConcept" class="detail-concept-title"></p>
+                <div id="detailContent"></div>
+                <div class="modal-actions detail-modal-actions">
+                    <button type="button" id="closeDetailBtn" class="aceptarmovimiento btn-modal-wide">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- ==========================================
+         MODALES DE UTILIDADES (REMESAS Y CUOTAS)
+         ========================================== -->
+
+    <!-- Modal: Nueva Remesa -->
     <dialog id="remitNewDlg">
         <form class="modal" id="remitNewForm" tabindex="-1">
             <h2>Calcular nueva remesa</h2>
@@ -328,7 +375,7 @@
         </form>
     </dialog>
 
-    <!-- Dialog para Nueva Compra en Cuotas -->
+    <!-- Modal: Nueva Compra en Cuotas -->
     <dialog id="installmentNewDlg">
         <form class="modal" id="installmentNewForm" tabindex="-1">
             <h2>Nueva compra en cuotas</h2>
@@ -391,7 +438,7 @@
         </form>
     </dialog>
 
-    <!-- Dialog para Editar Compra en Cuotas -->
+    <!-- Modal: Editar Compra en Cuotas -->
     <dialog id="installmentEditDlg">
         <form class="modal" id="installmentEditForm" tabindex="-1">
             <h2>Detalles de la compra</h2>
@@ -456,7 +503,11 @@
         </form>
     </dialog>
 
-    <!-- Dialog Configuración -->
+    <!-- ==========================================
+         MODALES DE CONFIGURACIÓN Y CATEGORÍAS
+         ========================================== -->
+
+    <!-- Modal: Configuración General -->
     <dialog id="configDlg">
         <div class="modal" tabindex="-1">
             <h2>Configuración</h2>
@@ -491,7 +542,7 @@
         </div>
     </dialog>
 
-    <!-- Dialog Gestión de Categorías -->
+    <!-- Modal: Gestión de Categorías -->
     <dialog id="categoriesDlg">
         <div class="modal" tabindex="-1">
             <h2>Gestión de categorías</h2>
@@ -502,7 +553,7 @@
                     <input id="newCatName" placeholder="Ej. Mascotas">
                 </div> 
 
-                <div class="field">
+                <div class="field full">
                     <label for="newCatKind">Tipo</label>
                     <select id="newCatKind">
                         <option value="expense">Gasto</option>
@@ -510,12 +561,10 @@
                     </select>
                 </div>
 
-                <div class="field">
-                    <label for="newCatColor">Color</label>
-                    <div class="color-picker-box" title="Seleccionar color">
-                        <div class="color-picker-box-preview" id="newCatColorPreview"></div>
-                        <input type="color" value="#3b82f6" id="newCatColor" class="category-color-input">
-                    </div>
+                <div class="field full">
+                    <label>Icono</label>
+                    <div id="iconSelectorGrid" class="icon-selector-grid"></div>
+                    <input type="hidden" id="newCatIcon" value="Compras">
                 </div>
             </div>
 
@@ -527,22 +576,6 @@
 
             <div class="modal-actions">
                 <button type="button" class="aceptarmovimiento" id="closeCategoriesDlg">Aceptar</button>
-            </div>
-        </div>
-    </dialog>
-
-    <!-- Dialog Detalles del Movimiento -->
-    <dialog id="detailDlg">
-        <div class="modal detail-modal" tabindex="-1">
-            <div class="detail-modal-header">
-                <h2>Detalles del movimiento</h2>
-            </div>
-            <div class="detail-modal-body">
-                <p id="detailConcept" class="detail-concept-title"></p>
-                <div id="detailContent"></div>
-                <div class="modal-actions detail-modal-actions">
-                    <button type="button" id="closeDetailBtn" class="aceptarmovimiento btn-modal-wide">Aceptar</button>
-                </div>
             </div>
         </div>
     </dialog>

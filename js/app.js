@@ -3,30 +3,47 @@
 const $ = (id) => document.getElementById(id);
 
 /* ==========================================
+   0. MAPA MAESTRO DE ICONOS SVG PARA CATEGORÍAS
+   ========================================== */
+const categoryIconsMap = {
+    "Ingresos extras": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M7.5 5h-1.5a1 1 0 0 0 0 2h1a1 1 0 0 1 0 2H5.5"/><path d="M6.5 4v.5M6.5 8.5V9"/><path d="M14 3h3a2 2 0 0 1 2 2v4"/><path d="M16.5 6.5L19 9l2.5-2.5"/><path d="M14 9v3M12.5 10.5h3"/><path d="M2 21v-4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1H8"/><path d="M14 16l4-3.5a1.5 1.5 0 0 1 2.2 2L16 19.5c-1 .8-2.2 1.5-3.5 1.5H2"/></svg>`,
+    "Devoluciones": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M7.5 5h-1.5a1 1 0 0 0 0 2h1a1 1 0 0 1 0 2H5.5"/><path d="M6.5 4v.5M6.5 8.5V9"/><circle cx="18.5" cy="4.5" r="1.8" fill="currentColor"/><path d="M15.5 11v-.5a3 3 0 0 1 6 0v.5"/><path d="M2 21v-4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1H8"/><path d="M14 16l4-3.5a1.5 1.5 0 0 1 2.2 2L16 19.5c-1 .8-2.2 1.5-3.5 1.5H2"/></svg>`,
+    "Salario": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6"/><path d="M3 7a2 2 0 0 0 2 2h8"/><path d="M18 3v6"/><path d="M15.5 6.5L18 9l2.5-2.5"/><circle cx="17.5" cy="14.5" r="1" fill="currentColor"/></svg>`,
+    "Suscripciones": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="4" /><path d="M12 17v3" /><path d="M8 20h8" /><circle cx="11" cy="12" r="2" fill="currentColor" /><path d="M13 12V7h2" /></svg>`,
+    "Manutencion": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="4" r="1.8" fill="currentColor"/><path d="M7.5 8.5H5a2 2 0 0 0-2 2v5a1.5 1.5 0 0 0 1.5 1.5h3"/><path d="M5.5 17v4"/><circle cx="18.5" cy="4" r="1.8" fill="currentColor"/><path d="M16.5 8.5H19a2 2 0 0 1 2 2v5a1.5 1.5 0 0 1-1.5 1.5h-3"/><path d="M18.5 17v4"/><circle cx="12" cy="8.5" r="1.6" fill="currentColor"/><rect x="9.5" y="12" width="5" height="5" rx="1.5"/><path d="M10.8 17v4M13.2 17v4"/></svg>`,
+    "Transporte": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3c4.5-1.3 9.5-1.3 14 0"/><path d="M12 2v4"/><rect x="4" y="6" width="16" height="14" rx="4"/><path d="M4 10h16"/><path d="M4 14h16"/><path d="M12 10v4"/><path d="M8 16v1"/><path d="M16 16v1"/><path d="M8 20l-1.5 2"/><path d="M16 20l1.5 2"/></svg>`,    
+    "Alimentacion": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18l-1.5 7.5a2 2 0 0 1-2 1.5h-11a2 2 0 0 1-2-1.5L3 11z"/><path d="M8 14v3M12 14v3M16 14v3"/><path d="M6.5 3h4"/><path d="M7.5 3v3L6 8.5V11M9.5 3v3L11 8.5V11"/><path d="M13 11l3.5-6.5a2.2 2.2 0 0 1 3.7 2.2L17.5 11"/></svg>`,
+    "Compras": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h1.5a2 2 0 0 1 1.98 1.7L6.7 14.3A2 2 0 0 0 8.68 16H19"/><path d="M5.6 6h14.1a2 2 0 0 1 1.97 2.35l-.72 4A2 2 0 0 1 19 14H6.65"/><circle cx="8" cy="20" r="1.5" fill="currentColor" stroke="none"/><circle cx="17.5" cy="20" r="1.5" fill="currentColor" stroke="none"/></svg>`,
+    "Combustible": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v16H3z"/><path d="M3 10h11"/><path d="M14 14h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0V8l-3-3"/><path d="M18 4l2 2v3h-2V4z" fill="currentColor" stroke="none"/></svg>`,
+    "Servicios": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v6" /><path d="M8 4h8" /><path d="M3 10h11a5 5 0 0 1 5 5v2" /><path d="M3 15h10a1 1 0 0 1 1 1v1" /><path d="M13 17h7" /><path d="M16.5 20.5c-.83 0-1.5-.67-1.5-1.5 0-1 1.5-2.5 1.5-2.5s1.5 1.5 1.5 2.5c0 .83-.67 1.5-1.5 1.5z" fill="currentColor" stroke="none" /></svg>`,
+    "Coche": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l2.2-5.5A4 4 0 0 1 8.9 3h3.6a4 4 0 0 1 3.3 1.7L20 11" /><path d="M10 3v8" /><path d="M4 11h15a4 4 0 0 1 4 4v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2a3 3 0 0 1 3-3z" /><path d="M4 17v1a2.5 2.5 0 0 0 5 0v-1" /><path d="M15 17v1a2.5 2.5 0 0 0 5 0v-1" /></svg>`,
+    "Vivienda": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7.5a2 2 0 0 0-.6-1.4l-7-6.8a2 2 0 0 0-2.8 0l-7 6.8a2 2 0 0 0-.6 1.4z"/><path d="M9 21v-5a3 3 0 0 1 6 0v5"/></svg>`,
+    "Monedas": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8.5" cy="11" rx="6.5" ry="3"/><path d="M2 11v8c0 1.66 2.91 3 6.5 3s6.5-1.34 6.5-3v-8"/><path d="M2 15c0 1.66 2.91 3 6.5 3s6.5-1.34 6.5-3"/><ellipse cx="15.5" cy="5" rx="6.5" ry="3"/><path d="M9 5v3.1"/><path d="M22 5v12c0 1.66-2.91 3-6.5 3-.6 0-1.18-.04-1.73-.11"/><path d="M22 9c0 1.66-2.91 3-6.5 3-.45 0-.89-.02-1.31-.06"/><path d="M22 13c0 1.66-2.91 3-6.5 3-.17 0-.34 0-.5-.01"/></svg>`,
+};
+
+/* ==========================================
    1. ESTADO Y CONFIGURACIÓN GLOBAL
    ========================================== */
-
 const DEFAULT_CONFIG = {
     userName: 'Invitado',
     currency: 'EUR',
     theme: 'light',
     categories: {
         expense: [
-            { name: 'Vivienda', color: '#3b82f6' },
-            { name: 'Coche', color: '#d97706' },
-            { name: 'Combustible', color: '#ef4444' },
-            { name: 'Compras', color: '#ec4899' },
-            { name: 'Alimentación', color: '#8b5cf6' },
-            { name: 'Transporte', color: '#10b981' },
-            { name: 'Manutención', color: '#f59e0b' },
-            { name: 'Servicios', color: '#6366f1' },
-            { name: 'Suscripciones', color: '#14b8a6' },
-            { name: 'Otros', color: '#64748b' }
+            { name: 'Vivienda', color: '#3b82f6', icon: 'Vivienda' },
+            { name: 'Coche', color: '#d97706', icon: 'Coche' },
+            { name: 'Combustible', color: '#ef4444', icon: 'Combustible' },
+            { name: 'Compras', color: '#ec4899', icon: 'Compras' },
+            { name: 'Alimentación', color: '#8b5cf6', icon: 'Alimentacion' },
+            { name: 'Transporte', color: '#10b981', icon: 'Transporte' },
+            { name: 'Manutención', color: '#f59e0b', icon: 'Manutencion' },
+            { name: 'Servicios', color: '#6366f1', icon: 'Servicios' },
+            { name: 'Suscripciones', color: '#14b8a6', icon: 'Suscripciones' },
         ],
         income: [
-            { name: 'Salario', color: '#22c55e' },
-            { name: 'Ingresos extra', color: '#84cc16' },
-            { name: 'Devoluciones', color: '#0ea5e9' }
+            { name: 'Salario', color: '#22c55e', icon: 'Salario' },
+            { name: 'Ingresos extra', color: '#84cc16', icon: 'Ingresos extras' },
+            { name: 'Devoluciones', color: '#0ea5e9', icon: 'Devoluciones' }
         ]
     }
 };
@@ -38,6 +55,8 @@ let installmentsPurchases = JSON.parse(localStorage.getItem('finanzas_cuotas_v1'
 
 let editingId = null;
 let editingInstallmentId = null;
+let currentCatKind = 'expense';
+let selectedDonutCategory = null;
 
 const accordionState = {
     movements: true,
@@ -53,7 +72,6 @@ const currentMonth = `${today.getFullYear()}-${pad(today.getMonth() + 1)}`;
 /* ==========================================
    2. UTILIDADES DE FORMATO Y FECHAS
    ========================================== */
-
 const getCurrencySymbol = (code) => {
     const symbols = { EUR: '€', USD: '$', PEN: 'S/.' };
     return symbols[code] || '€';
@@ -72,7 +90,6 @@ const formatCurrencyCustom = (amount, code) => {
 };
 
 const formatMoney = (amount) => formatCurrencyCustom(amount, appConfig.currency);
-const formatEurFixed = (amount) => formatCurrencyCustom(amount, 'EUR');
 
 const formatNumberDisplay = (val, currCode) => {
     if (isNaN(val) || val <= 0) return '';
@@ -132,7 +149,6 @@ function addMonthsToDate(dateStr, monthsToAdd) {
 /* ==========================================
    3. PERSISTENCIA Y CONFIGURACIÓN UI
    ========================================== */
-
 const persist = () => localStorage.setItem('finanzas_movimientos_v1', JSON.stringify(movements));
 const persistRemittancesList = () => localStorage.setItem('finanzas_remesas_cards_v3', JSON.stringify(remittancesList));
 const persistInstallments = () => localStorage.setItem('finanzas_cuotas_v1', JSON.stringify(installmentsPurchases));
@@ -188,8 +204,155 @@ function setupMainAccordion(btnId, containerId, iconId, cardEl, stateKey) {
 }
 
 /* ==========================================
-   4. MOVIMIENTOS Y CATEGORÍAS
+   4. MOVIMIENTOS Y CATEGORÍAS (DONA INTERACTIVA Y LISTA CON %)
    ========================================== */
+function setupCategoryTabs() {
+    const btnExpense = $('catTabExpense');
+    const btnIncome = $('catTabIncome');
+
+    if (btnExpense && btnIncome) {
+        btnExpense.addEventListener('click', () => {
+            currentCatKind = 'expense';
+            selectedDonutCategory = null;
+            btnExpense.classList.add('active');
+            btnIncome.classList.remove('active');
+            renderCategoriesRedesign();
+        });
+
+        btnIncome.addEventListener('click', () => {
+            currentCatKind = 'income';
+            selectedDonutCategory = null;
+            btnIncome.classList.add('active');
+            btnExpense.classList.remove('active');
+            renderCategoriesRedesign();
+        });
+    }
+}
+
+function toggleDonutSegment(categoryName) {
+    selectedDonutCategory = (selectedDonutCategory === categoryName) ? null : categoryName;
+    renderCategoriesRedesign();
+}
+
+function renderCategoriesRedesign() {
+    const month = $('month').value;
+    const monthMovements = movements.filter(item => item.date.startsWith(month));
+    const activeMonthMovements = monthMovements.filter(item => item.kind === currentCatKind);
+
+    const categoryTotals = {};
+    activeMonthMovements.forEach(item => {
+        categoryTotals[item.category] = (categoryTotals[item.category] || 0) + item.amount;
+    });
+
+    const sortedCategories = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
+    const totalSum = sortedCategories.reduce((sum, [, amt]) => sum + amt, 0);
+
+    const chartWrapper = $('catChartWrapper');
+    const listContainer = $('categories');
+
+    if (!sortedCategories.length) {
+        if (chartWrapper) {
+            chartWrapper.innerHTML = `
+                <svg viewBox="0 0 100 100" class="cat-donut-svg">
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="var(--bar-bg)" stroke-width="16"></circle>
+                </svg>
+                <div class="cat-center-info">
+                    <span class="cat-center-label">Total</span>
+                    <span class="cat-center-value">${formatMoney(0)}</span>
+                </div>
+            `;
+        }
+        if (listContainer) {
+            listContainer.innerHTML = '<div class="empty">Añade movimientos para ver el desglose.</div>';
+        }
+        return;
+    }
+
+    let cumulativePercent = 0;
+    const radius = 38;
+    const circumference = 2 * Math.PI * radius;
+
+    let svgSegments = '';
+    let floatingBadgeHtml = '';
+
+    sortedCategories.forEach(([name, amount]) => {
+        const catList = appConfig.categories[currentCatKind] || [];
+        const catObj = catList.find(c => c.name === name);
+        const color = catObj ? catObj.color : 'var(--blue)';
+        const iconKey = catObj && catObj.icon ? catObj.icon : 'Compras';
+        const iconSvg = categoryIconsMap[iconKey] || categoryIconsMap['Compras'];
+
+        const percentage = totalSum > 0 ? (amount / totalSum) * 100 : 0;
+        const strokeDasharray = `${(percentage * circumference) / 100} ${circumference}`;
+        const strokeDashoffset = -((cumulativePercent * circumference) / 100);
+
+        const midPercent = cumulativePercent + percentage / 2;
+        cumulativePercent += percentage;
+
+        const isSelected = (selectedDonutCategory === name);
+
+        svgSegments += `
+            <circle cx="50" cy="50" r="${radius}" fill="none" stroke="${color}" stroke-width="${isSelected ? 20 : 16}"
+                stroke-dasharray="${strokeDasharray}" stroke-dashoffset="${strokeDashoffset}" 
+                class="cat-donut-segment ${isSelected ? 'selected' : ''}" 
+                data-donut-category="${escapeHtml(name)}">
+                <title>${escapeHtml(name)}: ${formatMoney(amount)} (${percentage.toFixed(1)}%)</title>
+            </circle>
+        `;
+
+        if (isSelected) {
+            const angle = (midPercent / 100) * 2 * Math.PI - Math.PI / 2;
+            const badgeRadius = 57;
+            const x = 50 + badgeRadius * Math.cos(angle);
+            const y = 50 + badgeRadius * Math.sin(angle);
+
+            floatingBadgeHtml = `
+                <div class="cat-floating-badge" style="top: ${y}%; left: ${x}%; color: ${color}; border-color: ${color};">
+                    <span class="cat-badge-icon" style="color: ${color};">${iconSvg}</span>
+                    <span class="cat-badge-text">${percentage.toFixed(1)}%</span>
+                </div>
+            `;
+        }
+    });
+
+    if (chartWrapper) {
+        chartWrapper.innerHTML = `
+            <svg viewBox="0 0 100 100" class="cat-donut-svg">
+                <circle cx="50" cy="50" r="${radius}" fill="none" stroke="var(--bar-bg)" stroke-width="16"></circle>
+                ${svgSegments}
+            </svg>
+            <div class="cat-center-info">
+                <span class="cat-center-label">${currentCatKind === 'expense' ? 'Gastos' : 'Ingresos'}</span>
+                <span class="cat-center-value">${formatMoney(totalSum)}</span>
+            </div>
+            ${floatingBadgeHtml}
+        `;
+    }
+
+    if (listContainer) {
+        listContainer.innerHTML = sortedCategories.map(([name, amount]) => {
+            const catList = appConfig.categories[currentCatKind] || [];
+            const catObj = catList.find(c => c.name === name);
+            const color = catObj ? catObj.color : 'var(--blue)';
+            const iconKey = catObj && catObj.icon ? catObj.icon : 'Compras';
+            const iconSvg = categoryIconsMap[iconKey] || categoryIconsMap['Compras'];
+            const usagePercentage = totalSum > 0 ? ((amount / totalSum) * 100).toFixed(1) : 0;
+
+            return `
+                <div class="cat-breakdown-item">
+                    <div class="cat-breakdown-left">
+                        <span class="category-icon-wrapper" style="color: ${color};">${iconSvg}</span>
+                        <span class="cat-breakdown-name">${escapeHtml(name)}</span>
+                    </div>
+                    <div class="cat-breakdown-right-group">
+                        <span class="cat-breakdown-right">${formatMoney(amount)}</span>
+                        <span class="cat-percentage-badge">${usagePercentage}%</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+}
 
 function render() {
     const month = $('month').value;
@@ -239,12 +402,14 @@ function render() {
         const catList = appConfig.categories[item.kind] || [];
         const catObj = catList.find(c => c.name === item.category);
         const catColor = catObj ? catObj.color : 'var(--blue)';
+        const iconKey = catObj && catObj.icon ? catObj.icon : 'Compras';
+        const iconSvg = categoryIconsMap[iconKey] || categoryIconsMap['Compras'];
 
         rowsHtml += `
             <tr class="movement-row ${borderClass}">
                 <td>
                     <div class="movement-name-wrapper">
-                        <span class="category-dot" style="background-color: ${catColor};" title="${escapeHtml(item.category)}"></span>
+                        <span class="category-icon-wrapper" style="color: ${catColor}; width: 28px; height: 28px;">${iconSvg}</span>
                         <span class="movement-title">${escapeHtml(item.desc)}</span>
                     </div>
                 </td>
@@ -268,44 +433,12 @@ function render() {
     $('rows').innerHTML = rowsHtml;
     $('empty').style.display = visibleMovements.length ? 'none' : 'block';
 
-    const categoryTotals = {};
-    monthMovements.forEach(item => {
-        const key = `${item.kind}:${item.category}`;
-        categoryTotals[key] = (categoryTotals[key] || 0) + item.amount;
-    });
-
-    const sortedCategories = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
-    const maximum = sortedCategories[0]?.[1] || 1;
-
-    $('categories').innerHTML = sortedCategories.length
-        ? sortedCategories.map(([key, amount]) => {
-            const [kind, name] = key.split(':');
-            const catList = appConfig.categories[kind] || [];
-            const catObj = catList.find(c => c.name === name);
-            const color = catObj ? catObj.color : 'var(--blue)';
-            const percentage = (amount / maximum) * 100;
-            const sign = kind === 'income' ? '+' : '';
-            return `
-                <div class="catrow">
-                    <div class="catname">
-                        <div class="catname-header">
-                            <span>${escapeHtml(name)} <span class="cat-kind-badge">(${kind === 'income' ? 'Ingreso' : 'Gasto'})</span></span>
-                            <span class="catvalue">${sign}${formatMoney(amount)}</span>
-                        </div>
-                        <div class="bar">
-                            <div class="fill" style="width:${percentage}%; background:${color};"></div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('')
-        : '<div class="empty">Añade movimientos para ver el desglose.</div>';
+    renderCategoriesRedesign();
 }
 
 /* ==========================================
    5. GESTOR DE REMESAS
    ========================================== */
-
 function updateRemitDOMTotals(rem) {
     const tc = rem.tc || 1;
     let totalRecv = 0;
@@ -374,7 +507,7 @@ function renderRemittancesList() {
                     </div>
                     <div class="flex-center-gap">
                         <input type="text" inputmode="decimal" enterkeyhint="done" class="remit-recv-input remit-input-num" data-remit-id="${rem.id}" data-index="${idx}" value="${formattedVal}" placeholder="0,00">
-                        <button type="button" class="danger icon-btn btn-xs" onclick="removeRemitItem('${rem.id}', ${idx})" title="Eliminar concepto" aria-label="Eliminar concepto">
+                        <button type="button" class="danger icon-btn btn-xs" data-action="remove-remit-item" data-remit-id="${rem.id}" data-index="${idx}" title="Eliminar concepto" aria-label="Eliminar concepto">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                         </button>
                     </div>
@@ -384,7 +517,7 @@ function renderRemittancesList() {
 
         return `
             <div class="installment-purchase-card" id="remit_box_${rem.id}">
-                <div class="installment-purchase-header" onclick="toggleRemitAccordion('${rem.id}')">
+                <div class="installment-purchase-header" data-action="toggle-remit" data-remit-id="${rem.id}">
                     <div class="flex-col">
                         <span>${escapeHtml(rem.name)}</span>
                         <span class="installment-card-subtitle" id="remit_header_summary_${rem.id}">
@@ -392,7 +525,7 @@ function renderRemittancesList() {
                         </span>
                     </div>
                     <div class="flex-center-gap">
-                        <button type="button" class="danger icon-btn btn-xs" onclick="event.stopPropagation(); deleteRemittance('${rem.id}')" title="Eliminar remesa" aria-label="Eliminar remesa">
+                        <button type="button" class="danger icon-btn btn-xs" data-action="delete-remit" data-remit-id="${rem.id}" title="Eliminar remesa" aria-label="Eliminar remesa">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                         </button>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -411,7 +544,7 @@ function renderRemittancesList() {
 
                     <div class="remit-new-row">
                         <input type="text" id="new_concept_input_${rem.id}" placeholder="Nuevo concepto" class="remit-new-input remit-concept-field" data-remit-id="${rem.id}" enterkeyhint="done">
-                        <button type="button" class="remit-add-btn" onclick="addRemitItem('${rem.id}')">Añadir</button>
+                        <button type="button" class="remit-add-btn" data-action="add-remit-item" data-remit-id="${rem.id}">Añadir</button>
                     </div>
 
                     <div class="remit-totals-box">
@@ -437,113 +570,34 @@ function renderRemittancesList() {
     }).join('');
 }
 
-function initRemittancesDelegation() {
-    const listContainer = $('remittancesList');
-    if (!listContainer) return;
-
-    listContainer.addEventListener('keydown', (e) => {
-        if (e.target.classList.contains('remit-concept-field') && e.key === 'Enter') {
-            e.preventDefault();
-            e.stopPropagation();
-            addRemitItem(e.target.dataset.remitId);
-        }
-    });
-
-    listContainer.addEventListener('input', (e) => {
-        const remId = e.target.dataset.remitId;
-        if (!remId) return;
-        const rem = remittancesList.find(r => r.id === remId);
-        if (!rem) return;
-
-        if (e.target.classList.contains('remit-recv-input')) {
-            const idx = Number(e.target.dataset.index);
-            rem.items[idx].recvAmount = parseInputNumber(e.target.value);
-        } else if (e.target.classList.contains('remit-tc-input')) {
-            rem.tc = parseInputNumber(e.target.value) || 1;
-        } else if (e.target.classList.contains('remit-comm-input')) {
-            rem.commission = parseInputNumber(e.target.value);
-        } else {
-            return;
-        }
-
-        persistRemittancesList();
-        updateRemitDOMTotals(rem);
-    });
-
-    listContainer.addEventListener('focusin', (e) => {
-        const remId = e.target.dataset.remitId;
-        if (!remId) return;
-        const rem = remittancesList.find(r => r.id === remId);
-        if (!rem) return;
-
-        let val = 0;
-        if (e.target.classList.contains('remit-recv-input')) {
-            val = rem.items[Number(e.target.dataset.index)]?.recvAmount || 0;
-        } else if (e.target.classList.contains('remit-tc-input')) {
-            val = rem.tc || 0;
-        } else if (e.target.classList.contains('remit-comm-input')) {
-            val = rem.commission || 0;
-        } else {
-            return;
-        }
-
-        e.target.value = val > 0 ? String(val).replace('.', ',') : '';
-    });
-
-    listContainer.addEventListener('focusout', (e) => {
-        const remId = e.target.dataset.remitId;
-        if (!remId) return;
-        const rem = remittancesList.find(r => r.id === remId);
-        if (!rem) return;
-
-        if (e.target.classList.contains('remit-recv-input')) {
-            const idx = Number(e.target.dataset.index);
-            const val = parseInputNumber(e.target.value);
-            rem.items[idx].recvAmount = val;
-            persistRemittancesList();
-            renderRemittancesList();
-        } else if (e.target.classList.contains('remit-tc-input')) {
-            const val = parseInputNumber(e.target.value);
-            rem.tc = val > 0 ? val : 1;
-            persistRemittancesList();
-            renderRemittancesList();
-        } else if (e.target.classList.contains('remit-comm-input')) {
-            rem.commission = parseInputNumber(e.target.value);
-            persistRemittancesList();
-            renderRemittancesList();
-        }
-    });
-}
-
-window.toggleRemitAccordion = function(remId) {
+function toggleRemitAccordion(remId) {
     const rem = remittancesList.find(r => r.id === remId);
     if (rem) {
         const willBeExpanded = !rem.expanded;
         remittancesList.forEach(r => r.expanded = false);
         rem.expanded = willBeExpanded;
-        
         persistRemittancesList();
         renderRemittancesList();
     }
-};
+}
 
-window.deleteRemittance = function(remId) {
+function deleteRemittance(remId) {
     if (!confirm('¿Eliminar esta remesa y todo su registro?')) return;
     remittancesList = remittancesList.filter(r => r.id !== remId);
     persistRemittancesList();
     renderRemittancesList();
-};
+}
 
-window.removeRemitItem = function(remId, index) {
+function removeRemitItem(remId, index) {
     const rem = remittancesList.find(r => r.id === remId);
     if (rem) {
         rem.items.splice(index, 1);
         persistRemittancesList();
         renderRemittancesList();
     }
-};
+}
 
-window.addRemitItem = function(remId) {
+function addRemitItem(remId) {
     const inputEl = $(`new_concept_input_${remId}`);
     if (!inputEl) return;
     const conceptName = inputEl.value.trim();
@@ -555,7 +609,6 @@ window.addRemitItem = function(remId) {
         persistRemittancesList();
         renderRemittancesList();
 
-        // Enfoque inmediato y truco para forzar el teclado en iOS
         const nextInput = $(`new_concept_input_${remId}`);
         if (nextInput) {
             nextInput.value = '';
@@ -565,12 +618,11 @@ window.addRemitItem = function(remId) {
             }
         }
     }
-};
+}
 
 /* ==========================================
    6. GESTOR DE CUOTAS
    ========================================== */
-
 function autoCalculateInstallment(prefix) {
     const financed = parseFloat($(`${prefix}InstFinancedAmount`).value.replace(',', '.')) || 0;
     const interest = parseFloat($(`${prefix}InstInterestAmount`).value.replace(',', '.')) || 0;
@@ -615,27 +667,27 @@ function renderInstallments() {
         const allPaid = purchase.installments.length > 0 && purchase.installments.every(i => i.paid);
 
         const installmentsHtml = purchase.installments.map((inst) => `
-            <div class="installment-row ${inst.paid ? 'paid' : ''}" onclick="toggleInstallmentPaid('${purchase.id}', ${inst.number})">
+            <div class="installment-row ${inst.paid ? 'paid' : ''}" data-action="toggle-inst-paid" data-purchase-id="${purchase.id}" data-inst-number="${inst.number}">
                 <div class="flex-col">
                     <span class="installment-row-title">Cuota ${inst.number} de ${purchase.totalCount}</span>
                     <span class="installment-row-date">Fecha: ${formatDateEs(inst.date)}</span>
                 </div>
                 <div class="installment-row-right">
                     <span class="installment-row-amount">${formatCurrencyCustom(inst.amount, curr)}</span>
-                    <input type="checkbox" class="installment-checkbox" ${inst.paid ? 'checked' : ''} onclick="event.stopPropagation(); toggleInstallmentPaid('${purchase.id}', ${inst.number})" title="Marcar como pagado">
+                    <input type="checkbox" class="installment-checkbox" ${inst.paid ? 'checked' : ''} data-action="toggle-inst-paid" data-purchase-id="${purchase.id}" data-inst-number="${inst.number}" title="Marcar como pagado">
                 </div>
             </div>
         `).join('');
 
         return `
             <div class="installment-purchase-card" id="purchase_box_${purchase.id}">
-                <div class="installment-purchase-header ${allPaid ? 'all-paid' : ''}" onclick="toggleInstallmentAccordion('${purchase.id}')">
+                <div class="installment-purchase-header ${allPaid ? 'all-paid' : ''}" data-action="toggle-inst-accordion" data-purchase-id="${purchase.id}">
                     <div class="flex-col">
                         <span>${escapeHtml(purchase.name)}</span>
                         <span class="installment-card-subtitle">Total: ${formatCurrencyCustom(purchase.totalAmount, curr)} (${progressText})</span>
                     </div>
                     <div class="flex-center-gap">
-                        <button type="button" class="soft icon-btn btn-xs" onclick="event.stopPropagation(); editInstallmentPurchase('${purchase.id}')" title="Editar compra" aria-label="Editar compra">
+                        <button type="button" class="soft icon-btn btn-xs" data-action="edit-inst-purchase" data-purchase-id="${purchase.id}" title="Editar compra" aria-label="Editar compra">
                             <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
                         </button>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -649,7 +701,7 @@ function renderInstallments() {
     }).join('');
 }
 
-window.toggleInstallmentAccordion = function(purchaseId) {
+function toggleInstallmentAccordion(purchaseId) {
     const purchase = installmentsPurchases.find(p => p.id === purchaseId);
     if (purchase) {
         const willBeExpanded = !purchase.expanded;
@@ -658,9 +710,9 @@ window.toggleInstallmentAccordion = function(purchaseId) {
         persistInstallments();
         renderInstallments();
     }
-};
+}
 
-window.toggleInstallmentPaid = function(purchaseId, instNumber) {
+function toggleInstallmentPaid(purchaseId, instNumber) {
     const purchase = installmentsPurchases.find(p => p.id === purchaseId);
     if (!purchase) return;
     const inst = purchase.installments.find(i => i.number === instNumber);
@@ -673,17 +725,17 @@ window.toggleInstallmentPaid = function(purchaseId, instNumber) {
     renderInstallments();
     const updatedListEl = $(`inst_details_${purchaseId}`);
     if (updatedListEl) updatedListEl.scrollTop = currentScrollTop;
-};
+}
 
-window.deleteInstallmentPurchase = function(purchaseId) {
+function deleteInstallmentPurchase(purchaseId) {
     if (!confirm('¿Eliminar esta compra en cuotas y todo su historial?')) return;
     installmentsPurchases = installmentsPurchases.filter(p => p.id !== purchaseId);
     persistInstallments();
     if ($('installmentEditDlg')) $('installmentEditDlg').close();
     renderInstallments();
-};
+}
 
-window.editInstallmentPurchase = function(purchaseId) {
+function editInstallmentPurchase(purchaseId) {
     const purchase = installmentsPurchases.find(p => p.id === purchaseId);
     if (!purchase) return;
 
@@ -701,12 +753,11 @@ window.editInstallmentPurchase = function(purchaseId) {
     if ($('deleteInstallmentBtn')) $('deleteInstallmentBtn').onclick = () => deleteInstallmentPurchase(editingInstallmentId);
     document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
     if ($('installmentEditDlg')) $('installmentEditDlg').showModal();
-};
+}
 
 /* ==========================================
-   7. MODALES Y EVENTOS DE INTERFAZ
+   7. MODALES Y GESTIÓN DE CATEGORÍAS
    ========================================== */
-
 function openNewMovement() {
     editingId = null;
     if ($('newForm')) $('newForm').reset();
@@ -746,13 +797,6 @@ function editMovement(id) {
     if ($('editDlg')) $('editDlg').showModal();
 }
 
-function deleteMovement(id) {
-    if (!confirm('¿Eliminar este movimiento?')) return;
-    movements = movements.filter(m => m.id !== id);
-    persist();
-    render();
-}
-
 function showMovementDetail(id) {
     const item = movements.find(m => m.id === id);
     if (!item) return;
@@ -775,54 +819,236 @@ function renderConfigCategories() {
     const list = $('categoryManagerList');
     if (!list) return;
 
-    list.innerHTML = ['expense', 'income'].map(kind => {
+    list.innerHTML = ['expense', 'income'].map((kind, idx) => {
         const title = kind === 'expense' ? 'Gastos' : 'Ingresos';
-        const itemsHtml = appConfig.categories[kind].map((cat, index) => `
-            <div class="category-item-row">
-                <span class="category-item-name">${escapeHtml(cat.name)}</span>
-                <div class="category-item-controls">
-                    <div class="color-picker-container" title="Cambiar color">
-                        <div class="color-picker-preview" style="background-color: ${cat.color};"></div>
-                        <input type="color" value="${cat.color}" class="category-color-input" onchange="updateCatColor('${kind}', ${index}, this.value)">
+        const sectionClass = idx > 0 ? 'category-section-title category-section-divider' : 'category-section-title';
+
+        const itemsHtml = appConfig.categories[kind].map((cat, index) => {
+            const iconKey = cat.icon || 'Compras';
+            const iconSvg = categoryIconsMap[iconKey] || categoryIconsMap['Compras'];
+
+            return `
+                <div class="category-item-row">
+                    <div class="flex-center-gap">
+                        <span class="category-icon-wrapper" style="color: ${cat.color}; width: 28px; height: 28px;">${iconSvg}</span>
+                        <span class="category-item-name">${escapeHtml(cat.name)}</span>
                     </div>
-                    <button type="button" class="danger icon-btn btn-xs" onclick="removeCategory('${kind}', ${index})" title="Eliminar categoría" aria-label="Eliminar categoría">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                    </button>
+                    <div class="category-item-controls">
+                        <button type="button" class="danger icon-btn btn-xs" data-action="remove-category" data-kind="${kind}" data-index="${index}" title="Eliminar categoría" aria-label="Eliminar categoría">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        `).join('');
-        return `<strong class="category-section-title">${title}</strong>${itemsHtml}`;
+            `;
+        }).join('');
+
+        return `<strong class="${sectionClass}">${title}</strong>${itemsHtml}`;
     }).join('');
 }
 
-window.updateCatColor = function(kind, index, color) {
-    appConfig.categories[kind][index].color = color;
-    persistConfig();
-    render();
-};
-
-window.removeCategory = function(kind, index) {
+function removeCategory(kind, index) {
     appConfig.categories[kind].splice(index, 1);
     persistConfig();
     renderConfigCategories();
     updateCategoryOptions('new');
     updateCategoryOptions('edit');
     render();
-};
+}
+
+function renderIconSelector(selectedIcon = 'Compras') {
+    const gridContainer = $('iconSelectorGrid');
+    const hiddenInput = $('newCatIcon');
+    if (!gridContainer || !hiddenInput) return;
+
+    hiddenInput.value = selectedIcon;
+
+    gridContainer.innerHTML = Object.keys(categoryIconsMap).map(iconKey => {
+        const svgCode = categoryIconsMap[iconKey];
+        const isSelected = iconKey === selectedIcon ? 'selected' : '';
+        return `
+            <div class="icon-option-item ${isSelected}" data-icon="${iconKey}" title="${iconKey}">
+                ${svgCode}
+            </div>
+        `;
+    }).join('');
+}
+
+function selectCategoryIcon(iconKey) {
+    const hiddenInput = $('newCatIcon');
+    if (hiddenInput) hiddenInput.value = iconKey;
+
+    document.querySelectorAll('.icon-option-item').forEach(el => {
+        el.classList.toggle('selected', el.dataset.icon === iconKey);
+    });
+}
 
 /* ==========================================
-   8. REGISTRO DE LISTENERS E INICIALIZACIÓN
+   8. REGISTRO DE LISTENERS (DELEGACIÓN) E INICIALIZACIÓN
    ========================================== */
-
 function bindEvents() {
+    // Acordeones principales en móvil
     setupMainAccordion('toggleMovementsBtn', 'movementsContainer', 'toggleMovementsIcon', $('movementsCard'), 'movements');
     setupMainAccordion('toggleCategoriesBtn', 'categoriesContainer', 'toggleCategoriesIcon', $('categoriesCard'), 'categories');
     setupMainAccordion('toggleRemitBtn', 'remitContainer', 'toggleRemitIcon', $('remittancesCard'), 'remit');
     setupMainAccordion('toggleInstallmentsBtn', 'installmentsContainer', 'toggleInstallmentsIcon', $('installmentsCard'), 'installments');
 
+    setupCategoryTabs();
+
+    // Delegación: Clic en segmentos de la dona SVG
+    if ($('catChartWrapper')) {
+        $('catChartWrapper').addEventListener('click', (e) => {
+            const segment = e.target.closest('[data-donut-category]');
+            if (segment) {
+                toggleDonutSegment(segment.dataset.donutCategory);
+            }
+        });
+    }
+
+    // Delegación: Selector de iconos en modal de categorías
+    if ($('iconSelectorGrid')) {
+        $('iconSelectorGrid').addEventListener('click', (e) => {
+            const item = e.target.closest('.icon-option-item');
+            if (item && item.dataset.icon) {
+                selectCategoryIcon(item.dataset.icon);
+            }
+        });
+    }
+
+    // Delegación: Eliminar categorías existentes en modal
+    if ($('categoryManagerList')) {
+        $('categoryManagerList').addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-action="remove-category"]');
+            if (btn) {
+                removeCategory(btn.dataset.kind, Number(btn.dataset.index));
+            }
+        });
+    }
+
+    // Delegación: Eventos de Remesas
+    if ($('remittancesList')) {
+        const listContainer = $('remittancesList');
+
+        listContainer.addEventListener('click', (e) => {
+            const deleteRemitBtn = e.target.closest('[data-action="delete-remit"]');
+            if (deleteRemitBtn) {
+                e.stopPropagation();
+                return deleteRemittance(deleteRemitBtn.dataset.remitId);
+            }
+
+            const removeItemBtn = e.target.closest('[data-action="remove-remit-item"]');
+            if (removeItemBtn) {
+                e.stopPropagation();
+                return removeRemitItem(removeItemBtn.dataset.remitId, Number(removeItemBtn.dataset.index));
+            }
+
+            const addItemBtn = e.target.closest('[data-action="add-remit-item"]');
+            if (addItemBtn) {
+                e.stopPropagation();
+                return addRemitItem(addItemBtn.dataset.remitId);
+            }
+
+            const header = e.target.closest('[data-action="toggle-remit"]');
+            if (header) {
+                toggleRemitAccordion(header.dataset.remitId);
+            }
+        });
+
+        listContainer.addEventListener('keydown', (e) => {
+            if (e.target.classList.contains('remit-concept-field') && e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+                addRemitItem(e.target.dataset.remitId);
+            }
+        });
+
+        listContainer.addEventListener('input', (e) => {
+            const remId = e.target.dataset.remitId;
+            if (!remId) return;
+            const rem = remittancesList.find(r => r.id === remId);
+            if (!rem) return;
+
+            if (e.target.classList.contains('remit-recv-input')) {
+                rem.items[Number(e.target.dataset.index)].recvAmount = parseInputNumber(e.target.value);
+            } else if (e.target.classList.contains('remit-tc-input')) {
+                rem.tc = parseInputNumber(e.target.value) || 1;
+            } else if (e.target.classList.contains('remit-comm-input')) {
+                rem.commission = parseInputNumber(e.target.value);
+            } else {
+                return;
+            }
+
+            persistRemittancesList();
+            updateRemitDOMTotals(rem);
+        });
+
+        listContainer.addEventListener('focusin', (e) => {
+            const remId = e.target.dataset.remitId;
+            if (!remId) return;
+            const rem = remittancesList.find(r => r.id === remId);
+            if (!rem) return;
+
+            let val = 0;
+            if (e.target.classList.contains('remit-recv-input')) {
+                val = rem.items[Number(e.target.dataset.index)]?.recvAmount || 0;
+            } else if (e.target.classList.contains('remit-tc-input')) {
+                val = rem.tc || 0;
+            } else if (e.target.classList.contains('remit-comm-input')) {
+                val = rem.commission || 0;
+            } else {
+                return;
+            }
+
+            e.target.value = val > 0 ? String(val).replace('.', ',') : '';
+        });
+
+        listContainer.addEventListener('focusout', (e) => {
+            const remId = e.target.dataset.remitId;
+            if (!remId) return;
+            const rem = remittancesList.find(r => r.id === remId);
+            if (!rem) return;
+
+            if (e.target.classList.contains('remit-recv-input')) {
+                rem.items[Number(e.target.dataset.index)].recvAmount = parseInputNumber(e.target.value);
+                persistRemittancesList();
+                renderRemittancesList();
+            } else if (e.target.classList.contains('remit-tc-input')) {
+                const val = parseInputNumber(e.target.value);
+                rem.tc = val > 0 ? val : 1;
+                persistRemittancesList();
+                renderRemittancesList();
+            } else if (e.target.classList.contains('remit-comm-input')) {
+                rem.commission = parseInputNumber(e.target.value);
+                persistRemittancesList();
+                renderRemittancesList();
+            }
+        });
+    }
+
+    // Delegación: Eventos de Gestor de Cuotas
+    if ($('installmentsList')) {
+        $('installmentsList').addEventListener('click', (e) => {
+            const editBtn = e.target.closest('[data-action="edit-inst-purchase"]');
+            if (editBtn) {
+                e.stopPropagation();
+                return editInstallmentPurchase(editBtn.dataset.purchaseId);
+            }
+
+            const paidTarget = e.target.closest('[data-action="toggle-inst-paid"]');
+            if (paidTarget) {
+                e.stopPropagation();
+                return toggleInstallmentPaid(paidTarget.dataset.purchaseId, Number(paidTarget.dataset.instNumber));
+            }
+
+            const header = e.target.closest('[data-action="toggle-inst-accordion"]');
+            if (header) {
+                toggleInstallmentAccordion(header.dataset.purchaseId);
+            }
+        });
+    }
+
+    // Botones y filtros de Movimientos
     if ($('addBtn')) $('addBtn').addEventListener('click', openNewMovement);
     
-    // Cancelar/Cerrar Modales de Movimiento
     if ($('cancelNew')) $('cancelNew').addEventListener('click', () => {
         document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
         $('newDlg')?.close();
@@ -853,7 +1079,6 @@ function bindEvents() {
         });
     }
 
-    // Submit del formulario de Nuevo Movimiento
     if ($('newForm')) {
         $('newForm').addEventListener('submit', event => {
             event.preventDefault();
@@ -898,7 +1123,6 @@ function bindEvents() {
         });
     }
 
-    // Submit del formulario de Editar Movimiento
     if ($('editForm')) {
         $('editForm').addEventListener('submit', event => {
             event.preventDefault();
@@ -944,6 +1168,7 @@ function bindEvents() {
         });
     }
 
+    // Configuración General
     if ($('configBtn')) {
         $('configBtn').addEventListener('click', () => {
             $('userNameInput').value = appConfig.userName;
@@ -969,9 +1194,11 @@ function bindEvents() {
 
     if ($('cancelConfigBtn')) $('cancelConfigBtn').addEventListener('click', () => $('configDlg')?.close());
 
+    // Modal de Categorías
     if ($('editCategoriesBtn')) {
         $('editCategoriesBtn').addEventListener('click', () => {
             renderConfigCategories();
+            renderIconSelector('Compras');
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
             $('categoriesDlg')?.showModal();
         });
@@ -982,17 +1209,13 @@ function bindEvents() {
         $('categoriesDlg')?.close();
     });
 
-    if ($('newCatColor')) {
-        $('newCatColor').addEventListener('input', (e) => {
-            if ($('newCatColorPreview')) $('newCatColorPreview').style.backgroundColor = e.target.value;
-        });
-    }
-
     if ($('addCatBtn')) {
-        $('addCatBtn').addEventListener('click', () => {
+        $('addCatBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            
             const kind = $('newCatKind').value;
             const nameInput = $('newCatName');
-            const color = $('newCatColor').value;
+            const iconSelect = $('newCatIcon');
 
             if (!nameInput.value.trim()) {
                 nameInput.classList.add('input-error');
@@ -1002,19 +1225,33 @@ function bindEvents() {
             nameInput.classList.remove('input-error');
 
             const name = nameInput.value.trim();
+            const icon = iconSelect ? iconSelect.value : 'Compras';
 
-            if (!appConfig.categories[kind].some(c => c.name === name)) {
-                appConfig.categories[kind].push({ name, color });
+            const autoColors = [
+                '#3b82f6', '#10b981', '#f59e0b', '#ef4444', 
+                '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16', 
+                '#6366f1', '#d97706', '#14b8a6', '#64748b'
+            ];
+            
+            const totalCategories = appConfig.categories.expense.length + appConfig.categories.income.length;
+            const color = autoColors[totalCategories % autoColors.length];
+
+            if (!appConfig.categories[kind].some(c => c.name.toLowerCase() === name.toLowerCase())) {
+                appConfig.categories[kind].push({ name, color, icon });
                 nameInput.value = '';
                 persistConfig();
                 renderConfigCategories();
                 updateCategoryOptions('new');
                 updateCategoryOptions('edit');
                 render();
+            } else {
+                alert('Esta categoría ya existe.');
+                nameInput.focus();
             }
         });
     }
 
+    // Modal de Nueva Remesa
     if ($('addRemittanceBtn')) {
         $('addRemittanceBtn').addEventListener('click', () => {
             $('remitNewForm')?.reset();
@@ -1061,6 +1298,7 @@ function bindEvents() {
         });
     }
 
+    // Modales de Cuotas
     ['new', 'edit'].forEach(prefix => {
         ['FinancedAmount', 'InterestAmount', 'TotalCount'].forEach(field => {
             const el = $(`${prefix}Inst${field}`);
@@ -1211,7 +1449,6 @@ function init() {
     if ($('toggleMovementsIcon')) $('toggleMovementsIcon').innerHTML = '<polyline points="18 15 12 9 6 15"></polyline>';
 
     bindEvents();
-    initRemittancesDelegation();
     applyTheme();
     updateUserDisplay();
     updateCurrencyLabels();
