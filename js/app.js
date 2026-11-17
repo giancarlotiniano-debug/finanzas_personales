@@ -117,19 +117,23 @@ const formatNumberDisplay = (val, currCode) => {
     return formatCurrencyCustom(val, currCode);
 };
 
-const formatTcInputValue = (val) => {
+const formatTcInputValue = (val, currCode) => {
     if (isNaN(val) || val <= 0) return '';
     const num = Number(val);
     const parts = num.toString().split('.');
-    if (parts.length > 1 && parts[1].length > 4) {
-        return num.toFixed(4).replace('.', ',');
+    let str = (parts.length > 1 && parts[1].length > 4) ? num.toFixed(4) : num.toString();
+    
+    // Si la moneda de envío es EUR, mostramos con coma decimal
+    if (currCode === 'EUR') {
+        return str.replace('.', ',');
     }
-    return num.toString().replace('.', ',');
+    return str;
 };
 
 function parseInputNumber(rawValue) {
     if (!rawValue) return 0;
-    let s = String(rawValue).replace(/[A-Za-z/.]+\s*/g, '').trim();
+    let s = String(rawValue).replace(/S\/\.|[€$A-Za-z\s]/g, '').trim();
+
     if (s.includes(',') && s.includes('.')) {
         s = s.lastIndexOf(',') > s.lastIndexOf('.')
             ? s.replace(/\./g, '').replace(',', '.')
@@ -337,7 +341,6 @@ function executeCustomExport() {
 
     const csvRows = [];
 
-    // 1. MOVIMIENTOS
     if (includeMovs) {
         csvRows.push('--- SECCION: MOVIMIENTOS ---');
         csvRows.push('FECHA,MOVIMIENTO,TIPO,CATEGORIA,IMPORTE,NOTAS');
@@ -356,7 +359,6 @@ function executeCustomExport() {
         csvRows.push('');
     }
 
-    // 2. REMESAS
     if (includeRemit) {
         csvRows.push('--- SECCION: REMESAS ---');
         csvRows.push('NOMBRE_REMESA,MONEDA_ENVIO,MONEDA_RECEPCION,TIPO_CAMBIO,COMISION,CONCEPTO_ITEM,IMPORTE_RECEPCION_ITEM');
@@ -373,7 +375,6 @@ function executeCustomExport() {
         csvRows.push('');
     }
 
-    // 3. CUOTAS
     if (includeInst) {
         csvRows.push('--- SECCION: COMPRAS EN CUOTAS ---');
         csvRows.push('COMPRA,MONEDA,FINANCED_AMOUNT,INTEREST_AMOUNT,TOTAL_CUOTAS,NUMERO_CUOTA,FECHA_CUOTA,IMPORTE_CUOTA,FINAL_AMOUNT,PAGADO');
@@ -391,7 +392,6 @@ function executeCustomExport() {
         csvRows.push('');
     }
 
-    // 4. CONTADOR DE DÍAS
     if (includeDays) {
         csvRows.push('--- SECCION: CONTADOR DE DIAS TRABAJADOS ---');
         csvRows.push('MES,DIAS_OBJETIVO,FECHA_DIA,DIA_SEMANA,ENTRADA,SALIDA,LUGAR');
@@ -616,7 +616,6 @@ function importMovementsCsv(event) {
                 }
             }
 
-            // Preparar estructuras analizadas
             let parsedRemit = Object.values(rawRemitMap);
             let parsedInst = Object.values(rawInstMap).map(p => {
                 const totalSum = p.installments.reduce((acc, curr) => acc + curr.amount, 0);
@@ -648,7 +647,6 @@ function importMovementsCsv(event) {
                 dayCounter: parsedDays
             };
 
-            // Si hay más de una sección detectada, mostramos el modal para elegir
             if (detectedSections.size > 1) {
                 if ($('impMovCount')) $('impMovCount').textContent = tempMovements.length;
                 if ($('impRemitCount')) $('impRemitCount').textContent = parsedRemit.length;
@@ -657,7 +655,6 @@ function importMovementsCsv(event) {
 
                 if ($('importSelectDlg')) $('importSelectDlg').showModal();
             } else {
-                // Si solo hay una o ninguna etiqueta explícita, aplicamos todo por compatibilidad
                 applyImportSelection({ movements: true, remittances: true, installments: true, dayCounter: true });
             }
 
@@ -1007,7 +1004,7 @@ function renderRemittancesList() {
         const comm = rem.commission || 0;
         const grandTotal = totalSend + comm;
         const formattedComm = comm > 0 ? formatNumberDisplay(comm, rem.sendCurr) : '';
-        const formattedTc = tc > 0 ? formatTcInputValue(tc) : '';
+        const formattedTc = tc > 0 ? formatTcInputValue(tc, rem.sendCurr) : '';
 
         const itemsHtml = (rem.items || []).map((item, idx) => {
             const recvVal = item.recvAmount || 0;
@@ -1813,11 +1810,18 @@ function bindEvents() {
             }
         });
 
+        // Soporte para presionar Enter en los inputs y conceptos
         listContainer.addEventListener('keydown', (e) => {
-            if (e.target.classList.contains('remit-concept-field') && e.key === 'Enter') {
+            const remId = e.target.dataset.remitId;
+            if (!remId) return;
+
+            if (e.key === 'Enter') {
                 e.preventDefault();
-                e.stopPropagation();
-                addRemitItem(e.target.dataset.remitId);
+                e.target.blur(); // Quita el foco, guardando y formateando automáticamente vía focusout
+
+                if (e.target.classList.contains('remit-concept-field')) {
+                    addRemitItem(remId);
+                }
             }
         });
 
@@ -1858,7 +1862,12 @@ function bindEvents() {
                 return;
             }
 
-            e.target.value = val > 0 ? String(val).replace('.', ',') : '';
+            // Si es EUR, mostramos con coma al editar
+            if (rem.sendCurr === 'EUR') {
+                e.target.value = val > 0 ? String(val).replace('.', ',') : '';
+            } else {
+                e.target.value = val > 0 ? String(val) : '';
+            }
         });
 
         listContainer.addEventListener('focusout', (e) => {
