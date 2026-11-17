@@ -109,7 +109,7 @@ input[type="number"] {
 }
 
 /* ==========================================
-   3. LAYOUT GENERAL (CABECERA, MAIN Y TARJETAS)
+   3. LAYOUT GENERAL
    ========================================== */
 header {
     background: var(--header-bg);
@@ -174,7 +174,6 @@ main {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
-    margin-bottom: 20px;
 }
 
 .balance-card {
@@ -210,14 +209,14 @@ main {
 .layout {
     display: grid;
     grid-template-columns: 1.3fr 0.7fr;
-    gap: 16px;
+    gap: 12px;
 }
 
 .utilities-layout {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
-    margin-top: 16px;
+    margin-top: 10px;
 }
 
 .section-divider {
@@ -225,7 +224,7 @@ main {
     display: flex;
     align-items: center;
     gap: 14px;
-    margin: 8px 0 4px 0;
+    margin-bottom: 6px;
     padding: 0 20px;
 }
 
@@ -528,7 +527,7 @@ button.icon-btn {
 }
 
 /* ==========================================
-   5. TABLA DE MOVIMIENTOS Y ESTADOS VACÍOS
+   5. TABLA Y ESTADOS VACÍOS
    ========================================== */
 .toolbar {
     display: flex;
@@ -694,7 +693,7 @@ tr.movement-row:hover td:last-child {
 }
 
 /* ==========================================
-   6. RESUMEN POR CATEGORÍAS (DONA Y LISTA)
+   6. RESUMEN POR CATEGORÍAS
    ========================================== */
 .cat-type-selector {
     display: flex;
@@ -925,7 +924,7 @@ body.dark-mode .cat-percentage-badge {
 }
 
 /* ==========================================
-   7. UTILIDADES: REMESAS, CUOTAS Y CONTADOR DE DÍAS
+   7. UTILIDADES
    ========================================== */
 .utility-footer-action {
     text-align: center;
@@ -1116,21 +1115,6 @@ body.dark-mode .remit-add-btn {
     color: var(--muted);
 }
 
-.installment-purchase-card:has(.installment-installments-list[style*="display: flex"]) .installment-purchase-header,
-.installment-purchase-card:has([id*="remit_details_"][style*="display: flex"]) .installment-purchase-header,
-.installment-purchase-card:has([id*="dc_month_details_"][style*="display: flex"]) .installment-purchase-header {
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-    border-bottom-color: var(--line) !important;
-}
-
-.installment-purchase-card:has(.installment-installments-list[style*="display: none"]) .installment-purchase-header,
-.installment-purchase-card:has([id*="remit_details_"][style*="display: none"]) .installment-purchase-header,
-.installment-purchase-card:has([id*="dc_month_details_"][style*="display: none"]) .installment-purchase-header {
-    border-radius: 10px !important;
-    border-bottom-color: transparent !important;
-}
-
 .installment-installments-list {
     padding: 16px;
     display: flex;
@@ -1195,7 +1179,6 @@ body.dark-mode .installment-purchase-header.all-paid {
     stroke: var(--blue) !important;
 }
 
-/* Estilos específicos del Contador de días */
 .dc-day-row {
     display: flex;
     justify-content: space-between;
@@ -1511,13 +1494,6 @@ body.dark-mode .icon-option-item.selected {
 .detail-table tr:last-child th,
 .detail-table tr:last-child td { border-bottom: none; }
 
-/* ==========================================
-   CORRECCIÓN PARA INPUTS DE FECHA Y HORA EN iOS SAFARI
-   ========================================== */
-.formgrid .field {
-    min-width: 0;
-}
-
 input[type="date"],
 input[type="time"] {
     width: 100%;
@@ -1540,11 +1516,6 @@ input[type="time"]::-webkit-date-and-time-value {
     overflow: hidden;
 }
 
-[id^="dc_month_details_"] {
-    max-height: none !important;
-    overflow: visible !important;
-}
-
 .dc-days-wrapper {
     display: flex;
     flex-direction: column;
@@ -1565,9 +1536,6 @@ input[type="time"]::-webkit-date-and-time-value {
     border-radius: 99px;
 }
 
-/* ==========================================
-   SELECTOR DE UTILIDADES EN CONFIGURACIÓN
-   ========================================== */
 .config-utilities-list {
     display: flex;
     flex-direction: column;
@@ -1590,10 +1558,6 @@ input[type="time"]::-webkit-date-and-time-value {
     color: var(--ink) !important;
 }
 
-.config-utility-option:last-child {
-    border-bottom: none;
-}
-
 .config-utility-option input[type="checkbox"] {
     width: 20px !important;
     height: 20px !important;
@@ -1605,7 +1569,7 @@ input[type="time"]::-webkit-date-and-time-value {
 }
 
 /* ==========================================
-   9. RESPONSIVE DESIGN (MEDIA QUERIES)
+   9. RESPONSIVE DESIGN
    ========================================== */
 @media (min-width: 761px) {
     .section-title { white-space: nowrap; }

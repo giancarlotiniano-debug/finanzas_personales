@@ -39,13 +39,13 @@
 
         <div class="top">
             <div>
-                <h1>Resumen mensual</h1>
-                <p>Controla tus ingresos, gastos y balances.</p>
+                <h1>Gestor diario</h1>
+                <p>Gestiona tus finanzas, remesas, compras y más.</p>
             </div>
         </div>
 
         <!-- Tarjetas de métricas (Ingresos, Gastos, Balance) -->
-        <section class="cards">
+        <section class="cards" id="metricsCardsSection">
             <div class="card">
                 <div class="metric-label">INGRESOS</div>
                 <div class="metric income" id="income">0,00 €</div>
@@ -63,7 +63,7 @@
         </section>
 
         <!-- Fila superior: Movimientos y Categorías -->
-        <div class="layout">
+        <div class="layout" id="financeManagerLayout">
             <!-- Registro de movimientos -->
             <section class="card summary-card" id="movementsCard">
                 <div class="section-heading">
@@ -126,18 +126,15 @@
                     </div>
                 </div>
                 <div id="categoriesContainer">
-                    <!-- Selector de tipo (Gastos / Ingresos) -->
                     <div class="cat-type-selector">
                         <button type="button" class="cat-tab-btn active" data-kind="expense" id="catTabExpense">Gastos</button>
                         <button type="button" class="cat-tab-btn" data-kind="income" id="catTabIncome">Ingresos</button>
                     </div>
 
-                    <!-- Contenedor del Gráfico de Dona SVG -->
                     <div class="cat-chart-container">
                         <div id="catChartWrapper" class="cat-chart-wrapper"></div>
                     </div>
 
-                    <!-- Lista de desglose inferior con iconos y % -->
                     <div id="categories" class="cat-breakdown-list">
                         <div class="empty">Añade movimientos para ver el desglose.</div>
                     </div>
@@ -475,7 +472,6 @@
         </form>
     </dialog>
 
-    <!-- Diálogo: Nuevo Mes de Trabajo -->
     <dialog id="dayCounterMonthNewDlg">
         <form class="modal" id="dayCounterMonthNewForm" tabindex="-1">
             <h2>Nuevo mes de trabajo</h2>
@@ -496,7 +492,6 @@
         </form>
     </dialog>
 
-    <!-- Diálogo: Editar Mes de Trabajo -->
     <dialog id="dayCounterMonthEditDlg">
         <form class="modal" id="dayCounterMonthEditForm" tabindex="-1">
             <h2>Editar mes de trabajo</h2>
@@ -522,7 +517,6 @@
         </form>
     </dialog>
 
-    <!-- Diálogo: Nuevo/Editar Día de Trabajo -->
     <dialog id="dayCounterDayDlg">
         <form class="modal" id="dayCounterDayForm" tabindex="-1">
             <h2 id="dayDlgTitle">Registrar día</h2>
@@ -554,7 +548,6 @@
                     <input id="dayLocation" placeholder="Ej. Parking Azuaga">
                 </div>
             </div>
-            <!-- Acciones divididas con botón de eliminar a la izquierda (visible al editar) -->
             <div class="modal-actions modal-actions-split" id="dayModalActionsSplit">
                 <button type="button" class="btn-delete-large" id="deleteDayModalBtn" title="Eliminar día" aria-label="Eliminar día">
                     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
@@ -564,7 +557,6 @@
                     <button class="aceptarmovimiento" type="submit">Guardar</button>
                 </div>
             </div>
-            <!-- Acciones normales (visible al crear) -->
             <div class="modal-actions" id="dayModalActionsNormal" style="display: none;">
                 <button type="button" class="cancelarmovimiento" id="cancelDayCounterDayNormal">Cancelar</button>
                 <button class="aceptarmovimiento" type="submit">Guardar</button>
@@ -595,8 +587,12 @@
                     </select>
                 </div>
                 <div class="field full">
-                    <label>Utilidades</label>
+                    <label>Utilidades y Secciones</label>
                     <div class="config-utilities-list">
+                        <label class="config-utility-option">
+                            <input type="checkbox" id="toggleUtilFinanceManager" checked>
+                            <span>Gestor de finanzas</span>
+                        </label>
                         <label class="config-utility-option">
                             <input type="checkbox" id="toggleUtilRemit" checked>
                             <span>Calcular remesas</span>
@@ -619,7 +615,6 @@
         </div>
     </dialog>
 
-    <!-- Diálogo principal de Gestión de Categorías -->
     <dialog id="categoriesDlg">
         <div class="modal" tabindex="-1">
             <h2>Gestión de categorías</h2>
@@ -636,7 +631,6 @@
         </div>
     </dialog>
 
-    <!-- Diálogo modal para crear nueva categoría -->
     <dialog id="categoryCreateDlg">
         <form class="modal" id="categoryCreateForm" tabindex="-1">
             <h2>Crear nueva categoría</h2>
@@ -665,7 +659,6 @@
         </form>
     </dialog>
 
-    <!-- Diálogo modal para editar categoría existente -->
     <dialog id="categoryEditDlg">
         <form class="modal" id="categoryEditForm" tabindex="-1">
             <h2>Editar categoría</h2>
