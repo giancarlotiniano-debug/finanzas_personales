@@ -6,28 +6,31 @@ const $ = (id) => document.getElementById(id);
    0. MAPA MAESTRO DE ICONOS SVG PARA CATEGORÍAS
    ========================================== */
 const categoryIconsMap = {
-    "Ingresos": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M7.5 5h-1.5a1 1 0 0 0 0 2h1a1 1 0 0 1 0 2H5.5"/><path d="M6.5 4v.5M6.5 8.5V9"/><path d="M14 3h3a2 2 0 0 1 2 2v4"/><path d="M16.5 6.5L19 9l2.5-2.5"/><path d="M14 9v3M12.5 10.5h3"/><path d="M2 21v-4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1H8"/><path d="M14 16l4-3.5a1.5 1.5 0 0 1 2.2 2L16 19.5c-1 .8-2.2 1.5-3.5 1.5H2"/></svg>`,
-    "Devolver": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M7.5 5h-1.5a1 1 0 0 0 0 2h1a1 1 0 0 1 0 2H5.5"/><path d="M6.5 4v.5M6.5 8.5V9"/><circle cx="18.5" cy="4.5" r="1.8" fill="currentColor"/><path d="M15.5 11v-.5a3 3 0 0 1 6 0v.5"/><path d="M2 21v-4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1H8"/><path d="M14 16l4-3.5a1.5 1.5 0 0 1 2.2 2L16 19.5c-1 .8-2.2 1.5-3.5 1.5H2"/></svg>`,
-    "Billetera": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6"/><path d="M3 7a2 2 0 0 0 2 2h8"/><path d="M18 3v6"/><path d="M15.5 6.5L18 9l2.5-2.5"/><circle cx="17.5" cy="14.5" r="1" fill="currentColor"/></svg>`,
-    "Pantalla": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="4" /><path d="M12 17v3" /><path d="M8 20h8" /><circle cx="11" cy="12" r="2" fill="currentColor" /><path d="M13 12V7h2" /></svg>`,
-    "Familia": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="4" r="1.8" fill="currentColor"/><path d="M7.5 8.5H5a2 2 0 0 0-2 2v5a1.5 1.5 0 0 0 1.5 1.5h3"/><path d="M5.5 17v4"/><circle cx="18.5" cy="4" r="1.8" fill="currentColor"/><path d="M16.5 8.5H19a2 2 0 0 1 2 2v5a1.5 1.5 0 0 1-1.5 1.5h-3"/><path d="M18.5 17v4"/><circle cx="12" cy="8.5" r="1.6" fill="currentColor"/><rect x="9.5" y="12" width="5" height="5" rx="1.5"/><path d="M10.8 17v4M13.2 17v4"/></svg>`,
-    "Transporte": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3c4.5-1.3 9.5-1.3 14 0"/><path d="M12 2v4"/><rect x="4" y="6" width="16" height="14" rx="4"/><path d="M4 10h16"/><path d="M4 14h16"/><path d="M12 10v4"/><path d="M8 16v1"/><path d="M16 16v1"/><path d="M8 20l-1.5 2"/><path d="M16 20l1.5 2"/></svg>`,    
-    "Alimentacion": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18l-1.5 7.5a2 2 0 0 1-2 1.5h-11a2 2 0 0 1-2-1.5L3 11z"/><path d="M8 14v3M12 14v3M16 14v3"/><path d="M6.5 3h4"/><path d="M7.5 3v3L6 8.5V11M9.5 3v3L11 8.5V11"/><path d="M13 11l3.5-6.5a2.2 2.2 0 0 1 3.7 2.2L17.5 11"/></svg>`,
-    "Compras": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h1.5a2 2 0 0 1 1.98 1.7L6.7 14.3A2 2 0 0 0 8.68 16H19"/><path d="M5.6 6h14.1a2 2 0 0 1 1.97 2.35l-.72 4A2 2 0 0 1 19 14H6.65"/><circle cx="8" cy="20" r="1.5" fill="currentColor" stroke="none"/><circle cx="17.5" cy="20" r="1.5" fill="currentColor" stroke="none"/></svg>`,
-    "Combustible": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v16H3z"/><path d="M3 10h11"/><path d="M14 14h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0V8l-3-3"/><path d="M18 4l2 2v3h-2V4z" fill="currentColor" stroke="none"/></svg>`,
-    "Grifo": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v6" /><path d="M8 4h8" /><path d="M3 10h11a5 5 0 0 1 5 5v2" /><path d="M3 15h10a1 1 0 0 1 1 1v1" /><path d="M13 17h7" /><path d="M16.5 20.5c-.83 0-1.5-.67-1.5-1.5 0-1 1.5-2.5 1.5-2.5s1.5 1.5 1.5 2.5c0 .83-.67 1.5-1.5 1.5z" fill="currentColor" stroke="none" /></svg>`,
-    "Auto": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l2.2-5.5A4 4 0 0 1 8.9 3h3.6a4 4 0 0 1 3.3 1.7L20 11" /><path d="M10 3v8" /><path d="M4 11h15a4 4 0 0 1 4 4v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2a3 3 0 0 1 3-3z" /><path d="M4 17v1a2.5 2.5 0 0 0 5 0v-1" /><path d="M15 17v1a2.5 2.5 0 0 0 5 0v-1" /></svg>`,
-    "Casa": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7.5a2 2 0 0 0-.6-1.4l-7-6.8a2 2 0 0 0-2.8 0l-7 6.8a2 2 0 0 0-.6 1.4z"/><path d="M9 21v-5a3 3 0 0 1 6 0v5"/></svg>`,
-    "Monedas": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8.5" cy="11" rx="6.5" ry="3"/><path d="M2 11v8c0 1.66 2.91 3 6.5 3s6.5-1.34 6.5-3v-8"/><path d="M2 15c0 1.66 2.91 3 6.5 3s6.5-1.34 6.5-3"/><ellipse cx="15.5" cy="5" rx="6.5" ry="3"/><path d="M9 5v3.1"/><path d="M22 5v12c0 1.66-2.91 3-6.5 3-.6 0-1.18-.04-1.73-.11"/><path d="M22 9c0 1.66-2.91 3-6.5 3-.45 0-.89-.02-1.31-.06"/><path d="M22 13c0 1.66-2.91 3-6.5 3-.17 0-.34 0-.5-.01"/></svg>`,
-    "Regalo": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v4a5 5 0 0 0 5 5h6a5 5 0 0 0 5-5v-4M2 13h20v-2a3 3 0 0 0-3-3H5a3 3 0 0 0-3 3v2zM12 8v14m0-14c-1.5-2.5-2-4.5-2-5.5a2 2 0 0 1 4 0c0 1-.5 3-2 5.5zm0 0C7.5 8 5 6 5 3m7 5c4.5 0 7-2 7-5"/></svg>`,
-    "Torta": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20M4 22v-7a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v7M4 16a3 3 0 0 0 3-2 3 3 0 0 0 5 0 3 3 0 0 0 5 0 3 3 0 0 0 3 2M12 10V6"/><path fill="currentColor" stroke="none" d="M12 1c-1.5 1.8-2.5 3.3-2.5 4.5a2.5 2.5 0 0 0 5 0C14.5 4.3 13.5 2.8 12 1z"/></svg>`,
-    "Restaurante": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22L20 4M17 2l-5 5a4.24 4.24 0 0 0 0 6 4.24 4.24 0 0 0 6 0l5-5M7 11L2 6c0-2.5.5-4 1-4l5 5m5 9c1.2.5 2.5.6 4 .5l5 5"/></svg>`,
-    "Copas": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M7 2.5l1 1.8m9-1.8l-1 1.8M5 6.5l4.8 1.5a2 2 0 0 1 1.3 2.5l-1.5 4.8a4 4 0 0 1-5 2.6 4 4 0 0 1-2.6-5l1.5-4.8A2 2 0 0 1 5 6.5zm-1.4 4.3h7M5.5 18l-1.3 4M2 21.3l4.5 1.4M19 6.5l-4.8 1.5a2 2 0 0 0-1.3 2.5l1.5 4.8a4 4 0 0 0 5 2.6 4 4 0 0 0 2.6-5l-1.5-4.8A2 2 0 0 0 19 6.5zm1.4 4.3h-7M18.5 18l1.3 4M22 21.3l-4.5 1.4"/></svg>`,
-    "Musica": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M9 17.5V6a4 4 0 0 1 4-4h5a4 4 0 0 1 4 4v11.5"/></svg>`,
-    "Niño": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2a3 3 0 0 0 0 6 3 3 0 0 0 2.8-2M4.3 9.2a2.5 2.5 0 0 0 0 4.6 8 8 0 0 0 15.4 0 2.5 2.5 0 0 0 0-4.6 8 8 0 0 0-15.4 0zM6.5 18.5A9 9 0 0 0 4 22m13.5-3.5A9 9 0 0 1 20 22"/><circle cx="9.5" cy="11.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="14.5" cy="11.5" r="1.2" fill="currentColor" stroke="none"/></svg>`,
-    "Avión": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l-1.2-3.2A1.8 1.8 0 0 1 3.9 7.4L6 10h5.5L8.7 3.2A1.8 1.8 0 0 1 11.9 1.6L16.5 10H20a2 2 0 0 1 0 4h-3.5l-4.6 8.4a1.8 1.8 0 0 1-3.2-1.6L11.5 14H6l-2.1 2.6a1.8 1.8 0 0 1-3.1-1.4L2 12z"/></svg>`,
-    "Smartphone": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="1" width="14" height="22" rx="4"/><path d="M5 17h14"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>`,
-    "Teléfono": `<svg xmlns="http://www.w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" transform="matrix(-1 0 0 1 24 0)"/></svg>`,
+    "Ingresos": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M7.5 5h-1.5a1 1 0 0 0 0 2h1a1 1 0 0 1 0 2H5.5"/><path d="M6.5 4v.5M6.5 8.5V9"/><path d="M14 3h3a2 2 0 0 1 2 2v4"/><path d="M16.5 6.5L19 9l2.5-2.5"/><path d="M14 9v3M12.5 10.5h3"/><path d="M2 21v-4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1H8"/><path d="M14 16l4-3.5a1.5 1.5 0 0 1 2.2 2L16 19.5c-1 .8-2.2 1.5-3.5 1.5H2"/></svg>`,
+    "Devolver": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M7.5 5h-1.5a1 1 0 0 0 0 2h1a1 1 0 0 1 0 2H5.5"/><path d="M6.5 4v.5M6.5 8.5V9"/><circle cx="18.5" cy="4.5" r="1.8" fill="currentColor"/><path d="M15.5 11v-.5a3 3 0 0 1 6 0v.5"/><path d="M2 21v-4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1H8"/><path d="M14 16l4-3.5a1.5 1.5 0 0 1 2.2 2L16 19.5c-1 .8-2.2 1.5-3.5 1.5H2"/></svg>`,
+    "Billetera": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6"/><path d="M3 7a2 2 0 0 0 2 2h8"/><path d="M18 3v6"/><path d="M15.5 6.5L18 9l2.5-2.5"/><circle cx="17.5" cy="14.5" r="1" fill="currentColor"/></svg>`,
+    "Pantalla": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3" width="20" height="14" rx="4" /><path d="M12 17v3" /><path d="M8 20h8" /><circle cx="11" cy="12" r="1.5" fill="currentColor" /><path d="M13 12V7h2" /></svg>`,
+    "Familia": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="4" r="1.8" fill="currentColor"/><path d="M7.5 8.5H5a2 2 0 0 0-2 2v5a1.5 1.5 0 0 0 1.5 1.5h3"/><path d="M5.5 17v4"/><circle cx="18.5" cy="4" r="1.8" fill="currentColor"/><path d="M16.5 8.5H19a2 2 0 0 1 2 2v5a1.5 1.5 0 0 1-1.5 1.5h-3"/><path d="M18.5 17v4"/><circle cx="12" cy="8.5" r="1.6" fill="currentColor"/><rect x="9.5" y="12" width="5" height="5" rx="1.5"/><path d="M10.8 17v4M13.2 17v4"/></svg>`,
+    "Transporte": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3c4.5-1.3 9.5-1.3 14 0"/><path d="M12 2v4"/><rect x="4" y="6" width="16" height="14" rx="4"/><path d="M4 10h16"/><path d="M4 14h16"/><path d="M12 10v4"/><path d="M8 16v1"/><path d="M16 16v1"/><path d="M8 20l-1.5 2"/><path d="M16 20l1.5 2"/></svg>`,    
+    "Alimentacion": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18l-1.5 7.5a2 2 0 0 1-2 1.5h-11a2 2 0 0 1-2-1.5L3 11z"/><path d="M8 14v3M12 14v3M16 14v3"/><path d="M6.5 3h4"/><path d="M7.5 3v3L6 8.5V11M9.5 3v3L11 8.5V11"/><path d="M13 11l3.5-6.5a2.2 2.2 0 0 1 3.7 2.2L17.5 11"/></svg>`,
+    "Compras": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h1.5a2 2 0 0 1 1.98 1.7L6.7 14.3A2 2 0 0 0 8.68 16H19"/><path d="M5.6 6h14.1a2 2 0 0 1 1.97 2.35l-.72 4A2 2 0 0 1 19 14H6.65"/><circle cx="8" cy="20" r="1.5" fill="currentColor" stroke="none"/><circle cx="17.5" cy="20" r="1.5" fill="currentColor" stroke="none"/></svg>`,
+    "Combustible": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v16H3z"/><path d="M3 10h11"/><path d="M14 14h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0V8l-3-3"/><path d="M18 4l2 2v3h-2V4z" fill="currentColor" stroke="none"/></svg>`,
+    "Grifo": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v6" /><path d="M8 4h8" /><path d="M3 10h11a5 5 0 0 1 5 5v2" /><path d="M3 15h10a1 1 0 0 1 1 1v1" /><path d="M13 17h7" /><path d="M16.5 20.5c-.83 0-1.5-.67-1.5-1.5 0-1 1.5-2.5 1.5-2.5s1.5 1.5 1.5 2.5c0 .83-.67 1.5-1.5 1.5z" fill="currentColor" stroke="none" /></svg>`,
+    "Auto": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l2.2-5.5A4 4 0 0 1 8.9 3h3.6a4 4 0 0 1 3.3 1.7L20 11" /><path d="M10 3v8" /><path d="M4 11h15a4 4 0 0 1 4 4v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2a3 3 0 0 1 3-3z" /><path d="M4 17v1a2.5 2.5 0 0 0 5 0v-1" /><path d="M15 17v1a2.5 2.5 0 0 0 5 0v-1" /></svg>`,
+    "Casa": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7.5a2 2 0 0 0-.6-1.4l-7-6.8a2 2 0 0 0-2.8 0l-7 6.8a2 2 0 0 0-.6 1.4z"/><path d="M9 21v-5a3 3 0 0 1 6 0v5"/></svg>`,
+    "Monedas": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8.5" cy="11" rx="6.5" ry="3"/><path d="M2 11v8c0 1.66 2.91 3 6.5 3s6.5-1.34 6.5-3v-8"/><path d="M2 15c0 1.66 2.91 3 6.5 3s6.5-1.34 6.5-3"/><ellipse cx="15.5" cy="5" rx="6.5" ry="3"/><path d="M9 5v3.1"/><path d="M22 5v12c0 1.66-2.91 3-6.5 3-.6 0-1.18-.04-1.73-.11"/><path d="M22 9c0 1.66-2.91 3-6.5 3-.45 0-.89-.02-1.31-.06"/><path d="M22 13c0 1.66-2.91 3-6.5 3-.17 0-.34 0-.5-.01"/></svg>`,
+    "Regalo": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v4a5 5 0 0 0 5 5h6a5 5 0 0 0 5-5v-4M2 13h20v-2a3 3 0 0 0-3-3H5a3 3 0 0 0-3 3v2zM12 8v14m0-14c-1.5-2.5-2-4.5-2-5.5a2 2 0 0 1 4 0c0 1-.5 3-2 5.5zm0 0C7.5 8 5 6 5 3m7 5c4.5 0 7-2 7-5"/></svg>`,
+    "Torta": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20M4 22v-7a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v7M4 16a3 3 0 0 0 3-2 3 3 0 0 0 5 0 3 3 0 0 0 5 0 3 3 0 0 0 3 2M12 10V6"/><path fill="currentColor" stroke="none" d="M12 1c-1.5 1.8-2.5 3.3-2.5 4.5a2.5 2.5 0 0 0 5 0C14.5 4.3 13.5 2.8 12 1z"/></svg>`,
+    "Restaurante": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22L20 4M17 2l-5 5a4.24 4.24 0 0 0 0 6 4.24 4.24 0 0 0 6 0l5-5M7 11L2 6c0-2.5.5-4 1-4l5 5m5 9c1.2.5 2.5.6 4 .5l5 5"/></svg>`,
+    "Copas": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M7 2.5l1 1.8m9-1.8l-1 1.8M5 6.5l4.8 1.5a2 2 0 0 1 1.3 2.5l-1.5 4.8a4 4 0 0 1-5 2.6 4 4 0 0 1-2.6-5l1.5-4.8A2 2 0 0 1 5 6.5zm-1.4 4.3h7M5.5 18l-1.3 4M2 21.3l4.5 1.4M19 6.5l-4.8 1.5a2 2 0 0 0-1.3 2.5l1.5 4.8a4 4 0 0 0 5 2.6 4 4 0 0 0 2.6-5l-1.5-4.8A2 2 0 0 0 19 6.5zm1.4 4.3h-7M18.5 18l1.3 4M22 21.3l-4.5 1.4"/></svg>`,
+    "Musica": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M9 17.5V6a4 4 0 0 1 4-4h5a4 4 0 0 1 4 4v11.5"/></svg>`,
+    "Niño": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2a3 3 0 0 0 0 6 3 3 0 0 0 2.8-2M4.3 9.2a2.5 2.5 0 0 0 0 4.6 8 8 0 0 0 15.4 0 2.5 2.5 0 0 0 0-4.6 8 8 0 0 0-15.4 0zM6.5 18.5A9 9 0 0 0 4 22m13.5-3.5A9 9 0 0 1 20 22"/><circle cx="9.5" cy="11.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="14.5" cy="11.5" r="1.2" fill="currentColor" stroke="none"/></svg>`,
+    "Avión": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l-1.2-3.2A1.8 1.8 0 0 1 3.9 7.4L6 10h5.5L8.7 3.2A1.8 1.8 0 0 1 11.9 1.6L16.5 10H20a2 2 0 0 1 0 4h-3.5l-4.6 8.4a1.8 1.8 0 0 1-3.2-1.6L11.5 14H6l-2.1 2.6a1.8 1.8 0 0 1-3.1-1.4L2 12z"/></svg>`,
+    "Smartphone": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="1" width="14" height="22" rx="4"/><path d="M5 17h14"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>`,
+    "Teléfono": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" transform="matrix(-1 0 0 1 24 0)"/></svg>`,
+    "Foco": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M9 18a3 3 0 0 0 6 0M9 18c-.2-1.7-1.1-3.3-2.4-4.4a7.5 7.5 0 1 1 10.8 0c-1.3 1.1-2.2 2.7-2.4 4.4M12 18v-6.5m-2-2a2 2 0 0 0 4 0"/></svg>`,
+    "Bolsa de compras": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10V7a4 4 0 0 1 8 0v3"/><rect x="3" y="8" width="18" height="13" rx="3.5"/></svg>`,
+    "Bolsa de dinero": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6.5C8 5.2 7.5 4 7.5 3.2A1.2 1.2 0 0 1 8.7 2h6.6a1.2 1.2 0 0 1 1.2 1.2c0 .8-.5 2-2 3.3M9.5 6.5h5M9.5 6.5C5.5 8.5 3.5 13 3.5 17a5 5 0 0 0 5 5h7a5 5 0 0 0 5-5c0-4-2-8.5-6-10.5M14.2 11.2a2.2 2.2 0 0 0-2-.7h-.7a2 2 0 0 0 0 4h1a2 2 0 0 1 0 4h-1a2.2 2.2 0 0 1-2-.8M12 9v1.5m0 8V20"/></svg>`,
 };
 
 /* ==========================================
@@ -71,6 +74,7 @@ let dayCounterMonths = JSON.parse(localStorage.getItem('finanzas_day_counter_v1'
 
 let editingId = null;
 let editingInstallmentId = null;
+let editingRemittanceId = null;
 let editingCategoryData = null;
 let editingMonthId = null;
 let editingDayMonthId = null;
@@ -79,11 +83,11 @@ let currentCatKind = 'expense';
 let selectedDonutCategory = null;
 
 const accordionConfig = [
-    { btnId: 'toggleMovementsBtn', containerId: 'movementsContainer', iconId: 'toggleMovementsIcon', cardEl: 'movementsCard', stateKey: 'movements' },
-    { btnId: 'toggleCategoriesBtn', containerId: 'categoriesContainer', iconId: 'toggleCategoriesIcon', cardEl: 'categoriesCard', stateKey: 'categories' },
-    { btnId: 'toggleRemitBtn', containerId: 'remitContainer', iconId: 'toggleRemitIcon', cardEl: 'remittancesCard', stateKey: 'remit' },
-    { btnId: 'toggleInstallmentsBtn', containerId: 'installmentsContainer', iconId: 'toggleInstallmentsIcon', cardEl: 'installmentsCard', stateKey: 'installments' },
-    { btnId: 'toggleDayCounterBtn', containerId: 'dayCounterContainer', iconId: 'toggleDayCounterIcon', cardEl: 'dayCounterCard', stateKey: 'dayCounter' }
+    { btnId: 'toggleMovementsBtn', containerId: 'movementsContainer', iconId: 'toggleMovementsIcon', cardEl: 'movementsCard' },
+    { btnId: 'toggleCategoriesBtn', containerId: 'categoriesContainer', iconId: 'toggleCategoriesIcon', cardEl: 'categoriesCard' },
+    { btnId: 'toggleRemitBtn', containerId: 'remitContainer', iconId: 'toggleRemitIcon', cardEl: 'remittancesCard' },
+    { btnId: 'toggleInstallmentsBtn', containerId: 'installmentsContainer', iconId: 'toggleInstallmentsIcon', cardEl: 'installmentsCard' },
+    { btnId: 'toggleDayCounterBtn', containerId: 'dayCounterContainer', iconId: 'toggleDayCounterIcon', cardEl: 'dayCounterCard' }
 ];
 
 const today = new Date();
@@ -102,10 +106,10 @@ const formatCurrencyCustom = (amount, code) => {
     const num = Number(amount) || 0;
     const parts = num.toFixed(2).split('.');
     if (code === 'PEN') {
-        return `S/. ${parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${parts[1]}`;
+        return `S/ ${parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${parts[1]}`;
     }
     if (code === 'USD') {
-        return `$ ${parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${parts[1]}`;
+        return `$${parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${parts[1]}`;
     }
     return `${parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${parts[1]} €`;
 };
@@ -117,14 +121,14 @@ const formatNumberDisplay = (val, currCode) => {
     return formatCurrencyCustom(val, currCode);
 };
 
-const formatTcInputValue = (val, currCode) => {
+const formatTcInputValue = (val, recvCurrCode) => {
     if (isNaN(val) || val <= 0) return '';
     const num = Number(val);
-    const parts = num.toString().split('.');
-    let str = (parts.length > 1 && parts[1].length > 4) ? num.toFixed(4) : num.toString();
+    const parts = num.toFixed(4).split('.');
+    let cleanDecimal = parts[1].replace(/0+$/, '');
+    let str = cleanDecimal ? `${parts[0]}.${cleanDecimal}` : parts[0];
     
-    // Si la moneda de envío es EUR, mostramos con coma decimal
-    if (currCode === 'EUR') {
+    if (recvCurrCode === 'EUR') {
         return str.replace('.', ',');
     }
     return str;
@@ -191,6 +195,11 @@ function getDayNameFromDate(dateStr) {
     return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
+function clearValidationErrors(formEl) {
+    if (!formEl) return;
+    formEl.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+}
+
 /* ==========================================
    3. PERSISTENCIA Y CONFIGURACIÓN UI
    ========================================== */
@@ -215,7 +224,6 @@ function applyUtilitiesVisibility() {
     const utils = appConfig.utilities || { financeManager: true, remittances: true, installments: true, dayCounter: true };
 
     const showFinance = utils.financeManager !== false;
-
     const metricsSection = $('metricsCardsSection');
     if (metricsSection) {
         metricsSection.style.display = showFinance ? '' : 'none';
@@ -680,17 +688,17 @@ function applyImportSelection(selection) {
     if (selection.remittances && pendingParsedSections.remittances.length > 0) {
         remittancesList = pendingParsedSections.remittances;
         persistRemittancesList();
-        summaryMsg += `• Remesas: ${remittancesList.length}\n`;
+        summaryMsg += `• Calculos de remesas: ${remittancesList.length}\n`;
     }
     if (selection.installments && pendingParsedSections.installments.length > 0) {
         installmentsPurchases = pendingParsedSections.installments;
         persistInstallments();
-        summaryMsg += `• Compras en cuotas: ${installmentsPurchases.length}\n`;
+        summaryMsg += `• Gestores de cuotas: ${installmentsPurchases.length}\n`;
     }
     if (selection.dayCounter && pendingParsedSections.dayCounter.length > 0) {
         dayCounterMonths = pendingParsedSections.dayCounter;
         persistDayCounter();
-        summaryMsg += `• Meses de trabajo: ${dayCounterMonths.length}\n`;
+        summaryMsg += `• Contadores de días: ${dayCounterMonths.length}\n`;
     }
 
     render();
@@ -1004,7 +1012,7 @@ function renderRemittancesList() {
         const comm = rem.commission || 0;
         const grandTotal = totalSend + comm;
         const formattedComm = comm > 0 ? formatNumberDisplay(comm, rem.sendCurr) : '';
-        const formattedTc = tc > 0 ? formatTcInputValue(tc, rem.sendCurr) : '';
+        const formattedTc = tc > 0 ? formatTcInputValue(tc, rem.recvCurr) : '';
 
         const itemsHtml = (rem.items || []).map((item, idx) => {
             const recvVal = item.recvAmount || 0;
@@ -1038,8 +1046,8 @@ function renderRemittancesList() {
                         </span>
                     </div>
                     <div class="flex-center-gap">
-                        <button type="button" class="danger icon-btn btn-xs" data-action="delete-remit" data-remit-id="${rem.id}" title="Eliminar remesa" aria-label="Eliminar remesa">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        <button type="button" class="soft icon-btn btn-xs" data-action="edit-remit" data-remit-id="${rem.id}" title="Detalles de la remesa" aria-label="Detalles de la remesa">
+                            <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
                         </button>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
@@ -1098,7 +1106,25 @@ function deleteRemittance(remId) {
     if (!confirm('¿Eliminar esta remesa y todo su registro?')) return;
     remittancesList = remittancesList.filter(r => r.id !== remId);
     persistRemittancesList();
+    if ($('remitEditDlg')) $('remitEditDlg').close();
     renderRemittancesList();
+}
+
+function editRemittance(remId) {
+    const rem = remittancesList.find(r => r.id === remId);
+    if (!rem) return;
+
+    editingRemittanceId = remId;
+    $('editRemitName').value = rem.name;
+    $('editRemitSendCurr').value = rem.sendCurr || 'EUR';
+    $('editRemitRecvCurr').value = rem.recvCurr || 'PEN';
+
+    if ($('deleteRemitModalBtn')) {
+        $('deleteRemitModalBtn').onclick = () => deleteRemittance(editingRemittanceId);
+    }
+
+    clearValidationErrors($('remitEditForm'));
+    if ($('remitEditDlg')) $('remitEditDlg').showModal();
 }
 
 function removeRemitItem(remId, index) {
@@ -1264,7 +1290,7 @@ function editInstallmentPurchase(purchaseId) {
     $('editInstFirstDate').value = purchase.firstDate;
 
     if ($('deleteInstallmentBtn')) $('deleteInstallmentBtn').onclick = () => deleteInstallmentPurchase(editingInstallmentId);
-    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    clearValidationErrors($('installmentEditForm'));
     if ($('installmentEditDlg')) $('installmentEditDlg').showModal();
 }
 
@@ -1318,7 +1344,7 @@ function renderDayCounter() {
                     </div>
                     <div class="flex-center-gap">
                         <button type="button" class="soft icon-btn btn-xs" data-action="edit-dc-month" data-month-id="${month.id}" title="Editar mes" aria-label="Editar mes">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
                         </button>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
@@ -1368,7 +1394,7 @@ function openNewMovement() {
     if ($('month') && $('newDate')) {
         $('newDate').value = `${$('month').value}-${pad(today.getDate())}`;
     }
-    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    clearValidationErrors($('newForm'));
     if ($('newDlg')) $('newDlg').showModal();
 }
 
@@ -1395,7 +1421,7 @@ function editMovement(id) {
         };
     }
 
-    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    clearValidationErrors($('editForm'));
     if ($('editDlg')) $('editDlg').showModal();
 }
 
@@ -1488,7 +1514,7 @@ function openEditCategoryModal(kind, index) {
         }).join('');
     }
 
-    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    clearValidationErrors($('categoryEditForm'));
     if ($('categoryEditDlg')) $('categoryEditDlg').showModal();
 }
 
@@ -1653,14 +1679,14 @@ function bindEvents() {
             if ($('newCatName')) $('newCatName').value = '';
             if ($('newCatKind')) $('newCatKind').value = 'expense';
             renderIconSelector('Compras');
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            clearValidationErrors($('categoryCreateForm'));
             $('categoryCreateDlg')?.showModal();
         });
     }
 
     if ($('cancelCreateCategoryBtn')) {
         $('cancelCreateCategoryBtn').addEventListener('click', () => {
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            clearValidationErrors($('categoryCreateForm'));
             $('categoryCreateDlg')?.close();
         });
     }
@@ -1786,10 +1812,10 @@ function bindEvents() {
         const listContainer = $('remittancesList');
 
         listContainer.addEventListener('click', (e) => {
-            const deleteRemitBtn = e.target.closest('[data-action="delete-remit"]');
-            if (deleteRemitBtn) {
+            const editRemitBtn = e.target.closest('[data-action="edit-remit"]');
+            if (editRemitBtn) {
                 e.stopPropagation();
-                return deleteRemittance(deleteRemitBtn.dataset.remitId);
+                return editRemittance(editRemitBtn.dataset.remitId);
             }
 
             const removeItemBtn = e.target.closest('[data-action="remove-remit-item"]');
@@ -1810,14 +1836,13 @@ function bindEvents() {
             }
         });
 
-        // Soporte para presionar Enter en los inputs y conceptos
         listContainer.addEventListener('keydown', (e) => {
             const remId = e.target.dataset.remitId;
             if (!remId) return;
 
             if (e.key === 'Enter') {
                 e.preventDefault();
-                e.target.blur(); // Quita el foco, guardando y formateando automáticamente vía focusout
+                e.target.blur();
 
                 if (e.target.classList.contains('remit-concept-field')) {
                     addRemitItem(remId);
@@ -1862,7 +1887,6 @@ function bindEvents() {
                 return;
             }
 
-            // Si es EUR, mostramos con coma al editar
             if (rem.sendCurr === 'EUR') {
                 e.target.value = val > 0 ? String(val).replace('.', ',') : '';
             } else {
@@ -1893,6 +1917,38 @@ function bindEvents() {
         });
     }
 
+    if ($('remitEditForm')) {
+        $('remitEditForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!editingRemittanceId) return;
+
+            const nameInput = $('editRemitName');
+            if (!nameInput.value.trim()) {
+                nameInput.classList.add('input-error');
+                nameInput.focus();
+                return;
+            }
+            nameInput.classList.remove('input-error');
+
+            remittancesList = remittancesList.map(r => r.id === editingRemittanceId ? {
+                ...r,
+                name: nameInput.value.trim(),
+                sendCurr: $('editRemitSendCurr').value,
+                recvCurr: $('editRemitRecvCurr').value
+            } : r);
+
+            persistRemittancesList();
+            $('remitEditDlg')?.close();
+            renderRemittancesList();
+        });
+    }
+
+    if ($('cancelEditRemitBtn')) {
+        $('cancelEditRemitBtn').addEventListener('click', () => {
+            $('remitEditDlg')?.close();
+        });
+    }
+
     if ($('installmentsList')) {
         $('installmentsList').addEventListener('click', (e) => {
             const editBtn = e.target.closest('[data-action="edit-inst-purchase"]');
@@ -1920,7 +1976,7 @@ function bindEvents() {
             const defaultName = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
             $('newMonthName').value = defaultName;
             $('newMonthTarget').value = '15';
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            clearValidationErrors($('dayCounterMonthNewForm'));
             $('dayCounterMonthNewDlg')?.showModal();
         });
     }
@@ -1998,7 +2054,7 @@ function bindEvents() {
                 if (month) {
                     $('editMonthName').value = month.name;
                     $('editMonthTarget').value = month.targetDays;
-                    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+                    clearValidationErrors($('dayCounterMonthEditForm'));
                     $('dayCounterMonthEditDlg')?.showModal();
                 }
                 return;
@@ -2033,7 +2089,7 @@ function bindEvents() {
                     copyWrapper.style.display = 'none';
                 }
 
-                document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+                clearValidationErrors($('dayCounterDayForm'));
                 $('dayCounterDayDlg')?.showModal();
                 return;
             }
@@ -2057,6 +2113,7 @@ function bindEvents() {
                     if ($('dayModalActionsSplit')) $('dayModalActionsSplit').style.display = 'flex';
                     if ($('dayModalActionsNormal')) $('dayModalActionsNormal').style.display = 'none';
 
+                    clearValidationErrors($('dayCounterDayForm'));
                     $('dayCounterDayDlg')?.showModal();
                 }
                 return;
@@ -2178,11 +2235,11 @@ function bindEvents() {
     if ($('addBtn')) $('addBtn').addEventListener('click', openNewMovement);
     
     if ($('cancelNew')) $('cancelNew').addEventListener('click', () => {
-        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+        clearValidationErrors($('newForm'));
         $('newDlg')?.close();
     });
     if ($('cancelEdit')) $('cancelEdit').addEventListener('click', () => {
-        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+        clearValidationErrors($('editForm'));
         $('editDlg')?.close();
     });
 
@@ -2244,7 +2301,7 @@ function bindEvents() {
 
             movements.push(item);
             persist();
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            clearValidationErrors($('newForm'));
             $('newDlg')?.close();
             if ($('month')) $('month').value = item.date.slice(0, 7);
             render();
@@ -2290,7 +2347,7 @@ function bindEvents() {
 
             movements = movements.map(existing => existing.id === editingId ? item : existing);
             persist();
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            clearValidationErrors($('editForm'));
             $('editDlg')?.close();
             render();
         });
@@ -2340,13 +2397,13 @@ function bindEvents() {
     if ($('editCategoriesBtn')) {
         $('editCategoriesBtn').addEventListener('click', () => {
             renderConfigCategories();
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            clearValidationErrors($('categoriesDlg'));
             $('categoriesDlg')?.showModal();
         });
     }
 
     if ($('closeCategoriesDlg')) $('closeCategoriesDlg').addEventListener('click', () => {
-        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+        clearValidationErrors($('categoriesDlg'));
         $('categoriesDlg')?.close();
     });
 
@@ -2358,13 +2415,13 @@ function bindEvents() {
                 const capitalizedMonth = monthName.charAt(0).toUpperCase() + monthName.slice(1);
                 $('newRemitName').value = `${capitalizedMonth} ${today.getFullYear()}`;
             }
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            clearValidationErrors($('remitNewForm'));
             $('remitNewDlg')?.showModal();
         });
     }
 
     if ($('cancelNewRemitBtn')) $('cancelNewRemitBtn').addEventListener('click', () => {
-        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+        clearValidationErrors($('remitNewForm'));
         $('remitNewDlg')?.close();
     });
 
@@ -2390,7 +2447,7 @@ function bindEvents() {
                 items: []
             });
             persistRemittancesList();
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            clearValidationErrors($('remitNewForm'));
             $('remitNewDlg')?.close();
             renderRemittancesList();
         });
@@ -2409,13 +2466,13 @@ function bindEvents() {
             if ($('newInstFirstDate')) {
                 $('newInstFirstDate').value = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
             }
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            clearValidationErrors($('installmentNewForm'));
             $('installmentNewDlg')?.showModal();
         });
     }
 
     if ($('cancelNewInstallmentBtn')) $('cancelNewInstallmentBtn').addEventListener('click', () => {
-        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+        clearValidationErrors($('installmentNewForm'));
         $('installmentNewDlg')?.close();
     });
 
@@ -2470,7 +2527,7 @@ function bindEvents() {
             });
 
             persistInstallments();
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            clearValidationErrors($('installmentNewForm'));
             $('installmentNewDlg')?.close();
             renderInstallments();
         });
@@ -2530,7 +2587,7 @@ function bindEvents() {
             } : p);
 
             persistInstallments();
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            clearValidationErrors($('installmentEditForm'));
             $('installmentEditDlg')?.close();
             renderInstallments();
         });
