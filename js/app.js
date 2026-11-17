@@ -37,6 +37,11 @@ const DEFAULT_CONFIG = {
     userName: 'Invitado',
     currency: 'EUR',
     theme: 'light',
+    utilities: {
+        remittances: true,
+        installments: true,
+        dayCounter: true
+    },
     categories: {
         expense: [
             { name: 'Vivienda', color: '#3b82f6', icon: 'Casa' },
@@ -71,6 +76,14 @@ let editingDayMonthId = null;
 let editingDayIndex = null;
 let currentCatKind = 'expense';
 let selectedDonutCategory = null;
+
+const accordionConfig = [
+    { btnId: 'toggleMovementsBtn', containerId: 'movementsContainer', iconId: 'toggleMovementsIcon', cardEl: $('movementsCard'), stateKey: 'movements' },
+    { btnId: 'toggleCategoriesBtn', containerId: 'categoriesContainer', iconId: 'toggleCategoriesIcon', cardEl: $('categoriesCard'), stateKey: 'categories' },
+    { btnId: 'toggleRemitBtn', containerId: 'remitContainer', iconId: 'toggleRemitIcon', cardEl: $('remittancesCard'), stateKey: 'remit' },
+    { btnId: 'toggleInstallmentsBtn', containerId: 'installmentsContainer', iconId: 'toggleInstallmentsIcon', cardEl: $('installmentsCard'), stateKey: 'installments' },
+    { btnId: 'toggleDayCounterBtn', containerId: 'dayCounterContainer', iconId: 'toggleDayCounterIcon', cardEl: $('dayCounterCard'), stateKey: 'dayCounter' }
+];
 
 const accordionState = {
     movements: true,
@@ -193,11 +206,25 @@ const persistConfig = () => {
     localStorage.setItem('finanzas_config_v1', JSON.stringify(appConfig));
     updateUserDisplay();
     applyTheme();
+    applyUtilitiesVisibility();
     updateCurrencyLabels();
 };
 
 function applyTheme() {
     document.body.classList.toggle('dark-mode', appConfig.theme === 'dark');
+}
+
+function applyUtilitiesVisibility() {
+    const utils = appConfig.utilities || { remittances: true, installments: true, dayCounter: true };
+
+    if ($('remittancesCard')) $('remittancesCard').style.display = utils.remittances !== false ? '' : 'none';
+    if ($('installmentsCard')) $('installmentsCard').style.display = utils.installments !== false ? '' : 'none';
+    if ($('dayCounterCard')) $('dayCounterCard').style.display = utils.dayCounter !== false ? '' : 'none';
+
+    const anyVisible = (utils.remittances !== false) || (utils.installments !== false) || (utils.dayCounter !== false);
+    if ($('utilitiesSection')) {
+        $('utilitiesSection').style.display = anyVisible ? '' : 'none';
+    }
 }
 
 function updateUserDisplay() {
@@ -255,15 +282,32 @@ function setupMainAccordion(btnId, containerId, iconId, cardEl, stateKey) {
     if (!btn) return;
 
     btn.addEventListener('click', () => {
-        accordionState[stateKey] = !accordionState[stateKey];
-        const expanded = accordionState[stateKey];
+        const willBeExpanded = !accordionState[stateKey];
+
+        // Cierra todas las demás tarjetas principales
+        accordionConfig.forEach(item => {
+            accordionState[item.stateKey] = false;
+            const container = $(item.containerId);
+            const icon = $(item.iconId);
+            const card = item.cardEl || $(item.cardEl);
+
+            if (container) container.style.display = 'none';
+            if (card) card.classList.remove('expanded');
+            if (icon) {
+                icon.innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
+            }
+        });
+
+        // Establece el estado de la tarjeta seleccionada
+        accordionState[stateKey] = willBeExpanded;
         const container = $(containerId);
         const icon = $(iconId);
+        const cardElResolved = cardEl || $(cardEl);
 
-        if (container) container.style.display = expanded ? 'block' : 'none';
-        if (cardEl) cardEl.classList.toggle('expanded', expanded);
+        if (container) container.style.display = willBeExpanded ? 'block' : 'none';
+        if (cardElResolved) cardElResolved.classList.toggle('expanded', willBeExpanded);
         if (icon) {
-            icon.innerHTML = expanded
+            icon.innerHTML = willBeExpanded
                 ? '<polyline points="18 15 12 9 6 15"></polyline>'
                 : '<polyline points="6 9 12 15 18 9"></polyline>';
         }
@@ -854,11 +898,6 @@ function renderDayCounter() {
         return;
     }
 
-    if (!dayCounterMonths.length) {
-        listContainer.innerHTML = '<div class="empty empty-compact">Aún no hay meses registrados.</div>';
-        return;
-    }
-
     listContainer.innerHTML = dayCounterMonths.map((month) => {
         const totalWorked = (month.days || []).length;
         const target = month.targetDays || 0;
@@ -920,6 +959,13 @@ function toggleDayCounterMonthAccordion(monthId) {
         month.expanded = willBeExpanded;
         persistDayCounter();
         renderDayCounter();
+
+        if (willBeExpanded) {
+            const daysWrapper = document.querySelector(`#dc_month_details_${monthId} .dc-days-wrapper`);
+            if (daysWrapper) {
+                daysWrapper.scrollTop = daysWrapper.scrollHeight;
+            }
+        }
     }
 }
 
@@ -1089,11 +1135,9 @@ function selectCategoryIcon(iconKey, targetInputId, containerSelector) {
    9. REGISTRO DE LISTENERS E INICIALIZACIÓN
    ========================================== */
 function bindEvents() {
-    setupMainAccordion('toggleMovementsBtn', 'movementsContainer', 'toggleMovementsIcon', $('movementsCard'), 'movements');
-    setupMainAccordion('toggleCategoriesBtn', 'categoriesContainer', 'toggleCategoriesIcon', $('categoriesCard'), 'categories');
-    setupMainAccordion('toggleRemitBtn', 'remitContainer', 'toggleRemitIcon', $('remittancesCard'), 'remit');
-    setupMainAccordion('toggleInstallmentsBtn', 'installmentsContainer', 'toggleInstallmentsIcon', $('installmentsCard'), 'installments');
-    setupMainAccordion('toggleDayCounterBtn', 'dayCounterContainer', 'toggleDayCounterIcon', $('dayCounterCard'), 'dayCounter');
+    accordionConfig.forEach(item => {
+        setupMainAccordion(item.btnId, item.containerId, item.iconId, item.cardEl, item.stateKey);
+    });
 
     setupCategoryTabs();
 
@@ -1576,7 +1620,6 @@ function bindEvents() {
                 if (confirm('¿Eliminar este día registrado?')) {
                     const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
                     if (month && month.days) {
-                        // Guardar la posición actual del scroll antes de actualizar la lista
                         const daysWrapper = document.querySelector(`#dc_month_details_${editingDayMonthId} .dc-days-wrapper`);
                         const savedScrollTop = daysWrapper ? daysWrapper.scrollTop : 0;
 
@@ -1585,7 +1628,6 @@ function bindEvents() {
                         $('dayCounterDayDlg')?.close();
                         renderDayCounter();
 
-                        // Restaurar la posición exacta del scroll
                         const updatedWrapper = document.querySelector(`#dc_month_details_${editingDayMonthId} .dc-days-wrapper`);
                         if (updatedWrapper) {
                             updatedWrapper.scrollTop = savedScrollTop;
@@ -1650,6 +1692,9 @@ function bindEvents() {
                 return;
             }
 
+            const daysWrapperBefore = document.querySelector(`#dc_month_details_${month.id} .dc-days-wrapper`);
+            const savedScrollTop = daysWrapperBefore ? daysWrapperBefore.scrollTop : 0;
+
             const dayObj = {
                 date: dateStr,
                 dayName: getDayNameFromDate(dateStr),
@@ -1669,11 +1714,12 @@ function bindEvents() {
             $('dayCounterDayDlg')?.close();
             renderDayCounter();
 
-            // Hacer scroll automático hasta el final de la lista de días al agregar uno nuevo
-            if (editingDayIndex === null) {
-                const daysWrapper = document.querySelector(`#dc_month_details_${month.id} .dc-days-wrapper`);
-                if (daysWrapper) {
-                    daysWrapper.scrollTop = daysWrapper.scrollHeight;
+            const daysWrapperAfter = document.querySelector(`#dc_month_details_${month.id} .dc-days-wrapper`);
+            if (daysWrapperAfter) {
+                if (editingDayIndex === null) {
+                    daysWrapperAfter.scrollTop = daysWrapperAfter.scrollHeight;
+                } else {
+                    daysWrapperAfter.scrollTop = savedScrollTop;
                 }
             }
         });
@@ -1805,6 +1851,12 @@ function bindEvents() {
             $('userNameInput').value = appConfig.userName;
             $('currencySelect').value = appConfig.currency || 'EUR';
             $('themeSelect').value = appConfig.theme || 'light';
+
+            const utils = appConfig.utilities || { remittances: true, installments: true, dayCounter: true };
+            if ($('toggleUtilRemit')) $('toggleUtilRemit').checked = utils.remittances !== false;
+            if ($('toggleUtilInstallments')) $('toggleUtilInstallments').checked = utils.installments !== false;
+            if ($('toggleUtilDayCounter')) $('toggleUtilDayCounter').checked = utils.dayCounter !== false;
+
             $('configDlg')?.showModal();
         });
     }
@@ -1815,6 +1867,13 @@ function bindEvents() {
             if (newName) appConfig.userName = newName;
             appConfig.currency = $('currencySelect').value;
             appConfig.theme = $('themeSelect').value;
+
+            appConfig.utilities = {
+                remittances: $('toggleUtilRemit') ? $('toggleUtilRemit').checked : true,
+                installments: $('toggleUtilInstallments') ? $('toggleUtilInstallments').checked : true,
+                dayCounter: $('toggleUtilDayCounter') ? $('toggleUtilDayCounter').checked : true
+            };
+
             persistConfig();
             updateCategoryOptions('new');
             updateCategoryOptions('edit');
@@ -2036,6 +2095,7 @@ function init() {
 
     bindEvents();
     applyTheme();
+    applyUtilitiesVisibility();
     updateUserDisplay();
     updateCurrencyLabels();
     updateCategoryOptions('new');

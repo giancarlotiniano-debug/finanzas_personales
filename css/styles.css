@@ -1196,13 +1196,6 @@ body.dark-mode .installment-purchase-header.all-paid {
 }
 
 /* Estilos específicos del Contador de días */
-.dc-days-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
 .dc-day-row {
     display: flex;
     justify-content: space-between;
@@ -1522,7 +1515,7 @@ body.dark-mode .icon-option-item.selected {
    CORRECCIÓN PARA INPUTS DE FECHA Y HORA EN iOS SAFARI
    ========================================== */
 .formgrid .field {
-    min-width: 0; /* Evita que las columnas del grid se expandan más allá del 50% */
+    min-width: 0;
 }
 
 input[type="date"],
@@ -1535,11 +1528,10 @@ input[type="time"] {
     align-items: center;
     -webkit-appearance: none;
     appearance: none;
-    height: 44px; /* Misma altura exacta que los demás inputs */
+    height: 44px;
     padding: 0 12px;
 }
 
-/* Ajuste interno de WebKit para centrar y evitar desbordamiento del texto AM/PM */
 input[type="date"]::-webkit-date-and-time-value,
 input[type="time"]::-webkit-date-and-time-value {
     text-align: left;
@@ -1557,20 +1549,59 @@ input[type="time"]::-webkit-date-and-time-value {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-bottom: 12px;
     max-height: 432px; 
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
 }
 
-/* Opcional: Estilizar discretamente la barra de scroll */
 .dc-days-wrapper::-webkit-scrollbar {
     width: 5px;
 }
 
 .dc-days-wrapper::-webkit-scrollbar-thumb {
-    background: var(--border);
+    background: var(--line);
     border-radius: 99px;
+}
+
+/* ==========================================
+   SELECTOR DE UTILIDADES EN CONFIGURACIÓN
+   ========================================== */
+.config-utilities-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px 12px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+}
+
+.config-utility-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    padding: 5px 4px;
+    cursor: pointer;
+    font-size: 15px !important;
+    font-weight: 450 !important;
+    color: var(--ink) !important;
+}
+
+.config-utility-option:last-child {
+    border-bottom: none;
+}
+
+.config-utility-option input[type="checkbox"] {
+    width: 20px !important;
+    height: 20px !important;
+    min-height: 20px !important;
+    max-height: 20px !important;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--blue);
 }
 
 /* ==========================================

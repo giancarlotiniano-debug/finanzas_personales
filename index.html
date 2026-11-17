@@ -26,7 +26,7 @@
             <button class="soft icon-btn" id="configBtn" title="Configuración de usuario" aria-label="Configuración de usuario">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                 </svg>
             </button>
         </div>
@@ -148,7 +148,7 @@
         <!-- ==========================================
              SECCIÓN DE UTILIDADES
              ========================================== -->
-        <div class="utilities-layout">
+        <div class="utilities-layout" id="utilitiesSection">
             <div class="section-divider">
                 <div class="section-divider-title">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -525,7 +525,7 @@
     <!-- Diálogo: Nuevo/Editar Día de Trabajo -->
     <dialog id="dayCounterDayDlg">
         <form class="modal" id="dayCounterDayForm" tabindex="-1">
-            <h2 id="dayDlgTitle">Registrar día de trabajo</h2>
+            <h2 id="dayDlgTitle">Registrar día</h2>
             <div class="formgrid">
                 <div class="field full" id="copyPreviousDayWrapper" style="display: none;">
                     <button type="button" class="soft utility-new-btn" id="copyPreviousDayBtn" style="background: var(--bar-bg);">
@@ -538,7 +538,7 @@
                     <input id="dayDate" type="date">
                 </div>
                 <div class="field">
-                    <label for="dayNameDisplay">Día de la semana</label>
+                    <label for="dayNameDisplay">Día</label>
                     <input id="dayNameDisplay" readonly type="text" class="input-readonly" placeholder="Automático">
                 </div>
                 <div class="field">
@@ -550,8 +550,8 @@
                     <input id="dayExitTime" type="time">
                 </div>
                 <div class="field full">
-                    <label for="dayLocation">Lugar de trabajo</label>
-                    <input id="dayLocation" placeholder="Ej. Parking / Azuaga">
+                    <label for="dayLocation">Lugar</label>
+                    <input id="dayLocation" placeholder="Ej. Parking Azuaga">
                 </div>
             </div>
             <!-- Acciones divididas con botón de eliminar a la izquierda (visible al editar) -->
@@ -593,6 +593,23 @@
                         <option value="light">Modo Claro</option>
                         <option value="dark">Modo Oscuro</option>
                     </select>
+                </div>
+                <div class="field full">
+                    <label>Utilidades</label>
+                    <div class="config-utilities-list">
+                        <label class="config-utility-option">
+                            <input type="checkbox" id="toggleUtilRemit" checked>
+                            <span>Calcular remesas</span>
+                        </label>
+                        <label class="config-utility-option">
+                            <input type="checkbox" id="toggleUtilInstallments" checked>
+                            <span>Gestor de cuotas</span>
+                        </label>
+                        <label class="config-utility-option">
+                            <input type="checkbox" id="toggleUtilDayCounter" checked>
+                            <span>Contador de días</span>
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="modal-actions">
