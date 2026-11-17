@@ -1533,12 +1533,12 @@ function openEditCategoryModal(kind, index) {
     openModal($('categoryEditDlg'));
 }
 
-function renderIconSelector(selectedIcon = 'Compras') {
+function renderIconSelector(selectedIcon = null) {
     const gridContainer = $('iconSelectorGrid');
     const hiddenInput = $('newCatIcon');
     if (!gridContainer || !hiddenInput) return;
 
-    hiddenInput.value = selectedIcon;
+    hiddenInput.value = selectedIcon || '';
 
     gridContainer.innerHTML = Object.keys(categoryIconsMap).map(iconKey => {
         const svgCode = categoryIconsMap[iconKey];
@@ -1690,14 +1690,14 @@ function bindEvents() {
     }
 
     if ($('openCreateCategoryBtn')) {
-        $('openCreateCategoryBtn').addEventListener('click', () => {
-            if ($('newCatName')) $('newCatName').value = '';
-            if ($('newCatKind')) $('newCatKind').value = 'expense';
-            renderIconSelector('Compras');
-            clearValidationErrors($('categoryCreateForm'));
-            openModal($('categoryCreateDlg'));
-        });
-    }
+    $('openCreateCategoryBtn').addEventListener('click', () => {
+        if ($('newCatName')) $('newCatName').value = '';
+        if ($('newCatKind')) $('newCatKind').value = 'expense';
+        renderIconSelector(null); // Sin icono seleccionado por defecto
+        clearValidationErrors($('categoryCreateForm'));
+        openModal($('categoryCreateDlg'));
+    });
+}
 
     if ($('cancelCreateCategoryBtn')) {
         $('cancelCreateCategoryBtn').addEventListener('click', () => {
@@ -1707,55 +1707,63 @@ function bindEvents() {
     }
 
     if ($('categoryCreateForm')) {
-        $('categoryCreateForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const nameInput = $('newCatName');
-            const kindSelect = $('newCatKind');
-            const iconSelect = $('newCatIcon');
+    $('categoryCreateForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const nameInput = $('newCatName');
+        const kindSelect = $('newCatKind');
+        const iconSelect = $('newCatIcon');
 
-            if (!nameInput || !nameInput.value.trim()) {
-                if (nameInput) {
-                    nameInput.classList.add('input-error');
-                    nameInput.focus();
-                }
-                return;
-            }
-            nameInput.classList.remove('input-error');
-
-            const name = nameInput.value.trim();
-            const kind = kindSelect ? kindSelect.value : 'expense';
-            const icon = iconSelect ? iconSelect.value : 'Compras';
-
-            const autoColors = [
-                '#3b82f6', '#10b981', '#f59e0b', '#ef4444', 
-                '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16', 
-                '#6366f1', '#d97706', '#14b8a6', '#64748b'
-            ];
-            
-            const totalCategories = appConfig.categories.expense.length + appConfig.categories.income.length;
-            const color = autoColors[totalCategories % autoColors.length];
-
-            if (!appConfig.categories[kind].some(c => c.name.toLowerCase() === name.toLowerCase())) {
-                appConfig.categories[kind].push({ name, color, icon });
-                
-                appConfig.categories[kind].sort((a, b) => 
-                    a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
-                );
-
-                persistConfig();
-                closeModal($('categoryCreateDlg'));
-                renderConfigCategories();
-                updateCategoryOptions('new');
-                updateCategoryOptions('edit');
-                updateMovementFilterOptions();
-                render();
-            } else {
-                alert('Esta categoría ya existe.');
+        if (!nameInput || !nameInput.value.trim()) {
+            if (nameInput) {
+                nameInput.classList.add('input-error');
                 nameInput.focus();
             }
-        });
-    }
+            return;
+        }
+        nameInput.classList.remove('input-error');
+
+        // Validación de icono requerido
+        if (!iconSelect || !iconSelect.value) {
+            alert('Selecciona un icono.');
+            return;
+        }
+
+        const name = nameInput.value.trim();
+        const kind = kindSelect ? kindSelect.value : 'expense';
+        const icon = iconSelect.value;
+
+        // Resto de la lógica para guardar...
+        const autoColors = [
+            '#3b82f6', '#10b981', '#f59e0b', '#ef4444', 
+            '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16', 
+            '#6366f1', '#d97706', '#14b8a6', '#64748b'
+        ];
+        
+        const totalCategories = appConfig.categories.expense.length + appConfig.categories.income.length;
+        const hue = (totalCategories * 137.5) % 360; // Ángulo áureo para máxima separación visual
+        const color = `hsl(${Math.round(hue)}, 70%, 50%)`;
+
+        if (!appConfig.categories[kind].some(c => c.name.toLowerCase() === name.toLowerCase())) {
+            appConfig.categories[kind].push({ name, color, icon });
+            
+            appConfig.categories[kind].sort((a, b) => 
+                a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
+            );
+
+            persistConfig();
+            closeModal($('categoryCreateDlg'));
+            renderConfigCategories();
+            updateCategoryOptions('new');
+            updateCategoryOptions('edit');
+            updateMovementFilterOptions();
+            render();
+        } else {
+            alert('Esta categoría ya existe.');
+            nameInput.focus();
+        }
+    });
+}
 
     if ($('cancelEditCategoryBtn')) {
         $('cancelEditCategoryBtn').addEventListener('click', () => {
