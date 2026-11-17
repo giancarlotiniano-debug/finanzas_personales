@@ -925,7 +925,7 @@ body.dark-mode .cat-percentage-badge {
 }
 
 /* ==========================================
-   7. UTILIDADES: REMESAS Y GESTOR DE CUOTAS
+   7. UTILIDADES: REMESAS, CUOTAS Y CONTADOR DE DÍAS
    ========================================== */
 .utility-footer-action {
     text-align: center;
@@ -1117,14 +1117,16 @@ body.dark-mode .remit-add-btn {
 }
 
 .installment-purchase-card:has(.installment-installments-list[style*="display: flex"]) .installment-purchase-header,
-.installment-purchase-card:has([id*="remit_details_"][style*="display: flex"]) .installment-purchase-header {
+.installment-purchase-card:has([id*="remit_details_"][style*="display: flex"]) .installment-purchase-header,
+.installment-purchase-card:has([id*="dc_month_details_"][style*="display: flex"]) .installment-purchase-header {
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
     border-bottom-color: var(--line) !important;
 }
 
 .installment-purchase-card:has(.installment-installments-list[style*="display: none"]) .installment-purchase-header,
-.installment-purchase-card:has([id*="remit_details_"][style*="display: none"]) .installment-purchase-header {
+.installment-purchase-card:has([id*="remit_details_"][style*="display: none"]) .installment-purchase-header,
+.installment-purchase-card:has([id*="dc_month_details_"][style*="display: none"]) .installment-purchase-header {
     border-radius: 10px !important;
     border-bottom-color: transparent !important;
 }
@@ -1182,14 +1184,77 @@ body.dark-mode .installment-purchase-header.all-paid {
     accent-color: var(--blue);
 }
 
-.installment-purchase-card button.soft.icon-btn {
+.installment-purchase-card button.soft.icon-btn,
+.card button.soft.icon-btn {
     background: var(--card) !important;
     border: 1px solid var(--blue) !important;
 }
 
-.installment-purchase-card button.soft.icon-btn svg {
+.installment-purchase-card button.soft.icon-btn svg,
+.card button.soft.icon-btn svg {
     stroke: var(--blue) !important;
-    stroke-width: 35px;
+}
+
+/* Estilos específicos del Contador de días */
+.dc-days-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.dc-day-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: rgba(8, 126, 139, 0.04);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+body.dark-mode .dc-day-row {
+    background: rgba(64, 164, 176, 0.06);
+}
+
+.dc-day-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dc-day-name {
+    font-weight: 750;
+    color: var(--ink);
+}
+
+.dc-day-date {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.dc-day-middle {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+}
+
+.dc-day-time {
+    font-weight: 700;
+    color: var(--blue);
+}
+
+.dc-day-loc {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.dc-day-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 /* ==========================================
@@ -1301,7 +1366,7 @@ dialog::backdrop {
 }
 
 .category-manager-list {
-    max-height: 400px; /* Lista más alta para visualizar cómodamente */
+    max-height: 400px;
     overflow-y: auto;
     border: 1px solid var(--line);
     border-radius: 9px;
@@ -1454,6 +1519,61 @@ body.dark-mode .icon-option-item.selected {
 .detail-table tr:last-child td { border-bottom: none; }
 
 /* ==========================================
+   CORRECCIÓN PARA INPUTS DE FECHA Y HORA EN iOS SAFARI
+   ========================================== */
+.formgrid .field {
+    min-width: 0; /* Evita que las columnas del grid se expandan más allá del 50% */
+}
+
+input[type="date"],
+input[type="time"] {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 44px; /* Misma altura exacta que los demás inputs */
+    padding: 0 12px;
+}
+
+/* Ajuste interno de WebKit para centrar y evitar desbordamiento del texto AM/PM */
+input[type="date"]::-webkit-date-and-time-value,
+input[type="time"]::-webkit-date-and-time-value {
+    text-align: left;
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+[id^="dc_month_details_"] {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.dc-days-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 432px; 
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Opcional: Estilizar discretamente la barra de scroll */
+.dc-days-wrapper::-webkit-scrollbar {
+    width: 5px;
+}
+
+.dc-days-wrapper::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 99px;
+}
+
+/* ==========================================
    9. RESPONSIVE DESIGN (MEDIA QUERIES)
    ========================================== */
 @media (min-width: 761px) {
@@ -1476,7 +1596,8 @@ body.dark-mode .icon-option-item.selected {
     #movementsContainer,
     #categoriesContainer,
     #remitContainer,
-    #installmentsContainer {
+    #installmentsContainer,
+    #dayCounterContainer {
         display: block !important;
     }
 
@@ -1511,6 +1632,7 @@ body.dark-mode .icon-option-item.selected {
     .summary-card:not(.expanded) #categoriesContainer,
     .summary-card:not(.expanded) #remitContainer,
     .summary-card:not(.expanded) #installmentsContainer,
+    .summary-card:not(.expanded) #dayCounterContainer,
     .summary-card:not(.expanded) .movement-controls,
     .summary-card:not(.expanded) #editCategoriesBtn {
         display: none !important;

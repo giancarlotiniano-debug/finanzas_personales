@@ -61,10 +61,14 @@ let appConfig = JSON.parse(localStorage.getItem('finanzas_config_v1')) || DEFAUL
 let movements = JSON.parse(localStorage.getItem('finanzas_movimientos_v1') || '[]');
 let remittancesList = JSON.parse(localStorage.getItem('finanzas_remesas_cards_v3') || '[]').map(r => ({ ...r, expanded: false }));
 let installmentsPurchases = JSON.parse(localStorage.getItem('finanzas_cuotas_v1') || '[]').map(p => ({ ...p, expanded: false }));
+let dayCounterMonths = JSON.parse(localStorage.getItem('finanzas_day_counter_v1') || '[]').map(m => ({ ...m, expanded: false }));
 
 let editingId = null;
 let editingInstallmentId = null;
 let editingCategoryData = null;
+let editingMonthId = null;
+let editingDayMonthId = null;
+let editingDayIndex = null;
 let currentCatKind = 'expense';
 let selectedDonutCategory = null;
 
@@ -72,7 +76,8 @@ const accordionState = {
     movements: true,
     categories: false,
     remit: false,
-    installments: false
+    installments: false,
+    dayCounter: false
 };
 
 const today = new Date();
@@ -161,12 +166,28 @@ function addMonthsToDate(dateStr, monthsToAdd) {
     return `${targetYear}-${pad(targetMonth + 1)}-${pad(targetDay)}`;
 }
 
+function calculateExitTime(entryTimeStr) {
+    if (!entryTimeStr) return '06:00';
+    const [hours, minutes] = entryTimeStr.split(':').map(Number);
+    let newHours = (hours + 12) % 24;
+    return `${pad(newHours)}:${pad(minutes)}`;
+}
+
+function getDayNameFromDate(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr + 'T12:00:00');
+    const options = { weekday: 'long' };
+    const name = date.toLocaleDateString('es-ES', options);
+    return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
 /* ==========================================
    3. PERSISTENCIA Y CONFIGURACIÓN UI
    ========================================== */
 const persist = () => localStorage.setItem('finanzas_movimientos_v1', JSON.stringify(movements));
 const persistRemittancesList = () => localStorage.setItem('finanzas_remesas_cards_v3', JSON.stringify(remittancesList));
 const persistInstallments = () => localStorage.setItem('finanzas_cuotas_v1', JSON.stringify(installmentsPurchases));
+const persistDayCounter = () => localStorage.setItem('finanzas_day_counter_v1', JSON.stringify(dayCounterMonths));
 
 const persistConfig = () => {
     localStorage.setItem('finanzas_config_v1', JSON.stringify(appConfig));
@@ -250,7 +271,7 @@ function setupMainAccordion(btnId, containerId, iconId, cardEl, stateKey) {
 }
 
 /* ==========================================
-   4. MOVIMIENTOS Y CATEGORÍAS (DONA Y LISTA)
+   4. MOVIMIENTOS Y CATEGORÍAS
    ========================================== */
 function setupCategoryTabs() {
     const btnExpense = $('catTabExpense');
@@ -815,7 +836,95 @@ function editInstallmentPurchase(purchaseId) {
 }
 
 /* ==========================================
-   7. MODALES Y GESTIÓN DE CATEGORÍAS
+   7. CONTADOR DE DÍAS (NUEVA UTILIDAD)
+   ========================================== */
+function renderDayCounter() {
+    const listContainer = $('dayCounterMonthsList');
+    if (!listContainer) return;
+
+    // Ocultar el botón "+ Nuevo mes" si hay alguna pestaña de mes abierta
+    const addMonthBtn = $('addDayCounterMonthBtn');
+    if (addMonthBtn && addMonthBtn.parentElement) {
+        const hasExpandedMonth = dayCounterMonths.some(m => m.expanded);
+        addMonthBtn.parentElement.style.display = hasExpandedMonth ? 'none' : 'flex';
+    }
+
+    if (!dayCounterMonths.length) {
+        listContainer.innerHTML = '<div class="empty empty-compact">Aún no hay meses registrados.</div>';
+        return;
+    }
+
+    if (!dayCounterMonths.length) {
+        listContainer.innerHTML = '<div class="empty empty-compact">Aún no hay meses registrados.</div>';
+        return;
+    }
+
+    listContainer.innerHTML = dayCounterMonths.map((month) => {
+        const totalWorked = (month.days || []).length;
+        const target = month.targetDays || 0;
+        const extras = Math.max(0, totalWorked - target);
+
+        const daysHtml = (month.days || []).map((day, idx) => `
+            <div class="dc-day-row">
+                <div class="dc-day-left">
+                    <span class="dc-day-name">${escapeHtml(day.dayName)}</span>
+                    <span class="dc-day-date">${formatDateEs(day.date)}</span>
+                </div>
+                <div class="dc-day-middle">
+                    <span class="dc-day-time">${escapeHtml(day.entryTime)} — ${escapeHtml(day.exitTime)}</span>
+                    <span class="dc-day-loc">${escapeHtml(day.location)}</span>
+                </div>
+                <div class="dc-day-right">
+                    <button type="button" class="soft icon-btn btn-xs" data-action="edit-dc-day" data-month-id="${month.id}" data-index="${idx}" title="Editar día" aria-label="Editar día">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="installment-purchase-card" id="dc_month_box_${month.id}">
+                <div class="installment-purchase-header" data-action="toggle-dc-month" data-month-id="${month.id}">
+                    <div class="flex-col">
+                        <span>${escapeHtml(month.name)}</span>
+                        <span class="installment-card-subtitle">Días trabajados: ${totalWorked} • Días extras: ${extras}</span>
+                    </div>
+                    <div class="flex-center-gap">
+                        <button type="button" class="soft icon-btn btn-xs" data-action="edit-dc-month" data-month-id="${month.id}" title="Editar mes" aria-label="Editar mes">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                </div>
+                <div id="dc_month_details_${month.id}" class="installment-installments-list" style="display: ${month.expanded ? 'flex' : 'none'};">
+                    <div class="dc-days-wrapper">
+                        ${daysHtml || '<div class="empty empty-mini">Sin días registrados en este mes.</div>'}
+                    </div>
+                    <div class="utility-footer-action" style="margin-top: 0;">
+                        <button type="button" class="soft utility-new-btn" data-action="open-add-dc-day" data-month-id="${month.id}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Nuevo día
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function toggleDayCounterMonthAccordion(monthId) {
+    const month = dayCounterMonths.find(x => x.id === monthId);
+    if (month) {
+        const willBeExpanded = !month.expanded;
+        dayCounterMonths.forEach(m => m.expanded = false);
+        month.expanded = willBeExpanded;
+        persistDayCounter();
+        renderDayCounter();
+    }
+}
+
+/* ==========================================
+   8. MODALES Y GESTIÓN DE CATEGORÍAS
    ========================================== */
 function openNewMovement() {
     editingId = null;
@@ -977,13 +1086,14 @@ function selectCategoryIcon(iconKey, targetInputId, containerSelector) {
 }
 
 /* ==========================================
-   8. REGISTRO DE LISTENERS E INICIALIZACIÓN
+   9. REGISTRO DE LISTENERS E INICIALIZACIÓN
    ========================================== */
 function bindEvents() {
     setupMainAccordion('toggleMovementsBtn', 'movementsContainer', 'toggleMovementsIcon', $('movementsCard'), 'movements');
     setupMainAccordion('toggleCategoriesBtn', 'categoriesContainer', 'toggleCategoriesIcon', $('categoriesCard'), 'categories');
     setupMainAccordion('toggleRemitBtn', 'remitContainer', 'toggleRemitIcon', $('remittancesCard'), 'remit');
     setupMainAccordion('toggleInstallmentsBtn', 'installmentsContainer', 'toggleInstallmentsIcon', $('installmentsCard'), 'installments');
+    setupMainAccordion('toggleDayCounterBtn', 'dayCounterContainer', 'toggleDayCounterIcon', $('dayCounterCard'), 'dayCounter');
 
     setupCategoryTabs();
 
@@ -1303,6 +1413,268 @@ function bindEvents() {
             const header = e.target.closest('[data-action="toggle-inst-accordion"]');
             if (header) {
                 toggleInstallmentAccordion(header.dataset.purchaseId);
+            }
+        });
+    }
+
+    // ==========================================
+    // LISTENERS: CONTADOR DE DÍAS
+    // ==========================================
+    if ($('addDayCounterMonthBtn')) {
+        $('addDayCounterMonthBtn').addEventListener('click', () => {
+            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            const defaultName = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
+            $('newMonthName').value = defaultName;
+            $('newMonthTarget').value = '15';
+            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            $('dayCounterMonthNewDlg')?.showModal();
+        });
+    }
+
+    if ($('cancelNewDayCounterMonth')) {
+        $('cancelNewDayCounterMonth').addEventListener('click', () => $('dayCounterMonthNewDlg')?.close());
+    }
+
+    if ($('dayCounterMonthNewForm')) {
+        $('dayCounterMonthNewForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nameInput = $('newMonthName');
+            const targetInput = $('newMonthTarget');
+            if (!nameInput.value.trim() || !targetInput.value) return;
+
+            dayCounterMonths.push({
+                id: crypto.randomUUID(),
+                name: nameInput.value.trim(),
+                targetDays: parseInt(targetInput.value) || 15,
+                expanded: true,
+                days: []
+            });
+            persistDayCounter();
+            $('dayCounterMonthNewDlg')?.close();
+            renderDayCounter();
+        });
+    }
+
+    if ($('cancelEditDayCounterMonth')) {
+        $('cancelEditDayCounterMonth').addEventListener('click', () => $('dayCounterMonthEditDlg')?.close());
+    }
+
+    if ($('deleteMonthModalBtn')) {
+        $('deleteMonthModalBtn').addEventListener('click', () => {
+            if (!editingMonthId) return;
+            if (confirm('¿Eliminar este mes y todos sus días registrados?')) {
+                dayCounterMonths = dayCounterMonths.filter(x => x.id !== editingMonthId);
+                persistDayCounter();
+                $('dayCounterMonthEditDlg')?.close();
+                renderDayCounter();
+            }
+        });
+    }
+
+    if ($('dayCounterMonthEditForm')) {
+        $('dayCounterMonthEditForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!editingMonthId) return;
+
+            const nameInput = $('editMonthName');
+            const targetInput = $('editMonthTarget');
+            if (!nameInput.value.trim() || !targetInput.value) return;
+
+            dayCounterMonths = dayCounterMonths.map(m => m.id === editingMonthId ? {
+                ...m,
+                name: nameInput.value.trim(),
+                targetDays: parseInt(targetInput.value) || 15
+            } : m);
+
+            persistDayCounter();
+            $('dayCounterMonthEditDlg')?.close();
+            renderDayCounter();
+        });
+    }
+
+    if ($('dayCounterMonthsList')) {
+        const listEl = $('dayCounterMonthsList');
+
+        listEl.addEventListener('click', (e) => {
+            const editMonthBtn = e.target.closest('[data-action="edit-dc-month"]');
+            if (editMonthBtn) {
+                e.stopPropagation();
+                editingMonthId = editMonthBtn.dataset.monthId;
+                const month = dayCounterMonths.find(x => x.id === editingMonthId);
+                if (month) {
+                    $('editMonthName').value = month.name;
+                    $('editMonthTarget').value = month.targetDays;
+                    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+                    $('dayCounterMonthEditDlg')?.showModal();
+                }
+                return;
+            }
+
+            const toggleHeader = e.target.closest('[data-action="toggle-dc-month"]');
+            if (toggleHeader) {
+                toggleDayCounterMonthAccordion(toggleHeader.dataset.monthId);
+                return;
+            }
+
+            const openAddDayBtn = e.target.closest('[data-action="open-add-dc-day"]');
+            if (openAddDayBtn) {
+                e.stopPropagation();
+                editingDayMonthId = openAddDayBtn.dataset.monthId;
+                editingDayIndex = null;
+                $('dayDlgTitle').textContent = 'Registrar día de trabajo';
+                $('dayDate').value = `${currentMonth}-${pad(today.getDate())}`;
+                $('dayNameDisplay').value = getDayNameFromDate($('dayDate').value);
+                $('dayEntryTime').value = '18:00';
+                $('dayExitTime').value = calculateExitTime('18:00');
+                $('dayLocation').value = '';
+
+                if ($('dayModalActionsSplit')) $('dayModalActionsSplit').style.display = 'none';
+                if ($('dayModalActionsNormal')) $('dayModalActionsNormal').style.display = 'flex';
+
+                const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
+                const copyWrapper = $('copyPreviousDayWrapper');
+                if (month && month.days && month.days.length > 0) {
+                    copyWrapper.style.display = 'block';
+                } else {
+                    copyWrapper.style.display = 'none';
+                }
+
+                document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+                $('dayCounterDayDlg')?.showModal();
+                return;
+            }
+
+            const editDayBtn = e.target.closest('[data-action="edit-dc-day"]');
+            if (editDayBtn) {
+                e.stopPropagation();
+                editingDayMonthId = editDayBtn.dataset.monthId;
+                editingDayIndex = Number(editDayBtn.dataset.index);
+                const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
+                const day = month?.days[editingDayIndex];
+                if (day) {
+                    $('dayDlgTitle').textContent = 'Editar día de trabajo';
+                    $('dayDate').value = day.date;
+                    $('dayNameDisplay').value = day.dayName;
+                    $('dayEntryTime').value = day.entryTime;
+                    $('dayExitTime').value = day.exitTime;
+                    $('dayLocation').value = day.location;
+                    $('copyPreviousDayWrapper').style.display = 'none';
+
+                    if ($('dayModalActionsSplit')) $('dayModalActionsSplit').style.display = 'flex';
+                    if ($('dayModalActionsNormal')) $('dayModalActionsNormal').style.display = 'none';
+
+                    $('dayCounterDayDlg')?.showModal();
+                }
+                return;
+            }
+        });
+    }
+
+    if ($('deleteDayModalBtn')) {
+        $('deleteDayModalBtn').onclick = () => {
+            if (editingDayMonthId !== null && editingDayIndex !== null) {
+                if (confirm('¿Eliminar este día registrado?')) {
+                    const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
+                    if (month && month.days) {
+                        // Guardar la posición actual del scroll antes de actualizar la lista
+                        const daysWrapper = document.querySelector(`#dc_month_details_${editingDayMonthId} .dc-days-wrapper`);
+                        const savedScrollTop = daysWrapper ? daysWrapper.scrollTop : 0;
+
+                        month.days.splice(editingDayIndex, 1);
+                        persistDayCounter();
+                        $('dayCounterDayDlg')?.close();
+                        renderDayCounter();
+
+                        // Restaurar la posición exacta del scroll
+                        const updatedWrapper = document.querySelector(`#dc_month_details_${editingDayMonthId} .dc-days-wrapper`);
+                        if (updatedWrapper) {
+                            updatedWrapper.scrollTop = savedScrollTop;
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    if ($('dayDate')) {
+        $('dayDate').addEventListener('change', () => {
+            const dateStr = $('dayDate').value;
+            $('dayNameDisplay').value = getDayNameFromDate(dateStr);
+        });
+    }
+
+    if ($('dayEntryTime')) {
+        $('dayEntryTime').addEventListener('change', () => {
+            $('dayExitTime').value = calculateExitTime($('dayEntryTime').value);
+        });
+    }
+
+    if ($('copyPreviousDayBtn')) {
+        $('copyPreviousDayBtn').addEventListener('click', () => {
+            const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
+            if (month && month.days && month.days.length > 0) {
+                const lastDay = month.days[month.days.length - 1];
+                $('dayEntryTime').value = lastDay.entryTime;
+                $('dayExitTime').value = lastDay.exitTime;
+                $('dayLocation').value = lastDay.location;
+            }
+        });
+    }
+
+    if ($('cancelDayCounterDay')) {
+        $('cancelDayCounterDay').addEventListener('click', () => $('dayCounterDayDlg')?.close());
+    }
+    if ($('cancelDayCounterDayNormal')) {
+        $('cancelDayCounterDayNormal').addEventListener('click', () => $('dayCounterDayDlg')?.close());
+    }
+
+    if ($('dayCounterDayForm')) {
+        $('dayCounterDayForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
+            if (!month) return;
+
+            const dateStr = $('dayDate').value;
+            const entryStr = $('dayEntryTime').value;
+            const exitStr = $('dayExitTime').value;
+            const locationStr = $('dayLocation').value.trim();
+
+            if (!dateStr) return;
+
+            if (!month.days) month.days = [];
+            const duplicateIndex = month.days.findIndex((d, idx) => d.date === dateStr && (editingDayIndex === null || idx !== editingDayIndex));
+            
+            if (duplicateIndex !== -1) {
+                alert('Este día ya ha sido registrado en este mes.');
+                $('dayDate').focus();
+                return;
+            }
+
+            const dayObj = {
+                date: dateStr,
+                dayName: getDayNameFromDate(dateStr),
+                entryTime: entryStr,
+                exitTime: exitStr,
+                location: locationStr || ''
+            };
+
+            if (editingDayIndex !== null && editingDayIndex >= 0) {
+                month.days[editingDayIndex] = dayObj;
+            } else {
+                month.days.push(dayObj);
+                month.days.sort((a, b) => a.date.localeCompare(b.date));
+            }
+
+            persistDayCounter();
+            $('dayCounterDayDlg')?.close();
+            renderDayCounter();
+
+            // Hacer scroll automático hasta el final de la lista de días al agregar uno nuevo
+            if (editingDayIndex === null) {
+                const daysWrapper = document.querySelector(`#dc_month_details_${month.id} .dc-days-wrapper`);
+                if (daysWrapper) {
+                    daysWrapper.scrollTop = daysWrapper.scrollHeight;
+                }
             }
         });
     }
@@ -1671,6 +2043,7 @@ function init() {
     updateMovementFilterOptions();
     renderRemittancesList();
     renderInstallments();
+    renderDayCounter();
     render();
 }
 
