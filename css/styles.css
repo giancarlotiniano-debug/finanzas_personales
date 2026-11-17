@@ -1579,6 +1579,13 @@ input[type="time"]::-webkit-date-and-time-value {
     white-space: nowrap;
 }
 
+/* Bloquea el scroll de la página principal cuando hay un modal abierto */
+body.no-scroll {
+    overflow: hidden;
+    /* Opcional: previene pequeños saltos de diseño si la barra de scroll vertical desaparece de golpe */
+    padding-right: var(--scrollbar-width, 0px); 
+}
+
 /* ==========================================
    9. RESPONSIVE DESIGN
    ========================================== */

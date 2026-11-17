@@ -95,7 +95,7 @@ const pad = (number) => String(number).padStart(2, '0');
 const currentMonth = `${today.getFullYear()}-${pad(today.getMonth() + 1)}`;
 
 /* ==========================================
-   2. UTILIDADES DE FORMATO Y FECHAS
+   2. UTILIDADES DE FORMATO, FECHAS Y MODALES
    ========================================== */
 const getCurrencySymbol = (code) => {
     const symbols = { EUR: '€', USD: '$', PEN: 'S/.' };
@@ -198,6 +198,21 @@ function getDayNameFromDate(dateStr) {
 function clearValidationErrors(formEl) {
     if (!formEl) return;
     formEl.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+}
+
+/* Funciones auxiliares para control de modales y bloqueo de scroll de fondo */
+function openModal(dialogEl) {
+    if (!dialogEl) return;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+    document.body.classList.add('no-scroll');
+    dialogEl.showModal();
+}
+
+function closeModal(dialogEl) {
+    if (!dialogEl) return;
+    dialogEl.close();
+    document.body.classList.remove('no-scroll');
 }
 
 /* ==========================================
@@ -432,7 +447,7 @@ function executeCustomExport() {
     link.click();
     document.body.removeChild(link);
 
-    $('exportDlg')?.close();
+    closeModal($('exportDlg'));
 }
 
 function parseCsvLine(line) {
@@ -661,7 +676,7 @@ function importMovementsCsv(event) {
                 if ($('impInstCount')) $('impInstCount').textContent = parsedInst.length;
                 if ($('impDaysCount')) $('impDaysCount').textContent = parsedDays.length;
 
-                if ($('importSelectDlg')) $('importSelectDlg').showModal();
+                if ($('importSelectDlg')) openModal($('importSelectDlg'));
             } else {
                 applyImportSelection({ movements: true, remittances: true, installments: true, dayCounter: true });
             }
@@ -708,7 +723,7 @@ function applyImportSelection(selection) {
 
     alert(summaryMsg);
     pendingParsedSections = null;
-    if ($('importSelectDlg')) $('importSelectDlg').close();
+    if ($('importSelectDlg')) closeModal($('importSelectDlg'));
 }
 
 /* ==========================================
@@ -1106,7 +1121,7 @@ function deleteRemittance(remId) {
     if (!confirm('¿Eliminar esta remesa y todo su registro?')) return;
     remittancesList = remittancesList.filter(r => r.id !== remId);
     persistRemittancesList();
-    if ($('remitEditDlg')) $('remitEditDlg').close();
+    closeModal($('remitEditDlg'));
     renderRemittancesList();
 }
 
@@ -1124,7 +1139,7 @@ function editRemittance(remId) {
     }
 
     clearValidationErrors($('remitEditForm'));
-    if ($('remitEditDlg')) $('remitEditDlg').showModal();
+    if ($('remitEditDlg')) openModal($('remitEditDlg'));
 }
 
 function removeRemitItem(remId, index) {
@@ -1270,7 +1285,7 @@ function deleteInstallmentPurchase(purchaseId) {
     if (!confirm('¿Eliminar esta compra en cuotas y todo su historial?')) return;
     installmentsPurchases = installmentsPurchases.filter(p => p.id !== purchaseId);
     persistInstallments();
-    if ($('installmentEditDlg')) $('installmentEditDlg').close();
+    closeModal($('installmentEditDlg'));
     renderInstallments();
 }
 
@@ -1291,7 +1306,7 @@ function editInstallmentPurchase(purchaseId) {
 
     if ($('deleteInstallmentBtn')) $('deleteInstallmentBtn').onclick = () => deleteInstallmentPurchase(editingInstallmentId);
     clearValidationErrors($('installmentEditForm'));
-    if ($('installmentEditDlg')) $('installmentEditDlg').showModal();
+    openModal($('installmentEditDlg'));
 }
 
 /* ==========================================
@@ -1395,7 +1410,7 @@ function openNewMovement() {
         $('newDate').value = `${$('month').value}-${pad(today.getDate())}`;
     }
     clearValidationErrors($('newForm'));
-    if ($('newDlg')) $('newDlg').showModal();
+    openModal($('newDlg'));
 }
 
 function editMovement(id) {
@@ -1416,13 +1431,13 @@ function editMovement(id) {
             if (!confirm('¿Eliminar este movimiento?')) return;
             movements = movements.filter(m => m.id !== editingId);
             persist();
-            $('editDlg')?.close();
+            closeModal($('editDlg'));
             render();
         };
     }
 
     clearValidationErrors($('editForm'));
-    if ($('editDlg')) $('editDlg').showModal();
+    openModal($('editDlg'));
 }
 
 function showMovementDetail(id) {
@@ -1440,7 +1455,7 @@ function showMovementDetail(id) {
             </table>
         `;
     }
-    if ($('detailDlg')) $('detailDlg').showModal();
+    openModal($('detailDlg'));
 }
 
 function renderConfigCategories() {
@@ -1515,7 +1530,7 @@ function openEditCategoryModal(kind, index) {
     }
 
     clearValidationErrors($('categoryEditForm'));
-    if ($('categoryEditDlg')) $('categoryEditDlg').showModal();
+    openModal($('categoryEditDlg'));
 }
 
 function renderIconSelector(selectedIcon = 'Compras') {
@@ -1561,13 +1576,13 @@ function bindEvents() {
                 const cb = $(id);
                 if (cb) cb.checked = false;
             });
-            $('exportDlg')?.showModal();
+            openModal($('exportDlg'));
         });
     }
 
     if ($('cancelExportBtn')) {
         $('cancelExportBtn').addEventListener('click', () => {
-            $('exportDlg')?.close();
+            closeModal($('exportDlg'));
         });
     }
 
@@ -1604,7 +1619,7 @@ function bindEvents() {
     if ($('cancelImportSelect')) {
         $('cancelImportSelect').addEventListener('click', () => {
             pendingParsedSections = null;
-            $('importSelectDlg')?.close();
+            closeModal($('importSelectDlg'));
         });
     }
 
@@ -1680,14 +1695,14 @@ function bindEvents() {
             if ($('newCatKind')) $('newCatKind').value = 'expense';
             renderIconSelector('Compras');
             clearValidationErrors($('categoryCreateForm'));
-            $('categoryCreateDlg')?.showModal();
+            openModal($('categoryCreateDlg'));
         });
     }
 
     if ($('cancelCreateCategoryBtn')) {
         $('cancelCreateCategoryBtn').addEventListener('click', () => {
             clearValidationErrors($('categoryCreateForm'));
-            $('categoryCreateDlg')?.close();
+            closeModal($('categoryCreateDlg'));
         });
     }
 
@@ -1729,7 +1744,7 @@ function bindEvents() {
                 );
 
                 persistConfig();
-                if ($('categoryCreateDlg')) $('categoryCreateDlg').close();
+                closeModal($('categoryCreateDlg'));
                 renderConfigCategories();
                 updateCategoryOptions('new');
                 updateCategoryOptions('edit');
@@ -1744,7 +1759,7 @@ function bindEvents() {
 
     if ($('cancelEditCategoryBtn')) {
         $('cancelEditCategoryBtn').addEventListener('click', () => {
-            $('categoryEditDlg')?.close();
+            closeModal($('categoryEditDlg'));
         });
     }
 
@@ -1752,7 +1767,7 @@ function bindEvents() {
         $('deleteCategoryBtn').addEventListener('click', () => {
             if (!editingCategoryData) return;
             const { kind, index } = editingCategoryData;
-            $('categoryEditDlg')?.close();
+            closeModal($('categoryEditDlg'));
             removeCategory(kind, index);
         });
     }
@@ -1799,7 +1814,7 @@ function bindEvents() {
             });
 
             persistConfig();
-            $('categoryEditDlg')?.close();
+            closeModal($('categoryEditDlg'));
             renderConfigCategories();
             updateCategoryOptions('new');
             updateCategoryOptions('edit');
@@ -1938,14 +1953,14 @@ function bindEvents() {
             } : r);
 
             persistRemittancesList();
-            $('remitEditDlg')?.close();
+            closeModal($('remitEditDlg'));
             renderRemittancesList();
         });
     }
 
     if ($('cancelEditRemitBtn')) {
         $('cancelEditRemitBtn').addEventListener('click', () => {
-            $('remitEditDlg')?.close();
+            closeModal($('remitEditDlg'));
         });
     }
 
@@ -1977,12 +1992,12 @@ function bindEvents() {
             $('newMonthName').value = defaultName;
             $('newMonthTarget').value = '15';
             clearValidationErrors($('dayCounterMonthNewForm'));
-            $('dayCounterMonthNewDlg')?.showModal();
+            openModal($('dayCounterMonthNewDlg'));
         });
     }
 
     if ($('cancelNewDayCounterMonth')) {
-        $('cancelNewDayCounterMonth').addEventListener('click', () => $('dayCounterMonthNewDlg')?.close());
+        $('cancelNewDayCounterMonth').addEventListener('click', () => closeModal($('dayCounterMonthNewDlg')));
     }
 
     if ($('dayCounterMonthNewForm')) {
@@ -2000,13 +2015,13 @@ function bindEvents() {
                 days: []
             });
             persistDayCounter();
-            $('dayCounterMonthNewDlg')?.close();
+            closeModal($('dayCounterMonthNewDlg'));
             renderDayCounter();
         });
     }
 
     if ($('cancelEditDayCounterMonth')) {
-        $('cancelEditDayCounterMonth').addEventListener('click', () => $('dayCounterMonthEditDlg')?.close());
+        $('cancelEditDayCounterMonth').addEventListener('click', () => closeModal($('dayCounterMonthEditDlg')));
     }
 
     if ($('deleteMonthModalBtn')) {
@@ -2015,7 +2030,7 @@ function bindEvents() {
             if (confirm('¿Eliminar este mes y todos sus días registrados?')) {
                 dayCounterMonths = dayCounterMonths.filter(x => x.id !== editingMonthId);
                 persistDayCounter();
-                $('dayCounterMonthEditDlg')?.close();
+                closeModal($('dayCounterMonthEditDlg'));
                 renderDayCounter();
             }
         });
@@ -2037,7 +2052,7 @@ function bindEvents() {
             } : m);
 
             persistDayCounter();
-            $('dayCounterMonthEditDlg')?.close();
+            closeModal($('dayCounterMonthEditDlg'));
             renderDayCounter();
         });
     }
@@ -2055,7 +2070,7 @@ function bindEvents() {
                     $('editMonthName').value = month.name;
                     $('editMonthTarget').value = month.targetDays;
                     clearValidationErrors($('dayCounterMonthEditForm'));
-                    $('dayCounterMonthEditDlg')?.showModal();
+                    openModal($('dayCounterMonthEditDlg'));
                 }
                 return;
             }
@@ -2090,7 +2105,7 @@ function bindEvents() {
                 }
 
                 clearValidationErrors($('dayCounterDayForm'));
-                $('dayCounterDayDlg')?.showModal();
+                openModal($('dayCounterDayDlg'));
                 return;
             }
 
@@ -2114,7 +2129,7 @@ function bindEvents() {
                     if ($('dayModalActionsNormal')) $('dayModalActionsNormal').style.display = 'none';
 
                     clearValidationErrors($('dayCounterDayForm'));
-                    $('dayCounterDayDlg')?.showModal();
+                    openModal($('dayCounterDayDlg'));
                 }
                 return;
             }
@@ -2132,7 +2147,7 @@ function bindEvents() {
 
                         month.days.splice(editingDayIndex, 1);
                         persistDayCounter();
-                        $('dayCounterDayDlg')?.close();
+                        closeModal($('dayCounterDayDlg'));
                         renderDayCounter();
 
                         const updatedWrapper = document.querySelector(`#dc_month_details_${editingDayMonthId} .dc-days-wrapper`);
@@ -2171,10 +2186,10 @@ function bindEvents() {
     }
 
     if ($('cancelDayCounterDay')) {
-        $('cancelDayCounterDay').addEventListener('click', () => $('dayCounterDayDlg')?.close());
+        $('cancelDayCounterDay').addEventListener('click', () => closeModal($('dayCounterDayDlg')));
     }
     if ($('cancelDayCounterDayNormal')) {
-        $('cancelDayCounterDayNormal').addEventListener('click', () => $('dayCounterDayDlg')?.close());
+        $('cancelDayCounterDayNormal').addEventListener('click', () => closeModal($('dayCounterDayDlg')));
     }
 
     if ($('dayCounterDayForm')) {
@@ -2218,7 +2233,7 @@ function bindEvents() {
             }
 
             persistDayCounter();
-            $('dayCounterDayDlg')?.close();
+            closeModal($('dayCounterDayDlg'));
             renderDayCounter();
 
             const daysWrapperAfter = document.querySelector(`#dc_month_details_${month.id} .dc-days-wrapper`);
@@ -2236,11 +2251,11 @@ function bindEvents() {
     
     if ($('cancelNew')) $('cancelNew').addEventListener('click', () => {
         clearValidationErrors($('newForm'));
-        $('newDlg')?.close();
+        closeModal($('newDlg'));
     });
     if ($('cancelEdit')) $('cancelEdit').addEventListener('click', () => {
         clearValidationErrors($('editForm'));
-        $('editDlg')?.close();
+        closeModal($('editDlg'));
     });
 
     if ($('newKind')) $('newKind').addEventListener('change', () => updateCategoryOptions('new'));
@@ -2249,7 +2264,7 @@ function bindEvents() {
     if ($('month')) $('month').addEventListener('change', render);
     if ($('search')) $('search').addEventListener('input', render);
     if ($('movementFilter')) $('movementFilter').addEventListener('change', render);
-    if ($('closeDetailBtn')) $('closeDetailBtn').addEventListener('click', () => $('detailDlg')?.close());
+    if ($('closeDetailBtn')) $('closeDetailBtn').addEventListener('click', () => closeModal($('detailDlg')));
 
     if ($('rows')) {
         $('rows').addEventListener('click', event => {
@@ -2302,7 +2317,7 @@ function bindEvents() {
             movements.push(item);
             persist();
             clearValidationErrors($('newForm'));
-            $('newDlg')?.close();
+            closeModal($('newDlg'));
             if ($('month')) $('month').value = item.date.slice(0, 7);
             render();
         });
@@ -2348,7 +2363,7 @@ function bindEvents() {
             movements = movements.map(existing => existing.id === editingId ? item : existing);
             persist();
             clearValidationErrors($('editForm'));
-            $('editDlg')?.close();
+            closeModal($('editDlg'));
             render();
         });
     }
@@ -2365,7 +2380,7 @@ function bindEvents() {
             if ($('toggleUtilInstallments')) $('toggleUtilInstallments').checked = utils.installments !== false;
             if ($('toggleUtilDayCounter')) $('toggleUtilDayCounter').checked = utils.dayCounter !== false;
 
-            $('configDlg')?.showModal();
+            openModal($('configDlg'));
         });
     }
 
@@ -2388,23 +2403,23 @@ function bindEvents() {
             updateCategoryOptions('edit');
             updateMovementFilterOptions();
             render();
-            $('configDlg')?.close();
+            closeModal($('configDlg'));
         });
     }
 
-    if ($('cancelConfigBtn')) $('cancelConfigBtn').addEventListener('click', () => $('configDlg')?.close());
+    if ($('cancelConfigBtn')) $('cancelConfigBtn').addEventListener('click', () => closeModal($('configDlg')));
 
     if ($('editCategoriesBtn')) {
         $('editCategoriesBtn').addEventListener('click', () => {
             renderConfigCategories();
             clearValidationErrors($('categoriesDlg'));
-            $('categoriesDlg')?.showModal();
+            openModal($('categoriesDlg'));
         });
     }
 
     if ($('closeCategoriesDlg')) $('closeCategoriesDlg').addEventListener('click', () => {
         clearValidationErrors($('categoriesDlg'));
-        $('categoriesDlg')?.close();
+        closeModal($('categoriesDlg'));
     });
 
     if ($('addRemittanceBtn')) {
@@ -2416,13 +2431,13 @@ function bindEvents() {
                 $('newRemitName').value = `${capitalizedMonth} ${today.getFullYear()}`;
             }
             clearValidationErrors($('remitNewForm'));
-            $('remitNewDlg')?.showModal();
+            openModal($('remitNewDlg'));
         });
     }
 
     if ($('cancelNewRemitBtn')) $('cancelNewRemitBtn').addEventListener('click', () => {
         clearValidationErrors($('remitNewForm'));
-        $('remitNewDlg')?.close();
+        closeModal($('remitNewDlg'));
     });
 
     if ($('remitNewForm')) {
@@ -2448,7 +2463,7 @@ function bindEvents() {
             });
             persistRemittancesList();
             clearValidationErrors($('remitNewForm'));
-            $('remitNewDlg')?.close();
+            closeModal($('remitNewDlg'));
             renderRemittancesList();
         });
     }
@@ -2467,13 +2482,13 @@ function bindEvents() {
                 $('newInstFirstDate').value = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
             }
             clearValidationErrors($('installmentNewForm'));
-            $('installmentNewDlg')?.showModal();
+            openModal($('installmentNewDlg'));
         });
     }
 
     if ($('cancelNewInstallmentBtn')) $('cancelNewInstallmentBtn').addEventListener('click', () => {
         clearValidationErrors($('installmentNewForm'));
-        $('installmentNewDlg')?.close();
+        closeModal($('installmentNewDlg'));
     });
 
     if ($('installmentNewForm')) {
@@ -2528,7 +2543,7 @@ function bindEvents() {
 
             persistInstallments();
             clearValidationErrors($('installmentNewForm'));
-            $('installmentNewDlg')?.close();
+            closeModal($('installmentNewDlg'));
             renderInstallments();
         });
     }
@@ -2588,7 +2603,7 @@ function bindEvents() {
 
             persistInstallments();
             clearValidationErrors($('installmentEditForm'));
-            $('installmentEditDlg')?.close();
+            closeModal($('installmentEditDlg'));
             renderInstallments();
         });
     }
