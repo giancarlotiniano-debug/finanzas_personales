@@ -376,7 +376,7 @@ function executeCustomExport() {
     // 3. CUOTAS
     if (includeInst) {
         csvRows.push('--- SECCION: COMPRAS EN CUOTAS ---');
-        csvRows.push('COMPRA,MONEDA,TOTAL_CUOTAS,NUMERO_CUOTA,FECHA_CUOTA,IMPORTE_CUOTA,PAGADO');
+        csvRows.push('COMPRA,MONEDA,FINANCED_AMOUNT,INTEREST_AMOUNT,TOTAL_CUOTAS,NUMERO_CUOTA,FECHA_CUOTA,IMPORTE_CUOTA,FINAL_AMOUNT,PAGADO');
         installmentsPurchases.forEach(p => {
             p.installments.forEach(inst => {
                 let formattedDate = inst.date;
@@ -385,7 +385,7 @@ function executeCustomExport() {
                     formattedDate = `${day}/${month}/${year}`;
                 }
                 const name = `"${(p.name || '').replace(/"/g, '""')}"`;
-                csvRows.push(`${name},"${p.currency || 'EUR'}",${p.totalCount},${inst.number},${formattedDate},${inst.amount},${inst.paid ? 'SI' : 'NO'}`);
+                csvRows.push(`${name},"${p.currency || 'EUR'}",${p.financedAmount || 0},${p.interestAmount || 0},${p.totalCount},${inst.number},${formattedDate},${inst.amount},${p.finalAmount || inst.amount},${inst.paid ? 'SI' : 'NO'}`);
             });
         });
         csvRows.push('');
@@ -554,7 +554,17 @@ function importMovementsCsv(event) {
                     }
                 }
                 else if (currentSection === 'CUOTAS' && row.length >= 7) {
-                    let [pName, curr, totalCountStr, instNumStr, instDate, instAmtStr, paidStr] = row;
+                    let pName, curr, financedAmt, interestAmt, totalCountStr, instNumStr, instDate, instAmtStr, finalAmt, paidStr;
+                    
+                    if (row.length >= 10) {
+                        [pName, curr, financedAmt, interestAmt, totalCountStr, instNumStr, instDate, instAmtStr, finalAmt, paidStr] = row;
+                    } else {
+                        [pName, curr, totalCountStr, instNumStr, instDate, instAmtStr, paidStr] = row;
+                        financedAmt = 0;
+                        interestAmt = 0;
+                        finalAmt = 0;
+                    }
+
                     pName = pName.replace(/^"|"$/g, '').replace(/""/g, '"');
                     if (!pName) continue;
 
@@ -563,13 +573,16 @@ function importMovementsCsv(event) {
                             id: crypto.randomUUID(),
                             name: pName,
                             currency: curr.replace(/^"|"$/g, '') || 'EUR',
+                            rawFinanced: parseFloat(financedAmt) || 0,
+                            rawInterest: parseFloat(interestAmt) || 0,
+                            rawFinal: parseFloat(finalAmt) || 0,
                             totalCount: parseInt(totalCountStr) || 1,
                             expanded: false,
                             installments: []
                         };
                     }
                     const formattedDate = normalizeDateToIso(instDate);
-                    const amount = parseFloat(instAmtStr.replace(',', '.')) || 0;
+                    const amount = Math.round((parseFloat(instAmtStr.replace(',', '.')) || 0) * 100) / 100;
                     const paid = paidStr.toUpperCase().includes('SI');
                     const number = parseInt(instNumStr) || 1;
 
@@ -606,14 +619,20 @@ function importMovementsCsv(event) {
             // Preparar estructuras analizadas
             let parsedRemit = Object.values(rawRemitMap);
             let parsedInst = Object.values(rawInstMap).map(p => {
-                const totalAmount = p.installments.reduce((acc, curr) => acc + curr.amount, 0);
+                const totalSum = p.installments.reduce((acc, curr) => acc + curr.amount, 0);
+                const roundedSum = Math.round(totalSum * 100) / 100;
+
+                const financed = p.rawFinanced > 0 ? p.rawFinanced : roundedSum;
+                const interest = p.rawInterest >= 0 ? p.rawInterest : 0;
+                const totalAmount = Math.round((financed + interest) * 100) / 100;
+
                 return {
                     ...p,
-                    financedAmount: totalAmount,
-                    interestAmount: 0,
-                    totalAmount,
-                    regularAmount: p.installments.length ? p.installments[0].amount : 0,
-                    finalAmount: p.installments.length ? p.installments[p.installments.length - 1].amount : 0,
+                    financedAmount: financed,
+                    interestAmount: interest,
+                    totalAmount: totalAmount,
+                    regularAmount: p.installments.length > 1 ? p.installments[0].amount : roundedSum,
+                    finalAmount: p.rawFinal > 0 ? p.rawFinal : (p.installments.length ? p.installments[p.installments.length - 1].amount : 0),
                     firstDate: p.installments.length ? p.installments[0].date : ''
                 };
             });
@@ -1515,7 +1534,6 @@ function bindEvents() {
 
     if ($('openExportDlgBtn')) {
         $('openExportDlgBtn').addEventListener('click', () => {
-            // Desmarcar por defecto todas las opciones al abrir
             ['expMovements', 'expRemittances', 'expInstallments', 'expDayCounter'].forEach(id => {
                 const cb = $(id);
                 if (cb) cb.checked = false;
@@ -1547,7 +1565,6 @@ function bindEvents() {
         $('csvFileInput').addEventListener('change', importMovementsCsv);
     }
 
-    // Listener para el formulario de selección en el diálogo de importación
     if ($('importSelectForm')) {
         $('importSelectForm').addEventListener('submit', (e) => {
             e.preventDefault();
