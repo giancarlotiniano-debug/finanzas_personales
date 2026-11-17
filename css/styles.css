@@ -1568,6 +1568,12 @@ input[type="time"]::-webkit-date-and-time-value {
     accent-color: var(--blue);
 }
 
+.config-backup-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
 /* ==========================================
    9. RESPONSIVE DESIGN
    ========================================== */
@@ -1707,5 +1713,11 @@ input[type="time"]::-webkit-date-and-time-value {
     .table-wrapper {
         max-height: 500px;
         overflow-y: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .config-backup-actions {
+        grid-template-columns: 1fr;
     }
 }

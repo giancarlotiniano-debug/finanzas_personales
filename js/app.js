@@ -300,7 +300,6 @@ function setupMainAccordion(btnId, containerId, iconId, cardId) {
         const isCurrentlyExpanded = container.style.display === 'block';
         const willBeExpanded = !isCurrentlyExpanded;
 
-        // Cierra los demás acordeones principales del bloque
         accordionConfig.forEach(item => {
             const c = $(item.containerId);
             const ic = $(item.iconId);
@@ -323,7 +322,143 @@ function setupMainAccordion(btnId, containerId, iconId, cardId) {
 }
 
 /* ==========================================
-   4. MOVIMIENTOS Y CATEGORÍAS
+   4. EXPORTAR E IMPORTAR MOVIMIENTOS CSV
+   ========================================== */
+function exportMovementsCsv() {
+    if (!movements.length) {
+        alert('No hay movimientos registrados para exportar.');
+        return;
+    }
+
+    const headers = ['FECHA', 'MOVIMIENTO', 'TIPO', 'CATEGORIA', 'IMPORTE', 'NOTAS'];
+    const rows = movements.map(m => {
+        const tipoStr = m.kind === 'income' ? 'Ingreso' : 'Gasto';
+        const desc = `"${(m.desc || '').replace(/"/g, '""')}"`;
+        const cat = `"${(m.category || '').replace(/"/g, '""')}"`;
+        const notas = `"${(m.notes || '').replace(/"/g, '""')}"`;
+        
+        // --- CONVERSIÓN DE FECHA A DD/MM/YYYY ---
+        let formattedDate = m.date;
+        if (m.date && m.date.includes('-')) {
+            const [year, month, day] = m.date.split('-');
+            formattedDate = `${day}/${month}/${year}`;
+        }
+
+        return [formattedDate, desc, tipoStr, cat, m.amount, notas].join(',');
+    });
+
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `movimientos_finanzas_${today.toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function importMovementsCsv(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const text = e.target.result;
+            const lines = text.split(/\r\n|\n/);
+            if (lines.length < 2) {
+                alert('El archivo CSV está vacío o no tiene el formato correcto.');
+                return;
+            }
+
+            let importedCount = 0;
+            let skippedCount = 0;
+
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines.length > i ? lines[i].trim() : '';
+                if (!line) continue;
+
+                const row = [];
+                let inQuotes = false;
+                let currentVal = '';
+                for (let charIdx = 0; charIdx < line.length; charIdx++) {
+                    const char = line[charIdx];
+                    if (char === '"') {
+                        if (inQuotes && line[charIdx + 1] === '"') {
+                            currentVal += '"';
+                            charIdx++;
+                        } else {
+                            inQuotes = !inQuotes;
+                        }
+                    } else if (char === ',' && !inQuotes) {
+                        row.push(currentVal.trim());
+                        currentVal = '';
+                    } else {
+                        currentVal += char;
+                    }
+                }
+                row.push(currentVal.trim());
+
+                if (row.length >= 5) {
+                    let [date, desc, tipo, category, amountStr, notes = ''] = row;
+                    
+                    // --- NORMALIZACIÓN DE FECHAS (Soporta YYYY-MM-DD y DD/MM/YYYY) ---
+                    date = date.replace(/^"|"$/g, '').trim();
+                    if (date.includes('/')) {
+                        const parts = date.split('/');
+                        if (parts.length === 3) {
+                            // Si viene como DD/MM/YYYY o D/M/YYYY, lo convertimos a YYYY-MM-DD
+                            const day = parts[0].padStart(2, '0');
+                            const month = parts[1].padStart(2, '0');
+                            let year = parts[2];
+                            if (year.length === 2) year = '20' + year; // Por si el año viene en 2 dígitos
+                            date = `${year}-${month}-${day}`;
+                        }
+                    }
+
+                    const cleanDesc = desc.replace(/^"|"$/g, '').replace(/""/g, '"');
+                    const cleanCat = category.replace(/^"|"$/g, '').replace(/""/g, '"');
+                    const cleanNotes = notes.replace(/^"|"$/g, '').replace(/""/g, '"');
+                    
+                    const amount = parseFloat(amountStr.replace(',', '.')) || 0;
+                    const kindNormalized = (tipo.toLowerCase().includes('ingreso') || tipo.toLowerCase() === 'income') ? 'income' : 'expense';
+
+                    if (date && cleanDesc && amount > 0) {
+                        movements.push({
+                            id: crypto.randomUUID(),
+                            timestamp: Date.now() + i,
+                            desc: cleanDesc,
+                            kind: kindNormalized,
+                            amount: Math.round(amount * 100) / 100,
+                            date: date,
+                            category: cleanCat || (kindNormalized === 'income' ? 'Salario' : 'Compras'),
+                            notes: cleanNotes
+                        });
+                        importedCount++;
+                    } else {
+                        skippedCount++;
+                    }
+                } else {
+                    skippedCount++;
+                }
+            }
+
+            persist();
+            render();
+            alert(`¡Importación exitosa!\n• Movimientos añadidos: ${importedCount}\n• Filas omitidas/inválidas: ${skippedCount}`);
+            event.target.value = '';
+        } catch (err) {
+            console.error(err);
+            alert('Hubo un error al procesar el archivo CSV.');
+        }
+    };
+    reader.readAsText(file);
+}
+
+/* ==========================================
+   5. MOVIMIENTOS Y CATEGORÍAS
    ========================================== */
 function setupCategoryTabs() {
     const btnExpense = $('catTabExpense');
@@ -569,7 +704,7 @@ function render() {
 }
 
 /* ==========================================
-   5. GESTOR DE REMESAS
+   6. GESTOR DE REMESAS
    ========================================== */
 function updateRemitDOMTotals(rem) {
     const tc = rem.tc || 1;
@@ -753,7 +888,7 @@ function addRemitItem(remId) {
 }
 
 /* ==========================================
-   6. GESTOR DE CUOTAS
+   7. GESTOR DE CUOTAS
    ========================================== */
 function autoCalculateInstallment(prefix) {
     const financed = parseFloat($(`${prefix}InstFinancedAmount`).value.replace(',', '.')) || 0;
@@ -888,7 +1023,7 @@ function editInstallmentPurchase(purchaseId) {
 }
 
 /* ==========================================
-   7. CONTADOR DE DÍAS
+   8. CONTADOR DE DÍAS
    ========================================== */
 function renderDayCounter() {
     const listContainer = $('dayCounterMonthsList');
@@ -977,7 +1112,7 @@ function toggleDayCounterMonthAccordion(monthId) {
 }
 
 /* ==========================================
-   8. MODALES Y CATEGORÍAS
+   9. MODALES Y CATEGORÍAS
    ========================================== */
 function openNewMovement() {
     editingId = null;
@@ -1139,7 +1274,7 @@ function selectCategoryIcon(iconKey, targetInputId, containerSelector) {
 }
 
 /* ==========================================
-   9. REGISTRO DE LISTENERS E INICIALIZACIÓN
+   10. REGISTRO DE LISTENERS E INICIALIZACIÓN
    ========================================== */
 function bindEvents() {
     accordionConfig.forEach(item => {
@@ -1147,6 +1282,20 @@ function bindEvents() {
     });
 
     setupCategoryTabs();
+
+    if ($('exportCsvBtn')) {
+        $('exportCsvBtn').addEventListener('click', exportMovementsCsv);
+    }
+
+    if ($('importCsvBtn')) {
+        $('importCsvBtn').addEventListener('click', () => {
+            $('csvFileInput')?.click();
+        });
+    }
+
+    if ($('csvFileInput')) {
+        $('csvFileInput').addEventListener('change', importMovementsCsv);
+    }
 
     if ($('catChartWrapper')) {
         $('catChartWrapper').addEventListener('click', (e) => {
