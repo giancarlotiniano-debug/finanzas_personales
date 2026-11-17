@@ -1574,6 +1574,12 @@ input[type="time"]::-webkit-date-and-time-value {
     gap: 10px;
 }
 
+@media (max-width: 480px) {
+    .config-backup-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* ==========================================
    9. RESPONSIVE DESIGN
    ========================================== */
@@ -1713,11 +1719,5 @@ input[type="time"]::-webkit-date-and-time-value {
     .table-wrapper {
         max-height: 500px;
         overflow-y: auto;
-    }
-}
-
-@media (max-width: 480px) {
-    .config-backup-actions {
-        grid-template-columns: 1fr;
     }
 }

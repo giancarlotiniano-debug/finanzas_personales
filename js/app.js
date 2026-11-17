@@ -322,42 +322,152 @@ function setupMainAccordion(btnId, containerId, iconId, cardId) {
 }
 
 /* ==========================================
-   4. EXPORTAR E IMPORTAR MOVIMIENTOS CSV
+   4. EXPORTAR E IMPORTAR CSV MULTI-SECCIÓN
    ========================================== */
-function exportMovementsCsv() {
-    if (!movements.length) {
-        alert('No hay movimientos registrados para exportar.');
+function executeCustomExport() {
+    const includeMovs = $('expMovements')?.checked;
+    const includeRemit = $('expRemittances')?.checked;
+    const includeInst = $('expInstallments')?.checked;
+    const includeDays = $('expDayCounter')?.checked;
+
+    if (!includeMovs && !includeRemit && !includeInst && !includeDays) {
+        alert('Debes seleccionar al menos una sección para exportar.');
         return;
     }
 
-    const headers = ['FECHA', 'MOVIMIENTO', 'TIPO', 'CATEGORIA', 'IMPORTE', 'NOTAS'];
-    const rows = movements.map(m => {
-        const tipoStr = m.kind === 'income' ? 'Ingreso' : 'Gasto';
-        const desc = `"${(m.desc || '').replace(/"/g, '""')}"`;
-        const cat = `"${(m.category || '').replace(/"/g, '""')}"`;
-        const notas = `"${(m.notes || '').replace(/"/g, '""')}"`;
-        
-        // --- CONVERSIÓN DE FECHA A DD/MM/YYYY ---
-        let formattedDate = m.date;
-        if (m.date && m.date.includes('-')) {
-            const [year, month, day] = m.date.split('-');
-            formattedDate = `${day}/${month}/${year}`;
-        }
+    const csvRows = [];
 
-        return [formattedDate, desc, tipoStr, cat, m.amount, notas].join(',');
-    });
+    // 1. MOVIMIENTOS
+    if (includeMovs) {
+        csvRows.push('--- SECCION: MOVIMIENTOS ---');
+        csvRows.push('FECHA,MOVIMIENTO,TIPO,CATEGORIA,IMPORTE,NOTAS');
+        movements.forEach(m => {
+            let formattedDate = m.date;
+            if (m.date && m.date.includes('-')) {
+                const [year, month, day] = m.date.split('-');
+                formattedDate = `${day}/${month}/${year}`;
+            }
+            const desc = `"${(m.desc || '').replace(/"/g, '""')}"`;
+            const tipoStr = m.kind === 'income' ? 'Ingreso' : 'Gasto';
+            const cat = `"${(m.category || '').replace(/"/g, '""')}"`;
+            const notes = `"${(m.notes || '').replace(/"/g, '""')}"`;
+            csvRows.push([formattedDate, desc, tipoStr, cat, m.amount, notes].join(','));
+        });
+        csvRows.push('');
+    }
 
-    const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+    // 2. REMESAS
+    if (includeRemit) {
+        csvRows.push('--- SECCION: REMESAS ---');
+        csvRows.push('NOMBRE_REMESA,MONEDA_ENVIO,MONEDA_RECEPCION,TIPO_CAMBIO,COMISION,CONCEPTO_ITEM,IMPORTE_RECEPCION_ITEM');
+        remittancesList.forEach(r => {
+            if (!r.items || r.items.length === 0) {
+                csvRows.push(`"${r.name}","${r.sendCurr}","${r.recvCurr}",${r.tc},${r.commission},"" ,0`);
+            } else {
+                r.items.forEach(item => {
+                    const concept = `"${(item.concept || '').replace(/"/g, '""')}"`;
+                    csvRows.push(`"${r.name}","${r.sendCurr}","${r.recvCurr}",${r.tc},${r.commission},${concept},${item.recvAmount}`);
+                });
+            }
+        });
+        csvRows.push('');
+    }
+
+    // 3. CUOTAS
+    if (includeInst) {
+        csvRows.push('--- SECCION: COMPRAS EN CUOTAS ---');
+        csvRows.push('COMPRA,MONEDA,TOTAL_CUOTAS,NUMERO_CUOTA,FECHA_CUOTA,IMPORTE_CUOTA,PAGADO');
+        installmentsPurchases.forEach(p => {
+            p.installments.forEach(inst => {
+                let formattedDate = inst.date;
+                if (inst.date && inst.date.includes('-')) {
+                    const [year, month, day] = inst.date.split('-');
+                    formattedDate = `${day}/${month}/${year}`;
+                }
+                const name = `"${(p.name || '').replace(/"/g, '""')}"`;
+                csvRows.push(`${name},"${p.currency || 'EUR'}",${p.totalCount},${inst.number},${formattedDate},${inst.amount},${inst.paid ? 'SI' : 'NO'}`);
+            });
+        });
+        csvRows.push('');
+    }
+
+    // 4. CONTADOR DE DÍAS
+    if (includeDays) {
+        csvRows.push('--- SECCION: CONTADOR DE DIAS TRABAJADOS ---');
+        csvRows.push('MES,DIAS_OBJETIVO,FECHA_DIA,DIA_SEMANA,ENTRADA,SALIDA,LUGAR');
+        dayCounterMonths.forEach(m => {
+            if (!m.days || m.days.length === 0) {
+                csvRows.push(`"${m.name}",${m.targetDays},"" ,"" ,"" ,"" ,""`);
+            } else {
+                m.days.forEach(d => {
+                    let formattedDate = d.date;
+                    if (d.date && d.date.includes('-')) {
+                        const [year, month, day] = d.date.split('-');
+                        formattedDate = `${day}/${month}/${year}`;
+                    }
+                    const monthName = `"${(m.name || '').replace(/"/g, '""')}"`;
+                    const location = `"${(d.location || '').replace(/"/g, '""')}"`;
+                    csvRows.push(`${monthName},${m.targetDays},${formattedDate},"${d.dayName}","${d.entryTime}","${d.exitTime}",${location}`);
+                });
+            }
+        });
+    }
+
+    const csvContent = '\uFEFF' + csvRows.join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `movimientos_finanzas_${today.toISOString().slice(0, 10)}.csv`);
+    link.setAttribute('download', `copia_seguridad_finanzas_${today.toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    $('exportDlg')?.close();
 }
+
+function parseCsvLine(line) {
+    const row = [];
+    let inQuotes = false;
+    let currentVal = '';
+    for (let charIdx = 0; charIdx < line.length; charIdx++) {
+        const char = line[charIdx];
+        if (char === '"') {
+            if (inQuotes && line[charIdx + 1] === '"') {
+                currentVal += '"';
+                charIdx++;
+            } else {
+                inQuotes = !inQuotes;
+            }
+        } else if (char === ',' && !inQuotes) {
+            row.push(currentVal.trim());
+            currentVal = '';
+        } else {
+            currentVal += char;
+        }
+    }
+    row.push(currentVal.trim());
+    return row;
+}
+
+function normalizeDateToIso(dateStr) {
+    if (!dateStr) return '';
+    let clean = dateStr.replace(/^"|"$/g, '').trim();
+    if (clean.includes('/')) {
+        const parts = clean.split('/');
+        if (parts.length === 3) {
+            const day = parts[0].padStart(2, '0');
+            const month = parts[1].padStart(2, '0');
+            let year = parts[2];
+            if (year.length === 2) year = '20' + year;
+            return `${year}-${month}-${day}`;
+        }
+    }
+    return clean;
+}
+
+let pendingParsedSections = null;
 
 function importMovementsCsv(event) {
     const file = event.target.files[0];
@@ -373,60 +483,42 @@ function importMovementsCsv(event) {
                 return;
             }
 
-            let importedCount = 0;
-            let skippedCount = 0;
+            let currentSection = 'MOVIMIENTOS';
+            let rawRemitMap = {};
+            let rawInstMap = {};
+            let rawDaysMap = {};
+            let tempMovements = [];
+            let detectedSections = new Set();
 
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines.length > i ? lines[i].trim() : '';
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
                 if (!line) continue;
 
-                const row = [];
-                let inQuotes = false;
-                let currentVal = '';
-                for (let charIdx = 0; charIdx < line.length; charIdx++) {
-                    const char = line[charIdx];
-                    if (char === '"') {
-                        if (inQuotes && line[charIdx + 1] === '"') {
-                            currentVal += '"';
-                            charIdx++;
-                        } else {
-                            inQuotes = !inQuotes;
-                        }
-                    } else if (char === ',' && !inQuotes) {
-                        row.push(currentVal.trim());
-                        currentVal = '';
-                    } else {
-                        currentVal += char;
-                    }
+                if (line.startsWith('--- SECCION:')) {
+                    if (line.includes('MOVIMIENTOS')) { currentSection = 'MOVIMIENTOS'; detectedSections.add('MOVIMIENTOS'); }
+                    else if (line.includes('REMESAS')) { currentSection = 'REMESAS'; detectedSections.add('REMESAS'); }
+                    else if (line.includes('COMPRAS EN CUOTAS')) { currentSection = 'CUOTAS'; detectedSections.add('CUOTAS'); }
+                    else if (line.includes('CONTADOR DE DIAS')) { currentSection = 'DIAS'; detectedSections.add('DIAS'); }
+                    continue;
                 }
-                row.push(currentVal.trim());
 
-                if (row.length >= 5) {
+                if (line.startsWith('FECHA,') || line.startsWith('NOMBRE_REMESA,') || line.startsWith('COMPRA,') || line.startsWith('MES,')) {
+                    continue; 
+                }
+
+                const row = parseCsvLine(line);
+
+                if (currentSection === 'MOVIMIENTOS' && row.length >= 5) {
                     let [date, desc, tipo, category, amountStr, notes = ''] = row;
-                    
-                    // --- NORMALIZACIÓN DE FECHAS (Soporta YYYY-MM-DD y DD/MM/YYYY) ---
-                    date = date.replace(/^"|"$/g, '').trim();
-                    if (date.includes('/')) {
-                        const parts = date.split('/');
-                        if (parts.length === 3) {
-                            // Si viene como DD/MM/YYYY o D/M/YYYY, lo convertimos a YYYY-MM-DD
-                            const day = parts[0].padStart(2, '0');
-                            const month = parts[1].padStart(2, '0');
-                            let year = parts[2];
-                            if (year.length === 2) year = '20' + year; // Por si el año viene en 2 dígitos
-                            date = `${year}-${month}-${day}`;
-                        }
-                    }
-
+                    date = normalizeDateToIso(date);
                     const cleanDesc = desc.replace(/^"|"$/g, '').replace(/""/g, '"');
                     const cleanCat = category.replace(/^"|"$/g, '').replace(/""/g, '"');
                     const cleanNotes = notes.replace(/^"|"$/g, '').replace(/""/g, '"');
-                    
                     const amount = parseFloat(amountStr.replace(',', '.')) || 0;
                     const kindNormalized = (tipo.toLowerCase().includes('ingreso') || tipo.toLowerCase() === 'income') ? 'income' : 'expense';
 
                     if (date && cleanDesc && amount > 0) {
-                        movements.push({
+                        tempMovements.push({
                             id: crypto.randomUUID(),
                             timestamp: Date.now() + i,
                             desc: cleanDesc,
@@ -436,25 +528,163 @@ function importMovementsCsv(event) {
                             category: cleanCat || (kindNormalized === 'income' ? 'Salario' : 'Compras'),
                             notes: cleanNotes
                         });
-                        importedCount++;
-                    } else {
-                        skippedCount++;
                     }
-                } else {
-                    skippedCount++;
+                } 
+                else if (currentSection === 'REMESAS' && row.length >= 7) {
+                    let [remName, sendCurr, recvCurr, tcStr, commStr, concept, recvAmtStr] = row;
+                    remName = remName.replace(/^"|"$/g, '').replace(/""/g, '"');
+                    if (!remName) continue;
+
+                    if (!rawRemitMap[remName]) {
+                        rawRemitMap[remName] = {
+                            id: crypto.randomUUID(),
+                            name: remName,
+                            sendCurr: sendCurr.replace(/^"|"$/g, '') || 'EUR',
+                            recvCurr: recvCurr.replace(/^"|"$/g, '') || 'PEN',
+                            tc: parseFloat(tcStr.replace(',', '.')) || 3.75,
+                            commission: parseFloat(commStr.replace(',', '.')) || 0,
+                            expanded: false,
+                            items: []
+                        };
+                    }
+                    const cleanConcept = concept.replace(/^"|"$/g, '').replace(/""/g, '"');
+                    const recvAmt = parseFloat(recvAmtStr.replace(',', '.')) || 0;
+                    if (cleanConcept) {
+                        rawRemitMap[remName].items.push({ concept: cleanConcept, recvAmount: recvAmt });
+                    }
+                }
+                else if (currentSection === 'CUOTAS' && row.length >= 7) {
+                    let [pName, curr, totalCountStr, instNumStr, instDate, instAmtStr, paidStr] = row;
+                    pName = pName.replace(/^"|"$/g, '').replace(/""/g, '"');
+                    if (!pName) continue;
+
+                    if (!rawInstMap[pName]) {
+                        rawInstMap[pName] = {
+                            id: crypto.randomUUID(),
+                            name: pName,
+                            currency: curr.replace(/^"|"$/g, '') || 'EUR',
+                            totalCount: parseInt(totalCountStr) || 1,
+                            expanded: false,
+                            installments: []
+                        };
+                    }
+                    const formattedDate = normalizeDateToIso(instDate);
+                    const amount = parseFloat(instAmtStr.replace(',', '.')) || 0;
+                    const paid = paidStr.toUpperCase().includes('SI');
+                    const number = parseInt(instNumStr) || 1;
+
+                    rawInstMap[pName].installments.push({ number, amount, date: formattedDate, paid });
+                }
+                else if (currentSection === 'DIAS' && row.length >= 7) {
+                    let [mName, targetStr, dDate, dName, entryT, exitT, loc] = row;
+                    mName = mName.replace(/^"|"$/g, '').replace(/""/g, '"');
+                    if (!mName) continue;
+
+                    if (!rawDaysMap[mName]) {
+                        rawDaysMap[mName] = {
+                            id: crypto.randomUUID(),
+                            name: mName,
+                            targetDays: parseInt(targetStr) || 15,
+                            expanded: false,
+                            days: []
+                        };
+                    }
+                    const formattedDate = normalizeDateToIso(dDate);
+                    const cleanLoc = loc.replace(/^"|"$/g, '').replace(/""/g, '"');
+                    if (formattedDate) {
+                        rawDaysMap[mName].days.push({
+                            date: formattedDate,
+                            dayName: dName.replace(/^"|"$/g, ''),
+                            entryTime: entryT.replace(/^"|"$/g, ''),
+                            exitTime: exitT.replace(/^"|"$/g, ''),
+                            location: cleanLoc
+                        });
+                    }
                 }
             }
 
-            persist();
-            render();
-            alert(`¡Importación exitosa!\n• Movimientos añadidos: ${importedCount}\n• Filas omitidas/inválidas: ${skippedCount}`);
+            // Preparar estructuras analizadas
+            let parsedRemit = Object.values(rawRemitMap);
+            let parsedInst = Object.values(rawInstMap).map(p => {
+                const totalAmount = p.installments.reduce((acc, curr) => acc + curr.amount, 0);
+                return {
+                    ...p,
+                    financedAmount: totalAmount,
+                    interestAmount: 0,
+                    totalAmount,
+                    regularAmount: p.installments.length ? p.installments[0].amount : 0,
+                    finalAmount: p.installments.length ? p.installments[p.installments.length - 1].amount : 0,
+                    firstDate: p.installments.length ? p.installments[0].date : ''
+                };
+            });
+            let parsedDays = Object.values(rawDaysMap).map(m => {
+                m.days.sort((a, b) => a.date.localeCompare(b.date));
+                return m;
+            });
+
+            pendingParsedSections = {
+                movements: tempMovements,
+                remittances: parsedRemit,
+                installments: parsedInst,
+                dayCounter: parsedDays
+            };
+
+            // Si hay más de una sección detectada, mostramos el modal para elegir
+            if (detectedSections.size > 1) {
+                if ($('impMovCount')) $('impMovCount').textContent = tempMovements.length;
+                if ($('impRemitCount')) $('impRemitCount').textContent = parsedRemit.length;
+                if ($('impInstCount')) $('impInstCount').textContent = parsedInst.length;
+                if ($('impDaysCount')) $('impDaysCount').textContent = parsedDays.length;
+
+                if ($('importSelectDlg')) $('importSelectDlg').showModal();
+            } else {
+                // Si solo hay una o ninguna etiqueta explícita, aplicamos todo por compatibilidad
+                applyImportSelection({ movements: true, remittances: true, installments: true, dayCounter: true });
+            }
+
             event.target.value = '';
         } catch (err) {
             console.error(err);
-            alert('Hubo un error al procesar el archivo CSV.');
+            alert('Hubo un error al procesar el archivo de copia de seguridad.');
         }
     };
     reader.readAsText(file);
+}
+
+function applyImportSelection(selection) {
+    if (!pendingParsedSections) return;
+
+    let summaryMsg = '¡Restauración exitosa!\n';
+
+    if (selection.movements && pendingParsedSections.movements.length > 0) {
+        movements = pendingParsedSections.movements;
+        persist();
+        summaryMsg += `• Movimientos: ${movements.length}\n`;
+    }
+    if (selection.remittances && pendingParsedSections.remittances.length > 0) {
+        remittancesList = pendingParsedSections.remittances;
+        persistRemittancesList();
+        summaryMsg += `• Remesas: ${remittancesList.length}\n`;
+    }
+    if (selection.installments && pendingParsedSections.installments.length > 0) {
+        installmentsPurchases = pendingParsedSections.installments;
+        persistInstallments();
+        summaryMsg += `• Compras en cuotas: ${installmentsPurchases.length}\n`;
+    }
+    if (selection.dayCounter && pendingParsedSections.dayCounter.length > 0) {
+        dayCounterMonths = pendingParsedSections.dayCounter;
+        persistDayCounter();
+        summaryMsg += `• Meses de trabajo: ${dayCounterMonths.length}\n`;
+    }
+
+    render();
+    renderRemittancesList();
+    renderInstallments();
+    renderDayCounter();
+
+    alert(summaryMsg);
+    pendingParsedSections = null;
+    if ($('importSelectDlg')) $('importSelectDlg').close();
 }
 
 /* ==========================================
@@ -1283,8 +1513,28 @@ function bindEvents() {
 
     setupCategoryTabs();
 
-    if ($('exportCsvBtn')) {
-        $('exportCsvBtn').addEventListener('click', exportMovementsCsv);
+    if ($('openExportDlgBtn')) {
+        $('openExportDlgBtn').addEventListener('click', () => {
+            // Desmarcar por defecto todas las opciones al abrir
+            ['expMovements', 'expRemittances', 'expInstallments', 'expDayCounter'].forEach(id => {
+                const cb = $(id);
+                if (cb) cb.checked = false;
+            });
+            $('exportDlg')?.showModal();
+        });
+    }
+
+    if ($('cancelExportBtn')) {
+        $('cancelExportBtn').addEventListener('click', () => {
+            $('exportDlg')?.close();
+        });
+    }
+
+    if ($('exportForm')) {
+        $('exportForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            executeCustomExport();
+        });
     }
 
     if ($('importCsvBtn')) {
@@ -1295,6 +1545,27 @@ function bindEvents() {
 
     if ($('csvFileInput')) {
         $('csvFileInput').addEventListener('change', importMovementsCsv);
+    }
+
+    // Listener para el formulario de selección en el diálogo de importación
+    if ($('importSelectForm')) {
+        $('importSelectForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const selection = {
+                movements: $('impSelectMovs')?.checked || false,
+                remittances: $('impSelectRemit')?.checked || false,
+                installments: $('impSelectInst')?.checked || false,
+                dayCounter: $('impSelectDays')?.checked || false
+            };
+            applyImportSelection(selection);
+        });
+    }
+
+    if ($('cancelImportSelect')) {
+        $('cancelImportSelect').addEventListener('click', () => {
+            pendingParsedSections = null;
+            $('importSelectDlg')?.close();
+        });
     }
 
     if ($('catChartWrapper')) {
@@ -1369,14 +1640,14 @@ function bindEvents() {
             if ($('newCatKind')) $('newCatKind').value = 'expense';
             renderIconSelector('Compras');
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-            if ($('categoryCreateDlg')) $('categoryCreateDlg').showModal();
+            $('categoryCreateDlg')?.showModal();
         });
     }
 
     if ($('cancelCreateCategoryBtn')) {
         $('cancelCreateCategoryBtn').addEventListener('click', () => {
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-            if ($('categoryCreateDlg')) $('categoryCreateDlg').close();
+            $('categoryCreateDlg')?.close();
         });
     }
 
