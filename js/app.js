@@ -50,17 +50,17 @@ const DEFAULT_CONFIG = {
         expense: [
             { name: 'Vivienda', color: '#3b82f6', icon: 'Casa' },
             { name: 'Coche', color: '#d97706', icon: 'Auto' },
-            { name: 'Combustible', color: '#ef4444', icon: 'Combustible' },
-            { name: 'Compras', color: '#ec4899', icon: 'Compras' },
+            { name: 'Combustible', color: '#ec48e4', icon: 'Combustible' },
+            { name: 'Compras', color: '#ef4444', icon: 'Compras' },
             { name: 'Alimentación', color: '#8b5cf6', icon: 'Alimentacion' },
             { name: 'Transporte', color: '#10b981', icon: 'Transporte' },
             { name: 'Manutención', color: '#f59e0b', icon: 'Familia' },
             { name: 'Servicios', color: '#6366f1', icon: 'Grifo' },
-            { name: 'Suscripciones', color: '#14b8a6', icon: 'Pantalla' },
+            { name: 'Suscripciones', color: '#b87114', icon: 'Pantalla' },
         ],
         income: [
             { name: 'Salario', color: '#22c55e', icon: 'Billetera' },
-            { name: 'Ingresos extra', color: '#84cc16', icon: 'Ingresos' },
+            { name: 'Ingresos extra', color: '#528800', icon: 'Ingresos' },
             { name: 'Devoluciones', color: '#0ea5e9', icon: 'Devolver' }
         ]
     }
@@ -1344,7 +1344,7 @@ function renderDayCounter() {
                 </div>
                 <div class="dc-day-right">
                     <button type="button" class="soft icon-btn btn-xs" data-action="edit-dc-day" data-month-id="${month.id}" data-index="${idx}" title="Editar día" aria-label="Editar día">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     </button>
                 </div>
             </div>
@@ -1483,7 +1483,7 @@ function renderConfigCategories() {
                     </div>
                     <div class="category-item-controls">
                         <button type="button" class="soft icon-btn btn-xs" data-action="open-edit-category" data-kind="${kind}" data-index="${originalIndex}" title="Editar categoría" aria-label="Editar categoría">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--button-principal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         </button>
                     </div>
                 </div>

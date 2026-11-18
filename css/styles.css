@@ -2,14 +2,16 @@
    1. VARIABLES Y TEMAS (CLARO / OSCURO)
    ========================================== */
 :root {
-    --bg: #F5F5F5;
+    --bg: #00000008;
     --card: #ffffff;
     --ink: #3C3C3C;
+    --titulo-seccion: #000000;
     --muted: #8c8287;
-    --line: #e2e2e2;
-    --green: #15966b;
+    --line: #0000001f;
+    --ingresos-font-card: #15966b;
+    --gastos-font-card: #FF5A5F;
+    --balance-font-card: #1f6dff;
     --red: #FF5A5F;
-    --blue: #087E8B;
     --shadow: 0 8px 28px rgba(60, 60, 60, 0.07);
     --header-bg: #ffffff;
     --modal-bg: #ffffff;
@@ -17,24 +19,33 @@
     --table-hover: rgba(8, 126, 139, 0.06);
     --cancel-btn-bg: #eaeaea;
     --cancel-btn-color: #3C3C3C;
+    --card-primary: #087e8b07;
+    --card-primary-border: #087e8b81;
+    --card-newbutton: #00000008;
+    --button-principal: #087E8B;
+    --divisorutilidades: #087E8B;
 }
 
 body.dark-mode {
-    --bg: #121214;               
-    --card: #1a1a1e;             
-    --ink: #f4f4f5;              
-    --muted: #a1a1aa;            
-    --line: #27272a;             
-    --green: #34d399;            
-    --red: #f87171;              
-    --blue: #22d3ee;             
+    --bg: #1a2230;               /* Fondo general basado en tu tono oscuro principal */
+    --card: #273248;             /* Fondo de tarjetas y contenedores (#273248) */
+    --ink: #FFEBD2;              /* Texto principal en color crema claro (#FFEBD2) */
+    --muted: #D1B89F;            /* Tono crema sutil y legible para textos secundarios */
+    --line: #1a2230;            /* Bordes y líneas divisorias con el tono terracota (#AF4F41) */
+    --green: #34d399;            /* Verde optimizado para ingresos en modo oscuro */
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-    --header-bg: #18181b;        
-    --modal-bg: #1a1a1e;         
-    --bar-bg: #27272a;           
-    --table-hover: rgba(34, 211, 238, 0.08); 
-    --cancel-btn-bg: #27272a;
-    --cancel-btn-color: #f4f4f5;
+    --header-bg: #273248;        /* Cabecera alineada con el color de las tarjetas */
+    --modal-bg: #273248;         /* Fondo de modales unificado */
+    --bar-bg: #1a2230;           /* Fondo de barras o campos de solo lectura */
+    --table-hover: rgba(255, 163, 100, 0.08); /* Hover sutil con tinte melocotón */
+    --cancel-btn-bg: #1a2230;
+    --cancel-btn-color: #FFEBD2;
+    --button-principal: #FC7643;
+    --card-newbutton: #1a2230;
+    --card-primary-border: #1a2230;
+    --card-primary: #1a2230;
+    --titulo-seccion: #ffffff;
+    --divisorutilidades: #FC7643;
 }
 
 /* ==========================================
@@ -59,7 +70,7 @@ h1 {
 
 p {
     margin: 0;
-    color: var(--muted);
+    color: var(--titulo-seccion);
 }
 
 button,
@@ -126,6 +137,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    color: var(--titulo-seccion);
 }
 
 .brand {
@@ -168,6 +180,7 @@ main {
     gap: 15px;
     flex-wrap: wrap;
     margin-bottom: 22px;
+    color: var(--titulo-seccion);
 }
 
 .cards {
@@ -190,7 +203,7 @@ main {
 }
 
 .metric-label {
-    color: var(--muted);
+    color: var(--titulo-seccion);
     font-size: 13px;
     font-weight: 600;
 }
@@ -202,9 +215,9 @@ main {
     letter-spacing: -0.5px;
 }
 
-.income { color: var(--green); }
-.expense { color: var(--red); }
-.balance { color: var(--blue); }
+.income { color: var(--ingresos-font-card); }
+.expense { color: var(--gastos-font-card); }
+.balance { color: var(--balance-font-card); }
 
 .layout {
     display: grid;
@@ -234,18 +247,18 @@ main {
     gap: 8px;
     font-size: 15px;
     font-weight: 750;
-    color: var(--ink);
+    color: var(--titulo-seccion);
     white-space: nowrap;
 }
 
 .section-divider-title svg {
-    stroke: var(--blue);
+    stroke: var(--button-principal);
 }
 
 .section-divider-line {
     flex: 1;
     height: 1px;
-    background: var(--line);
+    background: var(--divisorutilidades);
 }
 
 .section-title {
@@ -254,6 +267,7 @@ main {
     margin: 0;
     flex: 1;
     min-width: 0;
+    color: var(--titulo-seccion);
 }
 
 .section-heading {
@@ -294,7 +308,7 @@ button {
 
 button.addcat,
 button.aceptarmovimiento {
-    background: var(--blue);
+    background: var(--button-principal);
     color: #fff;
     font-weight: 650;
     width: 100px;
@@ -349,13 +363,21 @@ button.cancelarmovimiento {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border: 2px solid var(--blue);
+    border: 2px solid var(--button-principal);
+}
+
+.dark-mode #configBtn {
+    border: 2px solid var(--button-principal);
 }
 
 #configBtn svg {
-    stroke: var(--blue);
+    stroke: var(--button-principal);
     width: 20px;
     height: 20px;
+}
+
+.dark-mode #configBtn svg {
+    stroke: var(--button-principal);
 }
 
 .action-icon-btn svg {
@@ -368,7 +390,7 @@ body.dark-mode button.addcat,
 body.dark-mode button.aceptarmovimiento,
 body.dark-mode button.button-add,
 body.dark-mode .action-icon-btn:not(.mobile-toggle-btn) {
-    color: #3C3C3C;
+    color: var(--bg);
 }
 
 body.dark-mode .action-icon-btn:not(.mobile-toggle-btn) svg {
@@ -388,19 +410,19 @@ body.dark-mode .action-icon-btn:not(.mobile-toggle-btn) svg {
     justify-content: center;
     border-radius: 10px;
     line-height: 1;
-    border: 1.5px solid var(--blue);
+    border: 2px solid var(--button-principal);
     cursor: pointer;
 }
 
 .action-icon-btn.mobile-toggle-btn svg {
-    stroke: var(--blue);
+    stroke: var(--button-principal);
     width: 20px;
     height: 20px;
     stroke-width: 3;
 }
 
 button.button-add {
-    background: var(--blue);
+    background: var(--button-principal);
     color: #fff;
     font-weight: 900;
     font-size: 25px;
@@ -418,9 +440,9 @@ button.button-add {
 
 button.button-add svg {
     stroke: #fff;
-    width: 20px;
-    height: 20px;
-    stroke-width: 3;
+    width: 23px;
+    height: 23px;
+    stroke-width: 4;
 }
 
 body.dark-mode button.button-add {
@@ -447,13 +469,12 @@ button.icon-btn {
     justify-content: center;
     border-radius: 8px;
     background: var(--card);
-    border: 1px solid var(--blue);
+    border: 1px solid var(--button-principal);
 }
 
 #editCategoriesBtn {
-    background: var(--blue) !important;
+    background: var(--button-principal) !important;
     color: var(--blue) !important;
-    border: 1.5px solid var(--blue) !important;
     width: 44px;
     height: 44px;
     border-radius: 10px;
@@ -496,7 +517,7 @@ button.icon-btn {
     height: 44px;
     min-width: 44px;
     padding: 0;
-    border: 1.5px solid var(--blue);
+    border: 2px solid var(--button-principal);
     border-radius: 10px;
     background: var(--card);
     cursor: pointer;
@@ -505,7 +526,7 @@ button.icon-btn {
 }
 
 .month-picker-wrapper svg {
-    stroke: var(--blue);
+    stroke: var(--button-principal);
     flex-shrink: 0;
     pointer-events: none;
     stroke-width: 2.5;
@@ -539,6 +560,7 @@ button.icon-btn {
 .toolbar input,
 .toolbar select {
     border: 1px solid var(--line);
+    border-width: 2px;
     border-radius: 9px;
     padding: 9px;
     background: var(--card);
@@ -595,6 +617,8 @@ button.icon-btn {
 table {
     width: 100%;
     border-collapse: collapse;
+    color: var(--titulo-seccion);
+    font-size: 15px;
 }
 
 th {
@@ -638,7 +662,7 @@ tr:last-child td {
     border-bottom: none;
     font-size: 13px;
     font-weight: 650;
-    color: var(--blue);
+    color: var(--button-principal);
     background: transparent;
 }
 
@@ -657,7 +681,7 @@ tr.movement-row {
 }
 
 tr.movement-row:hover {
-    background-color: var(--table-hover);
+    background-color: var(--bg);
 }
 
 .empty {
@@ -679,7 +703,7 @@ tr.movement-row:hover {
 }
 
 tr.movement-row:hover td {
-    background-color: var(--table-hover);
+    background-color: var(--bg);
 }
 
 tr.movement-row:hover td:first-child {
@@ -719,14 +743,14 @@ tr.movement-row:hover td:last-child {
 }
 
 .cat-tab-btn.active {
-    background: var(--card);
-    color: var(--ink);
+    background: var(--button-principal);
+    color: var(--card);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 body.dark-mode .cat-tab-btn.active {
-    background: var(--line);
-    color: var(--ink);
+    background: var(--button-principal);
+    color: var(--bg);
 }
 
 .cat-chart-container {
@@ -850,10 +874,10 @@ body.dark-mode .cat-tab-btn.active {
     transition: background-color 0.15s ease, outline-color 0.15s ease;
 }
 .cat-breakdown-item:hover {
-    background: var(--table-hover);
+    background: var(--bg);
 }
 .cat-breakdown-item.selected {
-    background: var(--table-hover);
+    background: var(--bg);
 }
 .cat-breakdown-item:focus-visible {
     outline: 2px solid var(--blue);
@@ -939,10 +963,10 @@ body.dark-mode .cat-percentage-badge {
     gap: 8px;
     padding: 12px;
     border-radius: 8px;
-    font-weight: 600;
-    background: var(--bg);
+    font-weight: 650;
+    background: var(--card-newbutton);
+    color: var(--button-principal);
     border: 1px solid var(--line);
-    color: var(--ink);
 }
 
 .remit-tc-row {
@@ -952,8 +976,8 @@ body.dark-mode .cat-percentage-badge {
     margin-bottom: 0;
     padding: 12px;
     background: var(--bg);
-    border-radius: 10px;
     border: 1px solid var(--line);
+    border-radius: 10px;
 }
 
 .remit-tc-label {
@@ -974,7 +998,11 @@ body.dark-mode .cat-percentage-badge {
     font-size: 16px;
 }
 
-.remit-items-wrapper { margin-bottom: 2px; }
+.dark-mode .remit-input-num {
+    border-width: 2px;
+}
+
+.remit-items-wrapper { margin-bottom: 2px; padding: 0 12px; }
 
 .remit-item-row {
     display: flex;
@@ -996,7 +1024,7 @@ body.dark-mode .cat-percentage-badge {
 .remit-item-send-val {
     font-size: 13px;
     font-weight: 700;
-    color: var(--blue);
+    color: var(--button-principal);
 }
 
 .remit-new-row {
@@ -1016,14 +1044,18 @@ body.dark-mode .cat-percentage-badge {
     font-size: 16px;
 }
 
+.dark-mode .remit-new-input {
+    border-width: 2px;
+}
+
 .remit-add-btn {
-    background: var(--bar-bg);
-    color: var(--blue);
-    font-weight: 650;
+    background: var(--card);
+    color: var(--button-principal);
+    font-weight: 500;
     height: 40px;
     padding: 6px 12px;
     border-radius: 8px;
-    border: 1px solid var(--line);
+    border: 1px solid var(--button-principal);
     cursor: pointer;
 }
 
@@ -1033,7 +1065,7 @@ body.dark-mode .remit-add-btn {
 }
 
 .remit-totals-box {
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--card-primary-border);
     padding-top: 12px;
     display: flex;
     flex-direction: column;
@@ -1049,7 +1081,7 @@ body.dark-mode .remit-add-btn {
 }
 
 .remit-total-label { font-weight: 750; }
-.remit-total-send { margin-right: 8px; font-weight: 750; color: var(--blue); }
+.remit-total-send { margin-right: 8px; font-weight: 750; color: var(--button-principal); }
 .remit-total-recv { font-weight: 750; color: var(--ink); }
 
 .remit-commission-line {
@@ -1072,12 +1104,12 @@ body.dark-mode .remit-add-btn {
     font-weight: 750;
     font-size: 16px;
     margin-top: 4px;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--card-primary-border);
     padding-top: 12px;
     padding-bottom: 3px;
 }
 
-.remit-grand-total-val { color: var(--blue); }
+.remit-grand-total-val { color: var(--button-principal); }
 
 .remit-details-body {
     padding: 12px !important;
@@ -1085,11 +1117,15 @@ body.dark-mode .remit-add-btn {
 }
 
 .installment-purchase-card {
-    border: 1px solid var(--line);
+    border: 1px solid var(--card-primary-border);
     border-radius: 10px;
     margin-bottom: 12px;
     background: var(--card);
     overflow: hidden !important;
+}
+
+.dark-mode .installment-purchase-card {
+    border-width: 2px;
 }
 
 .installment-purchase-header {
@@ -1097,16 +1133,18 @@ body.dark-mode .remit-add-btn {
     justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
-    background: rgba(8, 126, 139, 0.04);
+    background: var(--card-primary);
     cursor: pointer;
     font-weight: 600;
-    border-radius: 10px;
-    border-bottom: 1px solid transparent;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
     transition: background-color 0.2s ease, border-radius 0.2s ease;
 }
 
 .dark-mode .installment-purchase-header {
-    background: rgba(64, 164, 176, 0.08);
+    background: var(--card-primary)
 }
 
 .installment-card-subtitle {
@@ -1119,7 +1157,7 @@ body.dark-mode .remit-add-btn {
     padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 14px;
     border-top: none !important;
     max-height: 700px !important;
     overflow-y: auto !important;
@@ -1134,20 +1172,21 @@ body.dark-mode .remit-add-btn {
     justify-content: space-between;
     align-items: center;
     padding: 8px 10px;
-    border-radius: 6px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
     background: rgba(8, 126, 139, 0.04);
     font-size: 14px;
     cursor: pointer;
 }
 
 .dark-mode .installment-row {
-    background: rgba(64, 164, 176, 0.06);
+    background: var(--card-primary)
 }
 
 .installment-row-title { font-weight: 600; }
 .installment-row-date { font-size: 12px; color: var(--muted); }
 .installment-row-right { display: flex; align-items: center; gap: 12px; }
-.installment-row-amount { font-weight: 700; }
+.installment-row-amount { font-weight: 700; color: var(--button-principal); }
 
 .installment-row.paid,
 .installment-purchase-header.all-paid {
@@ -1165,18 +1204,30 @@ body.dark-mode .installment-purchase-header.all-paid {
     width: 22px;
     height: 22px;
     cursor: pointer;
-    accent-color: var(--blue);
+    accent-color: var(--button-principal);
 }
 
+/* Icono "editar" en la lista de movimientos" */
 .installment-purchase-card button.soft.icon-btn,
 .card button.soft.icon-btn {
     background: var(--card) !important;
-    border: 1px solid var(--blue) !important;
+    border: 1px solid var(--button-principal);
 }
 
 .installment-purchase-card button.soft.icon-btn svg,
 .card button.soft.icon-btn svg {
-    stroke: var(--blue) !important;
+    stroke: var(--button-principal) !important;
+}
+
+/* Icono "editar" en la lista de días */
+.dc-day-row button.icon-btn {
+    border-color: var(--line) !important;
+    background: var(--bg);
+}
+
+.dc-day-row button.icon-btn svg,
+.dc-day-row button.icon-btn svg * {
+    stroke: var(--button-principal) !important;
 }
 
 .dc-day-row {
@@ -1184,10 +1235,10 @@ body.dark-mode .installment-purchase-header.all-paid {
     justify-content: space-between;
     align-items: center;
     padding: 10px 14px;
-    background: rgba(8, 126, 139, 0.04);
-    border: 1px solid var(--line);
+    background: var(--card-primary);;
     border-radius: 10px;
     font-size: 14px;
+    border: 1px solid var(--line);
 }
 
 body.dark-mode .dc-day-row {
@@ -1219,7 +1270,7 @@ body.dark-mode .dc-day-row {
 
 .dc-day-time {
     font-weight: 700;
-    color: var(--blue);
+    color: var(--button-principal);
 }
 
 .dc-day-loc {
@@ -1253,7 +1304,7 @@ dialog::backdrop {
 .modal {
     padding: 24px;
     background: var(--modal-bg);
-    color: var(--ink);
+    color: var(--titulo-seccion);
 }
 
 .modal h2 {
@@ -1381,7 +1432,7 @@ dialog::backdrop {
 .category-section-title.category-section-divider {
     margin-top: 16px;
     padding-top: 16px;
-    border-top: 1px solid var(--line);
+    border-top: 2px solid var(--bg);
 }
 
 .icon-selector-grid {
@@ -1448,7 +1499,7 @@ body.dark-mode .icon-option-item.selected {
 .detail-concept-title {
     font-size: 18px;
     font-weight: 750;
-    color: var(--blue);
+    color: var(--button-principal);
     margin-bottom: 20px;
 }
 
@@ -1519,7 +1570,7 @@ input[type="time"]::-webkit-date-and-time-value {
 .dc-days-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 14px;
     margin-bottom: 12px;
     max-height: 432px; 
     overflow-y: auto;
