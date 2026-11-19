@@ -390,6 +390,7 @@ function setupMainAccordion(btnId, containerId, iconId, cardId) {
     const btn = $(btnId);
     const card = $(cardId);
     const container = $(containerId);
+    const heading = card ? card.querySelector('.section-heading') : null;
 
     if (btn) {
         btn.addEventListener('click', (e) => {
@@ -398,19 +399,16 @@ function setupMainAccordion(btnId, containerId, iconId, cardId) {
         });
     }
 
-    if (container) {
-        container.addEventListener('click', (e) => {
-            e.stopPropagation();
+    if (heading) {
+        heading.addEventListener('click', (e) => {
+            if (e.target.closest('button, input, select, textarea, a, label, .movement-controls')) return;
+            toggleMainAccordionById(containerId, iconId, cardId);
         });
     }
 
-    if (card) {
-        card.addEventListener('click', (e) => {
-            if (container && (container === e.target || container.contains(e.target))) return;
-
-            if (e.target.closest('button, input, select, textarea, a, label, .installment-purchase-card, .installment-purchase-header, .installment-installments-list')) return;
-
-            toggleMainAccordionById(containerId, iconId, cardId);
+    if (container) {
+        container.addEventListener('click', (e) => {
+            e.stopPropagation();
         });
     }
 }
@@ -1442,7 +1440,7 @@ function renderDayCounter() {
                         ${daysHtml || '<div class="empty empty-mini">Sin días registrados en este mes.</div>'}
                     </div>
                     <div class="utility-footer-action" style="margin-top: 0;">
-                        <button type="button" class="day-newbutton" data-action="open-add-dc-day" data-month-id="${month.id}">
+                        <button type="button" class="utility-category-newbutton" data-action="open-add-dc-day" data-month-id="${month.id}">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             Nuevo día
                         </button>

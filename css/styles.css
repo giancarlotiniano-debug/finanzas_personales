@@ -373,7 +373,7 @@ button.cancelarmovimiento {
     width: 44px;
     height: 44px;
     border-radius: 10px;
-    background-color: var(--fondo);
+    background-color: var(--tarjetas);
     border: 1px solid var(--red);
     align-items: center;
     justify-content: center;
@@ -382,8 +382,10 @@ button.cancelarmovimiento {
 }
 
 .large-delete-button svg {
-    stroke: var(--red) !important;
-    stroke-width: 2px;
+    width: 22px;
+    height: 22px;
+    stroke: var(--red);
+    stroke-width: 1px;
 }
 
 #configBtn {
@@ -412,7 +414,7 @@ button.cancelarmovimiento {
 }
 
 .action-icon-btn.mobile-toggle-btn {
-    background: var(--fondo);
+    background: var(--tarjetas);
     font-weight: 900;
     font-size: 25px;
     min-width: 45px;
@@ -1448,7 +1450,6 @@ dialog::backdrop {
 .category-manager-list {
     max-height: 400px;
     overflow-y: auto;
-    border: 1px solid var(--primario);
     border-radius: 9px;
     padding: 15px;
     background-color: var(--fondo);
@@ -1481,7 +1482,7 @@ dialog::backdrop {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     padding-top: 0;
-    color: var(--texto);
+    color: var(--primario);
 }
 
 .category-section-title.category-section-divider {
