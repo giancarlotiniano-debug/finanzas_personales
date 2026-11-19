@@ -11,7 +11,7 @@ const categoryIconsMap = {
     "Billetera": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6"/><path d="M3 7a2 2 0 0 0 2 2h8"/><path d="M18 3v6"/><path d="M15.5 6.5L18 9l2.5-2.5"/><circle cx="17.5" cy="14.5" r="1" fill="currentColor"/></svg>`,
     "Pantalla": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3" width="20" height="14" rx="4" /><path d="M12 17v3" /><path d="M8 20h8" /><circle cx="11" cy="12" r="1.5" fill="currentColor" /><path d="M13 12V7h2" /></svg>`,
     "Familia": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="4" r="1.8" fill="currentColor"/><path d="M7.5 8.5H5a2 2 0 0 0-2 2v5a1.5 1.5 0 0 0 1.5 1.5h3"/><path d="M5.5 17v4"/><circle cx="18.5" cy="4" r="1.8" fill="currentColor"/><path d="M16.5 8.5H19a2 2 0 0 1 2 2v5a1.5 1.5 0 0 1-1.5 1.5h-3"/><path d="M18.5 17v4"/><circle cx="12" cy="8.5" r="1.6" fill="currentColor"/><rect x="9.5" y="12" width="5" height="5" rx="1.5"/><path d="M10.8 17v4M13.2 17v4"/></svg>`,
-    "Transporte": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3c4.5-1.3 9.5-1.3 14 0"/><path d="M12 2v4"/><rect x="4" y="6" width="16" height="14" rx="4"/><path d="M4 10h16"/><path d="M4 14h16"/><path d="M12 10v4"/><path d="M8 16v1"/><path d="M16 16v1"/><path d="M8 20l-1.5 2"/><path d="M16 20l1.5 2"/></svg>`,    
+    "Transporte": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3c4.5-1.3 9.5-1.3 14 0"/><path d="M12 2v4"/><rect x="4" y="6" width="16" height="14" rx="4"/><path d="M4 10h16"/><path d="M4 14h16"/><path d="M12 10v4"/><path d="M8 16v1"/><path d="M16 16v1"/><path d="M8 20l-1.5 2"/><path d="M16 20l1.5 2"/></svg>`,
     "Alimentacion": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18l-1.5 7.5a2 2 0 0 1-2 1.5h-11a2 2 0 0 1-2-1.5L3 11z"/><path d="M8 14v3M12 14v3M16 14v3"/><path d="M6.5 3h4"/><path d="M7.5 3v3L6 8.5V11M9.5 3v3L11 8.5V11"/><path d="M13 11l3.5-6.5a2.2 2.2 0 0 1 3.7 2.2L17.5 11"/></svg>`,
     "Compras": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h1.5a2 2 0 0 1 1.98 1.7L6.7 14.3A2 2 0 0 0 8.68 16H19"/><path d="M5.6 6h14.1a2 2 0 0 1 1.97 2.35l-.72 4A2 2 0 0 1 19 14H6.65"/><circle cx="8" cy="20" r="1.5" fill="currentColor" stroke="none"/><circle cx="17.5" cy="20" r="1.5" fill="currentColor" stroke="none"/></svg>`,
     "Combustible": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v16H3z"/><path d="M3 10h11"/><path d="M14 14h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0V8l-3-3"/><path d="M18 4l2 2v3h-2V4z" fill="currentColor" stroke="none"/></svg>`,
@@ -33,6 +33,8 @@ const categoryIconsMap = {
     "Bolsa de dinero": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6.5C8 5.2 7.5 4 7.5 3.2A1.2 1.2 0 0 1 8.7 2h6.6a1.2 1.2 0 0 1 1.2 1.2c0 .8-.5 2-2 3.3M9.5 6.5h5M9.5 6.5C5.5 8.5 3.5 13 3.5 17a5 5 0 0 0 5 5h7a5 5 0 0 0 5-5c0-4-2-8.5-6-10.5M14.2 11.2a2.2 2.2 0 0 0-2-.7h-.7a2 2 0 0 0 0 4h1a2 2 0 0 1 0 4h-1a2.2 2.2 0 0 1-2-.8M12 9v1.5m0 8V20"/></svg>`,
 };
 
+const warningIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></svg>`;
+
 /* ==========================================
    1. ESTADO Y CONFIGURACIÓN GLOBAL
    ========================================== */
@@ -40,6 +42,7 @@ const DEFAULT_CONFIG = {
     userName: 'Invitado',
     currency: 'EUR',
     theme: 'light',
+    colorCounter: 0,
     utilities: {
         financeManager: true,
         remittances: true,
@@ -98,41 +101,26 @@ const currentMonth = `${today.getFullYear()}-${pad(today.getMonth() + 1)}`;
 /* ==========================================
    2. UTILIDADES DE FORMATO, FECHAS Y MODALES
    ========================================== */
-const getCurrencySymbol = (code) => {
-    const symbols = { EUR: '€', USD: '$', PEN: 'S/.' };
-    return symbols[code] || '€';
-};
+const CURRENCY_SYMBOLS = { EUR: '€', USD: '$', PEN: 'S/.' };
+const getCurrencySymbol = (code) => CURRENCY_SYMBOLS[code] || '€';
 
 const formatCurrencyCustom = (amount, code) => {
     const num = Number(amount) || 0;
-    const parts = num.toFixed(2).split('.');
-    if (code === 'PEN') {
-        return `S/ ${parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${parts[1]}`;
-    }
-    if (code === 'USD') {
-        return `$${parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${parts[1]}`;
-    }
-    return `${parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${parts[1]} €`;
+    const [intPart, decPart] = num.toFixed(2).split('.');
+    if (code === 'PEN') return `S/ ${intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${decPart}`;
+    if (code === 'USD') return `$${intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${decPart}`;
+    return `${intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${decPart} €`;
 };
 
 const formatMoney = (amount) => formatCurrencyCustom(amount, appConfig.currency);
-
-const formatNumberDisplay = (val, currCode) => {
-    if (isNaN(val) || val <= 0) return '';
-    return formatCurrencyCustom(val, currCode);
-};
+const formatNumberDisplay = (val, currCode) => (isNaN(val) || val <= 0) ? '' : formatCurrencyCustom(val, currCode);
 
 const formatTcInputValue = (val, recvCurrCode) => {
     if (isNaN(val) || val <= 0) return '';
-    const num = Number(val);
-    const parts = num.toFixed(4).split('.');
-    let cleanDecimal = parts[1].replace(/0+$/, '');
-    let str = cleanDecimal ? `${parts[0]}.${cleanDecimal}` : parts[0];
-    
-    if (recvCurrCode === 'EUR') {
-        return str.replace('.', ',');
-    }
-    return str;
+    const [intPart, decPart] = Number(val).toFixed(4).split('.');
+    const cleanDecimal = decPart.replace(/0+$/, '');
+    const str = cleanDecimal ? `${intPart}.${cleanDecimal}` : intPart;
+    return recvCurrCode === 'EUR' ? str.replace('.', ',') : str;
 };
 
 function parseInputNumber(rawValue) {
@@ -149,15 +137,8 @@ function parseInputNumber(rawValue) {
     return parseFloat(s) || 0;
 }
 
-function escapeHtml(value) {
-    return String(value).replace(/[&<>"']/g, char => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-    }[char]));
-}
+const HTML_ESCAPE_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const escapeHtml = (value) => String(value).replace(/[&<>"']/g, char => HTML_ESCAPE_MAP[char]);
 
 function formatDateEs(dateString) {
     if (!dateString) return '';
@@ -167,13 +148,11 @@ function formatDateEs(dateString) {
 
 function addMonthsToDate(dateStr, monthsToAdd) {
     const [y, m, d] = dateStr.split('-').map(Number);
-    const lastDayOfStartMonth = new Date(y, m, 0).getDate();
-    const isEndOfMonth = d >= lastDayOfStartMonth;
+    const isEndOfMonth = d >= new Date(y, m, 0).getDate();
 
-    let targetYear = y;
-    let targetMonth = (m - 1) + monthsToAdd;
-    targetYear += Math.floor(targetMonth / 12);
-    targetMonth = targetMonth % 12;
+    const totalMonths = (m - 1) + monthsToAdd;
+    const targetYear = y + Math.floor(totalMonths / 12);
+    const targetMonth = totalMonths % 12;
 
     const lastDayOfTargetMonth = new Date(targetYear, targetMonth + 1, 0).getDate();
     const targetDay = (isEndOfMonth || d > lastDayOfTargetMonth) ? lastDayOfTargetMonth : d;
@@ -184,24 +163,31 @@ function addMonthsToDate(dateStr, monthsToAdd) {
 function calculateExitTime(entryTimeStr) {
     if (!entryTimeStr) return '06:00';
     const [hours, minutes] = entryTimeStr.split(':').map(Number);
-    let newHours = (hours + 12) % 24;
-    return `${pad(newHours)}:${pad(minutes)}`;
+    return `${pad((hours + 12) % 24)}:${pad(minutes)}`;
 }
 
 function getDayNameFromDate(dateStr) {
     if (!dateStr) return '';
-    const date = new Date(dateStr + 'T12:00:00');
-    const options = { weekday: 'long' };
-    const name = date.toLocaleDateString('es-ES', options);
+    const name = new Date(dateStr + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long' });
     return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
 function clearValidationErrors(formEl) {
-    if (!formEl) return;
-    formEl.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    formEl?.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
 }
 
-/* Desplazamiento suave hacia una tarjeta interna abierta para que su contenido se vea en pantalla */
+function validateRequiredFields(formEl, fields) {
+    let isValid = true;
+    fields.forEach(el => {
+        if (!el) return;
+        const empty = !el.value.trim();
+        el.classList.toggle('input-error', empty);
+        if (empty) isValid = false;
+    });
+    if (!isValid) formEl?.querySelector('.input-error')?.focus();
+    return isValid;
+}
+
 function scrollCardIntoView(cardEl, shouldScroll = true) {
     if (!shouldScroll || !cardEl) return;
     requestAnimationFrame(() => {
@@ -209,7 +195,6 @@ function scrollCardIntoView(cardEl, shouldScroll = true) {
     });
 }
 
-/* Funciones auxiliares para control de modales y bloqueo de scroll de fondo */
 function openModal(dialogEl) {
     if (!dialogEl) return;
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -240,14 +225,15 @@ const persistConfig = () => {
     updateCurrencyLabels();
 };
 
-function applyTheme() {
-    document.body.classList.toggle('dark-mode', appConfig.theme === 'dark');
-}
+const applyTheme = () => document.body.classList.toggle('dark-mode', appConfig.theme === 'dark');
 
 function applyUtilitiesVisibility() {
     const utils = appConfig.utilities || { financeManager: true, remittances: true, installments: true, dayCounter: true };
-
     const showFinance = utils.financeManager !== false;
+    const showRemit = utils.remittances !== false;
+    const showInst = utils.installments !== false;
+    const showDays = utils.dayCounter !== false;
+
     const metricsSection = $('metricsCardsSection');
     if (metricsSection) {
         metricsSection.style.display = showFinance ? '' : 'none';
@@ -263,19 +249,15 @@ function applyUtilitiesVisibility() {
         financeLayout.style.marginBottom = showFinance ? '25px' : '0px';
     }
 
-    if ($('remittancesCard')) $('remittancesCard').style.display = utils.remittances !== false ? '' : 'none';
-    if ($('installmentsCard')) $('installmentsCard').style.display = utils.installments !== false ? '' : 'none';
-    if ($('dayCounterCard')) $('dayCounterCard').style.display = utils.dayCounter !== false ? '' : 'none';
-
-    const anyVisible = (utils.remittances !== false) || (utils.installments !== false) || (utils.dayCounter !== false);
-    if ($('utilitiesSection')) {
-        $('utilitiesSection').style.display = anyVisible ? '' : 'none';
-    }
+    if ($('remittancesCard')) $('remittancesCard').style.display = showRemit ? '' : 'none';
+    if ($('installmentsCard')) $('installmentsCard').style.display = showInst ? '' : 'none';
+    if ($('dayCounterCard')) $('dayCounterCard').style.display = showDays ? '' : 'none';
+    if ($('utilitiesSection')) $('utilitiesSection').style.display = (showRemit || showInst || showDays) ? '' : 'none';
 }
 
 function updateUserDisplay() {
-    $('welcomeText').textContent = `Bienvenido, ${appConfig.userName}.`;
-    $('userInitial').textContent = appConfig.userName.charAt(0) || 'I';
+    if ($('welcomeText')) $('welcomeText').textContent = `Bienvenido, ${appConfig.userName}.`;
+    if ($('userInitial')) $('userInitial').textContent = appConfig.userName.charAt(0) || 'I';
 }
 
 function updateCurrencyLabels() {
@@ -284,13 +266,14 @@ function updateCurrencyLabels() {
     if ($('editAmountLabel')) $('editAmountLabel').textContent = `Importe (${symbol})`;
 }
 
-function updateCategoryOptions(prefix) {
-    const kind = $(`${prefix}Kind`).value;
-    const catList = appConfig.categories[kind] || [];
-    const sortedCats = [...catList].sort((a, b) => 
+const getSortedCategories = (kind) =>
+    [...(appConfig.categories[kind] || [])].sort((a, b) =>
         a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
     );
-    $(`${prefix}Category`).innerHTML = sortedCats
+
+function updateCategoryOptions(prefix) {
+    const kind = $(`${prefix}Kind`).value;
+    $(`${prefix}Category`).innerHTML = getSortedCategories(kind)
         .map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`)
         .join('');
 }
@@ -300,12 +283,8 @@ function updateMovementFilterOptions() {
     if (!filterSelect) return;
 
     const currentSelection = filterSelect.value || 'all';
-    const expenseCats = [...(appConfig.categories.expense || [])].sort((a, b) => 
-        a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
-    );
-    const incomeCats = [...(appConfig.categories.income || [])].sort((a, b) => 
-        a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
-    );
+    const expenseCats = getSortedCategories('expense');
+    const incomeCats = getSortedCategories('income');
 
     filterSelect.innerHTML = `
         <option value="all">Todos</option>
@@ -323,22 +302,29 @@ function updateMovementFilterOptions() {
     filterSelect.value = exists ? currentSelection : 'all';
 }
 
-/* Cierra automáticamente todas las tarjetas internas de remesas, cuotas y contador de días */
+function refreshCategoryUI() {
+    renderConfigCategories();
+    updateCategoryOptions('new');
+    updateCategoryOptions('edit');
+    updateMovementFilterOptions();
+    render();
+}
+
 function collapseAllInternalCards() {
     if (remittancesList.some(r => r.expanded)) {
-        remittancesList.forEach(r => r.expanded = false);
+        remittancesList.forEach(r => { r.expanded = false; });
         persistRemittancesList();
         renderRemittancesList();
     }
 
     if (installmentsPurchases.some(p => p.expanded)) {
-        installmentsPurchases.forEach(p => p.expanded = false);
+        installmentsPurchases.forEach(p => { p.expanded = false; });
         persistInstallments();
         renderInstallments();
     }
 
     if (dayCounterMonths.some(m => m.expanded)) {
-        dayCounterMonths.forEach(m => m.expanded = false);
+        dayCounterMonths.forEach(m => { m.expanded = false; });
         persistDayCounter();
         renderDayCounter();
     }
@@ -349,13 +335,16 @@ function toggleMainAccordionById(containerId, iconId, cardId) {
     if (now - lastAccordionToggleAt < 180) return;
     lastAccordionToggleAt = now;
 
+    if (selectedDonutCategory !== null) {
+        selectedDonutCategory = null;
+    }
+
     const container = $(containerId);
     const icon = $(iconId);
     const card = $(cardId);
     if (!container) return;
 
-    const isCurrentlyExpanded = container.style.display === 'block';
-    const willBeExpanded = !isCurrentlyExpanded;
+    const willBeExpanded = container.style.display !== 'block';
 
     accordionConfig.forEach(item => {
         const c = $(item.containerId);
@@ -363,21 +352,21 @@ function toggleMainAccordionById(containerId, iconId, cardId) {
         const cr = $(item.cardEl);
         if (c && c !== container) {
             c.style.display = 'none';
-            if (cr) cr.classList.remove('expanded');
+            cr?.classList.remove('expanded');
             if (ic) ic.innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
         }
     });
 
     container.style.display = willBeExpanded ? 'block' : 'none';
-    if (card) card.classList.toggle('expanded', willBeExpanded);
+    card?.classList.toggle('expanded', willBeExpanded);
     if (icon) {
         icon.innerHTML = willBeExpanded
             ? '<polyline points="18 15 12 9 6 15"></polyline>'
             : '<polyline points="6 9 12 15 18 9"></polyline>';
     }
 
-    // Cierra todas las tarjetas internas al cerrar esta sección o cambiar a otra
     collapseAllInternalCards();
+    renderCategoriesRedesign();
 
     if (willBeExpanded && card && window.innerWidth <= 760) {
         requestAnimationFrame(() => {
@@ -390,32 +379,26 @@ function setupMainAccordion(btnId, containerId, iconId, cardId) {
     const btn = $(btnId);
     const card = $(cardId);
     const container = $(containerId);
-    const heading = card ? card.querySelector('.section-heading') : null;
+    const heading = card?.querySelector('.section-heading');
 
-    if (btn) {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleMainAccordionById(containerId, iconId, cardId);
-        });
-    }
+    btn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMainAccordionById(containerId, iconId, cardId);
+    });
 
-    if (heading) {
-        heading.addEventListener('click', (e) => {
-            if (e.target.closest('button, input, select, textarea, a, label, .movement-controls')) return;
-            toggleMainAccordionById(containerId, iconId, cardId);
-        });
-    }
+    heading?.addEventListener('click', (e) => {
+        if (e.target.closest('button, input, select, textarea, a, label, .movement-controls')) return;
+        toggleMainAccordionById(containerId, iconId, cardId);
+    });
 
-    if (container) {
-        container.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-    }
+    container?.addEventListener('click', (e) => e.stopPropagation());
 }
 
 /* ==========================================
    4. EXPORTAR E IMPORTAR CSV MULTI-SECCIÓN
    ========================================== */
+const csvQuote = (str) => `"${String(str || '').replace(/"/g, '""')}"`;
+
 function executeCustomExport() {
     const includeMovs = $('expMovements')?.checked;
     const includeRemit = $('expRemittances')?.checked;
@@ -433,16 +416,9 @@ function executeCustomExport() {
         csvRows.push('--- SECCION: MOVIMIENTOS ---');
         csvRows.push('FECHA,MOVIMIENTO,TIPO,CATEGORIA,IMPORTE,NOTAS');
         movements.forEach(m => {
-            let formattedDate = m.date;
-            if (m.date && m.date.includes('-')) {
-                const [year, month, day] = m.date.split('-');
-                formattedDate = `${day}/${month}/${year}`;
-            }
-            const desc = `"${(m.desc || '').replace(/"/g, '""')}"`;
+            const formattedDate = m.date?.includes('-') ? formatDateEs(m.date) : m.date;
             const tipoStr = m.kind === 'income' ? 'Ingreso' : 'Gasto';
-            const cat = `"${(m.category || '').replace(/"/g, '""')}"`;
-            const notes = `"${(m.notes || '').replace(/"/g, '""')}"`;
-            csvRows.push([formattedDate, desc, tipoStr, cat, m.amount, notes].join(','));
+            csvRows.push([formattedDate, csvQuote(m.desc), tipoStr, csvQuote(m.category), m.amount, csvQuote(m.notes)].join(','));
         });
         csvRows.push('');
     }
@@ -451,12 +427,11 @@ function executeCustomExport() {
         csvRows.push('--- SECCION: REMESAS ---');
         csvRows.push('NOMBRE_REMESA,MONEDA_ENVIO,MONEDA_RECEPCION,TIPO_CAMBIO,COMISION,CONCEPTO_ITEM,IMPORTE_RECEPCION_ITEM');
         remittancesList.forEach(r => {
-            if (!r.items || r.items.length === 0) {
-                csvRows.push(`"${r.name}","${r.sendCurr}","${r.recvCurr}",${r.tc},${r.commission},"" ,0`);
+            if (!r.items?.length) {
+                csvRows.push(`${csvQuote(r.name)},${csvQuote(r.sendCurr)},${csvQuote(r.recvCurr)},${r.tc},${r.commission},"" ,0`);
             } else {
                 r.items.forEach(item => {
-                    const concept = `"${(item.concept || '').replace(/"/g, '""')}"`;
-                    csvRows.push(`"${r.name}","${r.sendCurr}","${r.recvCurr}",${r.tc},${r.commission},${concept},${item.recvAmount}`);
+                    csvRows.push(`${csvQuote(r.name)},${csvQuote(r.sendCurr)},${csvQuote(r.recvCurr)},${r.tc},${r.commission},${csvQuote(item.concept)},${item.recvAmount}`);
                 });
             }
         });
@@ -468,13 +443,8 @@ function executeCustomExport() {
         csvRows.push('COMPRA,MONEDA,FINANCED_AMOUNT,INTEREST_AMOUNT,TOTAL_CUOTAS,NUMERO_CUOTA,FECHA_CUOTA,IMPORTE_CUOTA,FINAL_AMOUNT,PAGADO');
         installmentsPurchases.forEach(p => {
             p.installments.forEach(inst => {
-                let formattedDate = inst.date;
-                if (inst.date && inst.date.includes('-')) {
-                    const [year, month, day] = inst.date.split('-');
-                    formattedDate = `${day}/${month}/${year}`;
-                }
-                const name = `"${(p.name || '').replace(/"/g, '""')}"`;
-                csvRows.push(`${name},"${p.currency || 'EUR'}",${p.financedAmount || 0},${p.interestAmount || 0},${p.totalCount},${inst.number},${formattedDate},${inst.amount},${p.finalAmount || inst.amount},${inst.paid ? 'SI' : 'NO'}`);
+                const formattedDate = inst.date?.includes('-') ? formatDateEs(inst.date) : inst.date;
+                csvRows.push(`${csvQuote(p.name)},${csvQuote(p.currency || 'EUR')},${p.financedAmount || 0},${p.interestAmount || 0},${p.totalCount},${inst.number},${formattedDate},${inst.amount},${p.finalAmount || inst.amount},${inst.paid ? 'SI' : 'NO'}`);
             });
         });
         csvRows.push('');
@@ -484,33 +454,27 @@ function executeCustomExport() {
         csvRows.push('--- SECCION: CONTADOR DE DIAS TRABAJADOS ---');
         csvRows.push('MES,DIAS_OBJETIVO,FECHA_DIA,DIA_SEMANA,ENTRADA,SALIDA,LUGAR');
         dayCounterMonths.forEach(m => {
-            if (!m.days || m.days.length === 0) {
-                csvRows.push(`"${m.name}",${m.targetDays},"" ,"" ,"" ,"" ,""`);
+            if (!m.days?.length) {
+                csvRows.push(`${csvQuote(m.name)},${m.targetDays},"" ,"" ,"" ,"" ,""`);
             } else {
                 m.days.forEach(d => {
-                    let formattedDate = d.date;
-                    if (d.date && d.date.includes('-')) {
-                        const [year, month, day] = d.date.split('-');
-                        formattedDate = `${day}/${month}/${year}`;
-                    }
-                    const monthName = `"${(m.name || '').replace(/"/g, '""')}"`;
-                    const location = `"${(d.location || '').replace(/"/g, '""')}"`;
-                    csvRows.push(`${monthName},${m.targetDays},${formattedDate},"${d.dayName}","${d.entryTime}","${d.exitTime}",${location}`);
+                    const formattedDate = d.date?.includes('-') ? formatDateEs(d.date) : d.date;
+                    csvRows.push(`${csvQuote(m.name)},${m.targetDays},${formattedDate},${csvQuote(d.dayName)},${csvQuote(d.entryTime)},${csvQuote(d.exitTime)},${csvQuote(d.location)}`);
                 });
             }
         });
     }
 
     const csvContent = '\uFEFF' + csvRows.join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    
+    const url = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }));
+
     const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `copia_seguridad_finanzas_${today.toISOString().slice(0, 10)}.csv`);
+    link.href = url;
+    link.download = `copia_seguridad_finanzas_${today.toISOString().slice(0, 10)}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 
     closeModal($('exportDlg'));
 }
@@ -519,12 +483,12 @@ function parseCsvLine(line) {
     const row = [];
     let inQuotes = false;
     let currentVal = '';
-    for (let charIdx = 0; charIdx < line.length; charIdx++) {
-        const char = line[charIdx];
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
         if (char === '"') {
-            if (inQuotes && line[charIdx + 1] === '"') {
+            if (inQuotes && line[i + 1] === '"') {
                 currentVal += '"';
-                charIdx++;
+                i++;
             } else {
                 inQuotes = !inQuotes;
             }
@@ -539,16 +503,17 @@ function parseCsvLine(line) {
     return row;
 }
 
+const unquoteCsv = (val) => String(val || '').replace(/^"|"$/g, '').replace(/""/g, '"');
+
 function normalizeDateToIso(dateStr) {
     if (!dateStr) return '';
-    let clean = dateStr.replace(/^"|"$/g, '').trim();
+    const clean = dateStr.replace(/^"|"$/g, '').trim();
     if (clean.includes('/')) {
         const parts = clean.split('/');
         if (parts.length === 3) {
             const day = parts[0].padStart(2, '0');
             const month = parts[1].padStart(2, '0');
-            let year = parts[2];
-            if (year.length === 2) year = '20' + year;
+            const year = parts[2].length === 2 ? '20' + parts[2] : parts[2];
             return `${year}-${month}-${day}`;
         }
     }
@@ -564,19 +529,18 @@ function importMovementsCsv(event) {
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
-            const text = e.target.result;
-            const lines = text.split(/\r\n|\n/);
+            const lines = e.target.result.split(/\r\n|\n/);
             if (lines.length < 2) {
                 alert('El archivo CSV está vacío o no tiene el formato correcto.');
                 return;
             }
 
             let currentSection = 'MOVIMIENTOS';
-            let rawRemitMap = {};
-            let rawInstMap = {};
-            let rawDaysMap = {};
-            let tempMovements = [];
-            let detectedSections = new Set();
+            const rawRemitMap = {};
+            const rawInstMap = {};
+            const rawDaysMap = {};
+            const tempMovements = [];
+            const detectedSections = new Set();
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
@@ -590,18 +554,16 @@ function importMovementsCsv(event) {
                     continue;
                 }
 
-                if (line.startsWith('FECHA,') || line.startsWith('NOMBRE_REMESA,') || line.startsWith('COMPRA,') || line.startsWith('MES,')) {
-                    continue; 
-                }
+                if (/^(FECHA|NOMBRE_REMESA|COMPRA|MES),/.test(line)) continue;
 
                 const row = parseCsvLine(line);
 
                 if (currentSection === 'MOVIMIENTOS' && row.length >= 5) {
-                    let [date, desc, tipo, category, amountStr, notes = ''] = row;
-                    date = normalizeDateToIso(date);
-                    const cleanDesc = desc.replace(/^"|"$/g, '').replace(/""/g, '"');
-                    const cleanCat = category.replace(/^"|"$/g, '').replace(/""/g, '"');
-                    const cleanNotes = notes.replace(/^"|"$/g, '').replace(/""/g, '"');
+                    const [rawDate, desc, tipo, category, amountStr, notes = ''] = row;
+                    const date = normalizeDateToIso(rawDate);
+                    const cleanDesc = unquoteCsv(desc);
+                    const cleanCat = unquoteCsv(category);
+                    const cleanNotes = unquoteCsv(notes);
                     const amount = parseFloat(amountStr.replace(',', '.')) || 0;
                     const kindNormalized = (tipo.toLowerCase().includes('ingreso') || tipo.toLowerCase() === 'income') ? 'income' : 'expense';
 
@@ -612,55 +574,51 @@ function importMovementsCsv(event) {
                             desc: cleanDesc,
                             kind: kindNormalized,
                             amount: Math.round(amount * 100) / 100,
-                            date: date,
+                            date,
                             category: cleanCat || (kindNormalized === 'income' ? 'Salario' : 'Compras'),
                             notes: cleanNotes
                         });
                     }
-                } 
-                else if (currentSection === 'REMESAS' && row.length >= 7) {
-                    let [remName, sendCurr, recvCurr, tcStr, commStr, concept, recvAmtStr] = row;
-                    remName = remName.replace(/^"|"$/g, '').replace(/""/g, '"');
+                } else if (currentSection === 'REMESAS' && row.length >= 7) {
+                    const [rawRemName, sendCurr, recvCurr, tcStr, commStr, concept, recvAmtStr] = row;
+                    const remName = unquoteCsv(rawRemName);
                     if (!remName) continue;
 
                     if (!rawRemitMap[remName]) {
                         rawRemitMap[remName] = {
                             id: crypto.randomUUID(),
                             name: remName,
-                            sendCurr: sendCurr.replace(/^"|"$/g, '') || 'EUR',
-                            recvCurr: recvCurr.replace(/^"|"$/g, '') || 'PEN',
+                            sendCurr: unquoteCsv(sendCurr) || 'EUR',
+                            recvCurr: unquoteCsv(recvCurr) || 'PEN',
                             tc: parseFloat(tcStr.replace(',', '.')) || 3.75,
                             commission: parseFloat(commStr.replace(',', '.')) || 0,
                             expanded: false,
                             items: []
                         };
                     }
-                    const cleanConcept = concept.replace(/^"|"$/g, '').replace(/""/g, '"');
+                    const cleanConcept = unquoteCsv(concept);
                     const recvAmt = parseFloat(recvAmtStr.replace(',', '.')) || 0;
                     if (cleanConcept) {
                         rawRemitMap[remName].items.push({ concept: cleanConcept, recvAmount: recvAmt });
                     }
-                }
-                else if (currentSection === 'CUOTAS' && row.length >= 7) {
-                    let pName, curr, financedAmt, interestAmt, totalCountStr, instNumStr, instDate, instAmtStr, finalAmt, paidStr;
-                    
+                } else if (currentSection === 'CUOTAS' && row.length >= 7) {
+                    let rawPName, curr, financedAmt, interestAmt, totalCountStr, instNumStr, instDate, instAmtStr, finalAmt, paidStr;
+
                     if (row.length >= 10) {
-                        [pName, curr, financedAmt, interestAmt, totalCountStr, instNumStr, instDate, instAmtStr, finalAmt, paidStr] = row;
+                        [rawPName, curr, financedAmt, interestAmt, totalCountStr, instNumStr, instDate, instAmtStr, finalAmt, paidStr] = row;
                     } else {
-                        [pName, curr, totalCountStr, instNumStr, instDate, instAmtStr, paidStr] = row;
-                        financedAmt = 0;
-                        interestAmt = 0;
-                        finalAmt = 0;
+                        [rawPName, curr, totalCountStr, instNumStr, instDate, instAmtStr, paidStr] = row;
+                        financedAmt = interestAmt = finalAmt = 0;
                     }
 
-                    pName = pName.replace(/^"|"$/g, '').replace(/""/g, '"');
+                    const pName = unquoteCsv(rawPName);
                     if (!pName) continue;
 
                     if (!rawInstMap[pName]) {
                         rawInstMap[pName] = {
                             id: crypto.randomUUID(),
                             name: pName,
-                            currency: curr.replace(/^"|"$/g, '') || 'EUR',
+                            currency: unquoteCsv(curr) || 'EUR',
                             rawFinanced: parseFloat(financedAmt) || 0,
                             rawInterest: parseFloat(interestAmt) || 0,
                             rawFinal: parseFloat(finalAmt) || 0,
@@ -669,16 +627,16 @@ function importMovementsCsv(event) {
                             installments: []
                         };
                     }
-                    const formattedDate = normalizeDateToIso(instDate);
-                    const amount = Math.round((parseFloat(instAmtStr.replace(',', '.')) || 0) * 100) / 100;
-                    const paid = paidStr.toUpperCase().includes('SI');
-                    const number = parseInt(instNumStr) || 1;
 
-                    rawInstMap[pName].installments.push({ number, amount, date: formattedDate, paid });
-                }
-                else if (currentSection === 'DIAS' && row.length >= 7) {
-                    let [mName, targetStr, dDate, dName, entryT, exitT, loc] = row;
-                    mName = mName.replace(/^"|"$/g, '').replace(/""/g, '"');
+                    rawInstMap[pName].installments.push({
+                        number: parseInt(instNumStr) || 1,
+                        amount: Math.round((parseFloat(instAmtStr.replace(',', '.')) || 0) * 100) / 100,
+                        date: normalizeDateToIso(instDate),
+                        paid: paidStr.toUpperCase().includes('SI')
+                    });
+                } else if (currentSection === 'DIAS' && row.length >= 7) {
+                    const [rawMName, targetStr, dDate, dName, entryT, exitT, loc] = row;
+                    const mName = unquoteCsv(rawMName);
                     if (!mName) continue;
 
                     if (!rawDaysMap[mName]) {
@@ -691,39 +649,35 @@ function importMovementsCsv(event) {
                         };
                     }
                     const formattedDate = normalizeDateToIso(dDate);
-                    const cleanLoc = loc.replace(/^"|"$/g, '').replace(/""/g, '"');
                     if (formattedDate) {
                         rawDaysMap[mName].days.push({
                             date: formattedDate,
-                            dayName: dName.replace(/^"|"$/g, ''),
-                            entryTime: entryT.replace(/^"|"$/g, ''),
-                            exitTime: exitT.replace(/^"|"$/g, ''),
-                            location: cleanLoc
+                            dayName: unquoteCsv(dName),
+                            entryTime: unquoteCsv(entryT),
+                            exitTime: unquoteCsv(exitT),
+                            location: unquoteCsv(loc)
                         });
                     }
                 }
             }
 
-            let parsedRemit = Object.values(rawRemitMap);
-            let parsedInst = Object.values(rawInstMap).map(p => {
-                const totalSum = p.installments.reduce((acc, curr) => acc + curr.amount, 0);
-                const roundedSum = Math.round(totalSum * 100) / 100;
-
+            const parsedRemit = Object.values(rawRemitMap);
+            const parsedInst = Object.values(rawInstMap).map(p => {
+                const roundedSum = Math.round(p.installments.reduce((acc, curr) => acc + curr.amount, 0) * 100) / 100;
                 const financed = p.rawFinanced > 0 ? p.rawFinanced : roundedSum;
                 const interest = p.rawInterest >= 0 ? p.rawInterest : 0;
-                const totalAmount = Math.round((financed + interest) * 100) / 100;
 
                 return {
                     ...p,
                     financedAmount: financed,
                     interestAmount: interest,
-                    totalAmount: totalAmount,
+                    totalAmount: Math.round((financed + interest) * 100) / 100,
                     regularAmount: p.installments.length > 1 ? p.installments[0].amount : roundedSum,
-                    finalAmount: p.rawFinal > 0 ? p.rawFinal : (p.installments.length ? p.installments[p.installments.length - 1].amount : 0),
-                    firstDate: p.installments.length ? p.installments[0].date : ''
+                    finalAmount: p.rawFinal > 0 ? p.rawFinal : (p.installments.at(-1)?.amount || 0),
+                    firstDate: p.installments[0]?.date || ''
                 };
             });
-            let parsedDays = Object.values(rawDaysMap).map(m => {
+            const parsedDays = Object.values(rawDaysMap).map(m => {
                 m.days.sort((a, b) => a.date.localeCompare(b.date));
                 return m;
             });
@@ -740,7 +694,6 @@ function importMovementsCsv(event) {
                 if ($('impRemitCount')) $('impRemitCount').textContent = parsedRemit.length;
                 if ($('impInstCount')) $('impInstCount').textContent = parsedInst.length;
                 if ($('impDaysCount')) $('impDaysCount').textContent = parsedDays.length;
-
                 if ($('importSelectDlg')) openModal($('importSelectDlg'));
             } else {
                 applyImportSelection({ movements: true, remittances: true, installments: true, dayCounter: true });
@@ -758,27 +711,27 @@ function importMovementsCsv(event) {
 function applyImportSelection(selection) {
     if (!pendingParsedSections) return;
 
-    let summaryMsg = '¡Restauración exitosa!\n';
+    const importedSummary = [];
 
     if (selection.movements && pendingParsedSections.movements.length > 0) {
         movements = pendingParsedSections.movements;
         persist();
-        summaryMsg += `• Movimientos: ${movements.length}\n`;
+        importedSummary.push(`• Movimientos: ${movements.length}`);
     }
     if (selection.remittances && pendingParsedSections.remittances.length > 0) {
         remittancesList = pendingParsedSections.remittances;
         persistRemittancesList();
-        summaryMsg += `• Calculos de remesas: ${remittancesList.length}\n`;
+        importedSummary.push(`• Cálculos de remesas: ${remittancesList.length}`);
     }
     if (selection.installments && pendingParsedSections.installments.length > 0) {
         installmentsPurchases = pendingParsedSections.installments;
         persistInstallments();
-        summaryMsg += `• Gestores de cuotas: ${installmentsPurchases.length}\n`;
+        importedSummary.push(`• Gestores de cuotas: ${installmentsPurchases.length}`);
     }
     if (selection.dayCounter && pendingParsedSections.dayCounter.length > 0) {
         dayCounterMonths = pendingParsedSections.dayCounter;
         persistDayCounter();
-        summaryMsg += `• Contadores de días: ${dayCounterMonths.length}\n`;
+        importedSummary.push(`• Contadores de días: ${dayCounterMonths.length}`);
     }
 
     render();
@@ -786,7 +739,11 @@ function applyImportSelection(selection) {
     renderInstallments();
     renderDayCounter();
 
-    alert(summaryMsg);
+    alert(importedSummary.length
+        ? `¡Restauración exitosa!\n${importedSummary.join('\n')}`
+        : 'No se encontraron registros válidos para importar en el archivo seleccionado.'
+    );
+
     pendingParsedSections = null;
     if ($('importSelectDlg')) closeModal($('importSelectDlg'));
 }
@@ -797,24 +754,18 @@ function applyImportSelection(selection) {
 function setupCategoryTabs() {
     const btnExpense = $('catTabExpense');
     const btnIncome = $('catTabIncome');
+    if (!btnExpense || !btnIncome) return;
 
-    if (btnExpense && btnIncome) {
-        btnExpense.addEventListener('click', () => {
-            currentCatKind = 'expense';
-            selectedDonutCategory = null;
-            btnExpense.classList.add('active');
-            btnIncome.classList.remove('active');
-            renderCategoriesRedesign();
-        });
+    const switchTab = (kind) => {
+        currentCatKind = kind;
+        selectedDonutCategory = null;
+        btnExpense.classList.toggle('active', kind === 'expense');
+        btnIncome.classList.toggle('active', kind === 'income');
+        renderCategoriesRedesign();
+    };
 
-        btnIncome.addEventListener('click', () => {
-            currentCatKind = 'income';
-            selectedDonutCategory = null;
-            btnIncome.classList.add('active');
-            btnExpense.classList.remove('active');
-            renderCategoriesRedesign();
-        });
-    }
+    btnExpense.addEventListener('click', () => switchTab('expense'));
+    btnIncome.addEventListener('click', () => switchTab('income'));
 }
 
 function toggleDonutSegment(categoryName) {
@@ -822,10 +773,24 @@ function toggleDonutSegment(categoryName) {
     renderCategoriesRedesign();
 }
 
+function getCategoryMeta(kind, name) {
+    const catObj = (appConfig.categories[kind] || []).find(c => c.name === name);
+    if (!catObj) {
+        return {
+            color: 'var(--fondo)',
+            accentColor: 'var(--red)',
+            iconSvg: warningIconSvg
+        };
+    }
+    const color = catObj.color || 'var(--secundario)';
+    const iconKey = catObj.icon || 'Compras';
+    const iconSvg = categoryIconsMap[iconKey] || categoryIconsMap['Compras'];
+    return { color, accentColor: color, iconSvg };
+}
+
 function renderCategoriesRedesign() {
     const month = $('month').value;
-    const monthMovements = movements.filter(item => item.date.startsWith(month));
-    const activeMonthMovements = monthMovements.filter(item => item.kind === currentCatKind);
+    const activeMonthMovements = movements.filter(item => item.date.startsWith(month) && item.kind === currentCatKind);
 
     const categoryTotals = {};
     activeMonthMovements.forEach(item => {
@@ -842,7 +807,7 @@ function renderCategoriesRedesign() {
         if (chartWrapper) {
             chartWrapper.innerHTML = `
                 <svg viewBox="0 0 100 100" class="cat-donut-svg">
-                    <circle cx="50" cy="50" r="38" fill="none" stroke="var(--bar-bg)" stroke-width="16"></circle>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="var(--fondo)" stroke-width="16"></circle>
                 </svg>
                 <div class="cat-center-info">
                     <span class="cat-center-label">Total</span>
@@ -859,17 +824,11 @@ function renderCategoriesRedesign() {
     let cumulativePercent = 0;
     const radius = 38;
     const circumference = 2 * Math.PI * radius;
-
     let svgSegments = '';
     let floatingBadgeHtml = '';
 
     sortedCategories.forEach(([name, amount]) => {
-        const catList = appConfig.categories[currentCatKind] || [];
-        const catObj = catList.find(c => c.name === name);
-        const color = catObj ? catObj.color : 'var(--blue)';
-        const iconKey = catObj && catObj.icon ? catObj.icon : 'Compras';
-        const iconSvg = categoryIconsMap[iconKey] || categoryIconsMap['Compras'];
-
+        const { color, accentColor, iconSvg } = getCategoryMeta(currentCatKind, name);
         const percentage = totalSum > 0 ? (amount / totalSum) * 100 : 0;
         const strokeDasharray = `${(percentage * circumference) / 100} ${circumference}`;
         const strokeDashoffset = -((cumulativePercent * circumference) / 100);
@@ -877,7 +836,7 @@ function renderCategoriesRedesign() {
         const midPercent = cumulativePercent + percentage / 2;
         cumulativePercent += percentage;
 
-        const isSelected = (selectedDonutCategory === name);
+        const isSelected = selectedDonutCategory === name;
 
         svgSegments += `
             <circle cx="50" cy="50" r="${radius}" fill="none" stroke="${color}" stroke-width="${isSelected ? 20 : 16}"
@@ -895,8 +854,8 @@ function renderCategoriesRedesign() {
             const y = 50 + badgeRadius * Math.sin(angle);
 
             floatingBadgeHtml = `
-                <div class="cat-floating-badge" style="top: ${y}%; left: ${x}%; color: ${color}; border-color: ${color};">
-                    <span class="cat-badge-icon" style="color: ${color};">${iconSvg}</span>
+                <div class="cat-floating-badge" style="top: ${y}%; left: ${x}%; color: ${accentColor}; border-color: ${accentColor};">
+                    <span class="cat-badge-icon" style="color: ${accentColor};">${iconSvg}</span>
                     <span class="cat-badge-text">${percentage.toFixed(1)}%</span>
                 </div>
             `;
@@ -906,7 +865,7 @@ function renderCategoriesRedesign() {
     if (chartWrapper) {
         chartWrapper.innerHTML = `
             <svg viewBox="0 0 100 100" class="cat-donut-svg">
-                <circle cx="50" cy="50" r="${radius}" fill="none" stroke="var(--bar-bg)" stroke-width="16"></circle>
+                <circle cx="50" cy="50" r="${radius}" fill="none" stroke="var(--fondo)" stroke-width="16"></circle>
                 ${svgSegments}
             </svg>
             <div class="cat-center-info">
@@ -920,11 +879,7 @@ function renderCategoriesRedesign() {
     if (listContainer) {
         listContainer.innerHTML = sortedCategories.map(([name, amount]) => {
             const isSelected = selectedDonutCategory === name;
-            const catList = appConfig.categories[currentCatKind] || [];
-            const catObj = catList.find(c => c.name === name);
-            const color = catObj ? catObj.color : 'var(--blue)';
-            const iconKey = catObj && catObj.icon ? catObj.icon : 'Compras';
-            const iconSvg = categoryIconsMap[iconKey] || categoryIconsMap['Compras'];
+            const { accentColor, iconSvg } = getCategoryMeta(currentCatKind, name);
             const usagePercentage = totalSum > 0 ? ((amount / totalSum) * 100).toFixed(1) : 0;
 
             return `
@@ -932,7 +887,7 @@ function renderCategoriesRedesign() {
                      data-list-category="${escapeHtml(name)}" role="button" tabindex="0"
                      aria-pressed="${isSelected}">
                     <div class="cat-breakdown-left">
-                        <span class="category-icon-wrapper" style="color: ${color};">${iconSvg}</span>
+                        <span class="category-icon-wrapper" style="color: ${accentColor};">${iconSvg}</span>
                         <span class="cat-breakdown-name">${escapeHtml(name)}</span>
                     </div>
                     <div class="cat-breakdown-right-group">
@@ -949,13 +904,12 @@ function render() {
     const month = $('month').value;
     const monthMovements = movements.filter(item => item.date.startsWith(month));
 
-    const totalIncome = monthMovements
-        .filter(item => item.kind === 'income')
-        .reduce((sum, item) => sum + item.amount, 0);
-
-    const totalExpenses = monthMovements
-        .filter(item => item.kind === 'expense')
-        .reduce((sum, item) => sum + item.amount, 0);
+    let totalIncome = 0;
+    let totalExpenses = 0;
+    monthMovements.forEach(item => {
+        if (item.kind === 'income') totalIncome += item.amount;
+        else totalExpenses += item.amount;
+    });
 
     $('income').textContent = formatMoney(totalIncome);
     $('expense').textContent = formatMoney(totalExpenses);
@@ -966,30 +920,27 @@ function render() {
 
     const visibleMovements = monthMovements
         .filter(item => {
-            const matchesSearch = !query || `${item.desc} ${item.category} ${item.notes || ''}`.toLowerCase().includes(query);
-            if (!matchesSearch) return false;
-
+            if (query && !`${item.desc} ${item.category} ${item.notes || ''}`.toLowerCase().includes(query)) return false;
             if (filterVal === 'all') return true;
             if (filterVal === 'type:expense') return item.kind === 'expense';
             if (filterVal === 'type:income') return item.kind === 'income';
             if (filterVal.startsWith('cat:')) {
                 const [, kind, ...catParts] = filterVal.split(':');
-                const catName = catParts.join(':');
-                return item.kind === kind && item.category === catName;
+                return item.kind === kind && item.category === catParts.join(':');
             }
             return true;
         })
-        .sort((a, b) => {
-            const dateComparison = b.date.localeCompare(a.date);
-            return dateComparison !== 0 ? dateComparison : (b.timestamp || 0) - (a.timestamp || 0);
-        });
+        .sort((a, b) => b.date.localeCompare(a.date) || (b.timestamp || 0) - (a.timestamp || 0));
+
+    const formattedDates = visibleMovements.map(item =>
+        new Date(item.date + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })
+    );
 
     let rowsHtml = '';
     visibleMovements.forEach((item, index) => {
-        const formatDay = (dateStr) => new Date(dateStr + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
-        const dateFormatted = formatDay(item.date);
-        const prevDate = visibleMovements[index - 1] ? formatDay(visibleMovements[index - 1].date) : null;
-        const nextDate = visibleMovements[index + 1] ? formatDay(visibleMovements[index + 1].date) : null;
+        const dateFormatted = formattedDates[index];
+        const prevDate = formattedDates[index - 1] || null;
+        const nextDate = formattedDates[index + 1] || null;
 
         if (dateFormatted !== prevDate) {
             rowsHtml += `
@@ -1000,11 +951,7 @@ function render() {
         }
 
         const borderClass = dateFormatted !== nextDate ? 'no-border' : '';
-        const catList = appConfig.categories[item.kind] || [];
-        const catObj = catList.find(c => c.name === item.category);
-        const catColor = catObj ? catObj.color : 'var(--blue)';
-        const iconKey = catObj && catObj.icon ? catObj.icon : 'Compras';
-        const iconSvg = categoryIconsMap[iconKey] || categoryIconsMap['Compras'];
+        const { accentColor: catColor, iconSvg } = getCategoryMeta(item.kind, item.category);
 
         rowsHtml += `
             <tr class="movement-row ${borderClass}">
@@ -1073,7 +1020,7 @@ function renderRemittancesList() {
     const listContainer = $('remittancesList');
     if (!listContainer) return;
 
-    if (!remittancesList || !remittancesList.length) {
+    if (!remittancesList?.length) {
         listContainer.innerHTML = '<div class="empty empty-compact">Aún no hay remesas registradas.</div>';
         return;
     }
@@ -1091,13 +1038,13 @@ function renderRemittancesList() {
 
         const comm = rem.commission || 0;
         const grandTotal = totalSend + comm;
-        const formattedComm = comm > 0 ? formatNumberDisplay(comm, rem.sendCurr) : '';
-        const formattedTc = tc > 0 ? formatTcInputValue(tc, rem.recvCurr) : '';
+        const formattedComm = formatNumberDisplay(comm, rem.sendCurr);
+        const formattedTc = formatTcInputValue(tc, rem.recvCurr);
 
         const itemsHtml = (rem.items || []).map((item, idx) => {
             const recvVal = item.recvAmount || 0;
             const sendVal = tc > 0 ? recvVal / tc : 0;
-            const formattedVal = recvVal > 0 ? formatNumberDisplay(recvVal, rem.recvCurr) : '';
+            const formattedVal = formatNumberDisplay(recvVal, rem.recvCurr);
             const isLastClass = idx === rem.items.length - 1 ? 'is-last' : '';
 
             return `
@@ -1173,16 +1120,13 @@ function renderRemittancesList() {
 
 function toggleRemitAccordion(remId) {
     const rem = remittancesList.find(r => r.id === remId);
-    if (rem) {
-        const willBeExpanded = !rem.expanded;
-        remittancesList.forEach(r => {
-            if (r.id !== remId) r.expanded = false;
-        });
-        rem.expanded = willBeExpanded;
-        persistRemittancesList();
-        renderRemittancesList();
-        scrollCardIntoView($(`remit_box_${remId}`), willBeExpanded);
-    }
+    if (!rem) return;
+
+    const willBeExpanded = !rem.expanded;
+    remittancesList.forEach(r => { r.expanded = r.id === remId ? willBeExpanded : false; });
+    persistRemittancesList();
+    renderRemittancesList();
+    scrollCardIntoView($(`remit_box_${remId}`), willBeExpanded);
 }
 
 function deleteRemittance(remId) {
@@ -1212,33 +1156,29 @@ function editRemittance(remId) {
 
 function removeRemitItem(remId, index) {
     const rem = remittancesList.find(r => r.id === remId);
-    if (rem) {
-        rem.items.splice(index, 1);
-        persistRemittancesList();
-        renderRemittancesList();
-    }
+    if (!rem) return;
+    rem.items.splice(index, 1);
+    persistRemittancesList();
+    renderRemittancesList();
 }
 
 function addRemitItem(remId) {
     const inputEl = $(`new_concept_input_${remId}`);
-    if (!inputEl) return;
-    const conceptName = inputEl.value.trim();
+    const conceptName = inputEl?.value.trim();
     if (!conceptName) return;
 
     const rem = remittancesList.find(r => r.id === remId);
-    if (rem) {
-        rem.items.push({ concept: conceptName, recvAmount: 0 });
-        persistRemittancesList();
-        renderRemittancesList();
+    if (!rem) return;
 
-        const nextInput = $(`new_concept_input_${remId}`);
-        if (nextInput) {
-            nextInput.value = '';
-            nextInput.focus();
-            if (typeof nextInput.setSelectionRange === 'function') {
-                nextInput.setSelectionRange(0, 0);
-            }
-        }
+    rem.items.push({ concept: conceptName, recvAmount: 0 });
+    persistRemittancesList();
+    renderRemittancesList();
+
+    const nextInput = $(`new_concept_input_${remId}`);
+    if (nextInput) {
+        nextInput.value = '';
+        nextInput.focus();
+        nextInput.setSelectionRange?.(0, 0);
     }
 }
 
@@ -1257,16 +1197,44 @@ function autoCalculateInstallment(prefix) {
     }
 }
 
+function readInstallmentForm(prefix) {
+    const nameInput = $(`${prefix}InstName`);
+    const financedInput = $(`${prefix}InstFinancedAmount`);
+    const countInput = $(`${prefix}InstTotalCount`);
+    const regularInput = $(`${prefix}InstRegularAmount`);
+    const dateInput = $(`${prefix}InstFirstDate`);
+
+    if (!validateRequiredFields($(`installment${prefix === 'new' ? 'New' : 'Edit'}Form`), [nameInput, financedInput, countInput, regularInput, dateInput])) {
+        return null;
+    }
+
+    const financedAmount = parseFloat(financedInput.value.replace(',', '.')) || 0;
+    const interestAmount = parseFloat($(`${prefix}InstInterestAmount`).value.replace(',', '.')) || 0;
+    const totalCount = parseInt(countInput.value) || 1;
+    const regularAmount = parseFloat(regularInput.value.replace(',', '.')) || 0;
+    const finalAmountRaw = $(`${prefix}InstFinalAmount`).value.trim();
+
+    return {
+        name: nameInput.value.trim(),
+        currency: $(`${prefix}InstCurrency`).value,
+        financedAmount,
+        interestAmount,
+        totalAmount: financedAmount + interestAmount,
+        totalCount,
+        regularAmount,
+        finalAmount: finalAmountRaw ? parseFloat(finalAmountRaw.replace(',', '.')) : regularAmount,
+        firstDate: dateInput.value
+    };
+}
+
 function buildInstallmentsArray(totalCount, regularAmount, finalAmount, firstDateStr, existingInstallments = []) {
     const installments = [];
     for (let i = 1; i <= totalCount; i++) {
-        const amt = (i === totalCount) ? finalAmount : regularAmount;
-        const instDate = addMonthsToDate(firstDateStr, i - 1);
         const oldInst = existingInstallments.find(ins => ins.number === i);
         installments.push({
             number: i,
-            amount: amt,
-            date: instDate,
+            amount: (i === totalCount) ? finalAmount : regularAmount,
+            date: addMonthsToDate(firstDateStr, i - 1),
             paid: oldInst ? oldInst.paid : false
         });
     }
@@ -1285,8 +1253,7 @@ function renderInstallments() {
     listContainer.innerHTML = installmentsPurchases.map((purchase) => {
         const curr = purchase.currency || 'EUR';
         const totalPaidCount = purchase.installments.filter(i => i.paid).length;
-        const progressText = `${totalPaidCount}/${purchase.totalCount} pagadas`;
-        const allPaid = purchase.installments.length > 0 && purchase.installments.every(i => i.paid);
+        const allPaid = purchase.installments.length > 0 && totalPaidCount === purchase.installments.length;
 
         const installmentsHtml = purchase.installments.map((inst) => `
             <div class="installment-row ${inst.paid ? 'paid' : ''}" data-action="toggle-inst-paid" data-purchase-id="${purchase.id}" data-inst-number="${inst.number}">
@@ -1306,7 +1273,7 @@ function renderInstallments() {
                 <div class="installment-purchase-header ${allPaid ? 'all-paid' : ''}" data-action="toggle-inst-accordion" data-purchase-id="${purchase.id}">
                     <div class="flex-col">
                         <span class="installment-card-title">${escapeHtml(purchase.name)}</span>
-                        <span class="installment-card-subtitle">Total: ${formatCurrencyCustom(purchase.totalAmount, curr)} (${progressText})</span>
+                        <span class="installment-card-subtitle">Total: ${formatCurrencyCustom(purchase.totalAmount, curr)} (${totalPaidCount}/${purchase.totalCount} pagadas)</span>
                     </div>
                     <div class="flex-center-gap">
                         <button type="button" class="editbutton-xs" data-action="edit-inst-purchase" data-purchase-id="${purchase.id}" title="Editar compra" aria-label="Editar compra">
@@ -1325,28 +1292,23 @@ function renderInstallments() {
 
 function toggleInstallmentAccordion(purchaseId) {
     const purchase = installmentsPurchases.find(p => p.id === purchaseId);
-    if (purchase) {
-        const willBeExpanded = !purchase.expanded;
-        installmentsPurchases.forEach(p => {
-            if (p.id !== purchaseId) p.expanded = false;
-        });
-        purchase.expanded = willBeExpanded;
-        persistInstallments();
-        renderInstallments();
-        scrollCardIntoView($(`purchase_box_${purchaseId}`), willBeExpanded);
-    }
+    if (!purchase) return;
+
+    const willBeExpanded = !purchase.expanded;
+    installmentsPurchases.forEach(p => { p.expanded = p.id === purchaseId ? willBeExpanded : false; });
+    persistInstallments();
+    renderInstallments();
+    scrollCardIntoView($(`purchase_box_${purchaseId}`), willBeExpanded);
 }
 
 function toggleInstallmentPaid(purchaseId, instNumber) {
     const purchase = installmentsPurchases.find(p => p.id === purchaseId);
-    if (!purchase) return;
-    const inst = purchase.installments.find(i => i.number === instNumber);
+    const inst = purchase?.installments.find(i => i.number === instNumber);
     if (!inst) return;
 
     inst.paid = !inst.paid;
     persistInstallments();
-    const listEl = $(`inst_details_${purchaseId}`);
-    const currentScrollTop = listEl ? listEl.scrollTop : 0;
+    const currentScrollTop = $(`inst_details_${purchaseId}`)?.scrollTop || 0;
     renderInstallments();
     const updatedListEl = $(`inst_details_${purchaseId}`);
     if (updatedListEl) updatedListEl.scrollTop = currentScrollTop;
@@ -1388,9 +1350,8 @@ function renderDayCounter() {
     if (!listContainer) return;
 
     const addMonthBtn = $('addDayCounterMonthBtn');
-    if (addMonthBtn && addMonthBtn.parentElement) {
-        const hasExpandedMonth = dayCounterMonths.some(m => m.expanded);
-        addMonthBtn.parentElement.style.display = hasExpandedMonth ? 'none' : 'flex';
+    if (addMonthBtn?.parentElement) {
+        addMonthBtn.parentElement.style.display = dayCounterMonths.some(m => m.expanded) ? 'none' : 'flex';
     }
 
     if (!dayCounterMonths.length) {
@@ -1400,8 +1361,7 @@ function renderDayCounter() {
 
     listContainer.innerHTML = dayCounterMonths.map((month) => {
         const totalWorked = (month.days || []).length;
-        const target = month.targetDays || 0;
-        const extras = Math.max(0, totalWorked - target);
+        const extras = Math.max(0, totalWorked - (month.targetDays || 0));
 
         const daysHtml = (month.days || []).map((day, idx) => `
             <div class="dc-day-row">
@@ -1415,7 +1375,7 @@ function renderDayCounter() {
                 </div>
                 <div class="dc-day-right">
                     <button type="button" class="editbutton-xs" data-action="edit-dc-day" data-month-id="${month.id}" data-index="${idx}" title="Editar día" aria-label="Editar día">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     </button>
                 </div>
             </div>
@@ -1440,7 +1400,7 @@ function renderDayCounter() {
                         ${daysHtml || '<div class="empty empty-mini">Sin días registrados en este mes.</div>'}
                     </div>
                     <div class="utility-footer-action" style="margin-top: 0;">
-                        <button type="button" class="utility-category-newbutton" data-action="open-add-dc-day" data-month-id="${month.id}">
+                        <button type="button" class="day-newbutton" data-action="open-add-dc-day" data-month-id="${month.id}">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             Nuevo día
                         </button>
@@ -1453,22 +1413,17 @@ function renderDayCounter() {
 
 function toggleDayCounterMonthAccordion(monthId) {
     const month = dayCounterMonths.find(x => x.id === monthId);
-    if (month) {
-        const willBeExpanded = !month.expanded;
-        dayCounterMonths.forEach(m => {
-            if (m.id !== monthId) m.expanded = false;
-        });
-        month.expanded = willBeExpanded;
-        persistDayCounter();
-        renderDayCounter();
+    if (!month) return;
 
-        if (willBeExpanded) {
-            const daysWrapper = document.querySelector(`#dc_month_details_${monthId} .dc-days-wrapper`);
-            if (daysWrapper) {
-                daysWrapper.scrollTop = daysWrapper.scrollHeight;
-            }
-            scrollCardIntoView($(`dc_month_box_${monthId}`), true);
-        }
+    const willBeExpanded = !month.expanded;
+    dayCounterMonths.forEach(m => { m.expanded = m.id === monthId ? willBeExpanded : false; });
+    persistDayCounter();
+    renderDayCounter();
+
+    if (willBeExpanded) {
+        const daysWrapper = document.querySelector(`#dc_month_details_${monthId} .dc-days-wrapper`);
+        if (daysWrapper) daysWrapper.scrollTop = daysWrapper.scrollHeight;
+        scrollCardIntoView($(`dc_month_box_${monthId}`), true);
     }
 }
 
@@ -1477,7 +1432,7 @@ function toggleDayCounterMonthAccordion(monthId) {
    ========================================== */
 function openNewMovement() {
     editingId = null;
-    if ($('newForm')) $('newForm').reset();
+    $('newForm')?.reset();
     if ($('newKind')) $('newKind').value = 'expense';
     updateCategoryOptions('new');
     if ($('month') && $('newDate')) {
@@ -1540,14 +1495,9 @@ function renderConfigCategories() {
         const title = kind === 'expense' ? 'Gastos' : 'Ingresos';
         const sectionClass = idx > 0 ? 'category-section-title category-section-divider' : 'category-section-title';
 
-        const sortedCats = [...appConfig.categories[kind]].sort((a, b) => 
-            a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
-        );
-
-        const itemsHtml = sortedCats.map((cat) => {
+        const itemsHtml = getSortedCategories(kind).map((cat) => {
             const originalIndex = appConfig.categories[kind].findIndex(c => c.name === cat.name);
-            const iconKey = cat.icon || 'Compras';
-            const iconSvg = categoryIconsMap[iconKey] || categoryIconsMap['Compras'];
+            const iconSvg = categoryIconsMap[cat.icon || 'Compras'] || categoryIconsMap['Compras'];
 
             return `
                 <div class="category-item-row">
@@ -1557,7 +1507,7 @@ function renderConfigCategories() {
                     </div>
                     <div class="category-item-controls">
                         <button type="button" class="edit-category-button" data-action="open-edit-category" data-kind="${kind}" data-index="${originalIndex}" title="Editar categoría" aria-label="Editar categoría">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--button-principal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         </button>
                     </div>
                 </div>
@@ -1569,14 +1519,32 @@ function renderConfigCategories() {
 }
 
 function removeCategory(kind, index) {
-    if (!confirm('¿Estás seguro de eliminar esta categoría?')) return;
+    const cat = appConfig.categories[kind]?.[index];
+    if (!cat) return;
+
+    const usageCount = movements.filter(m => m.kind === kind && m.category === cat.name).length;
+    const message = usageCount > 0
+        ? `Hay ${usageCount} movimiento${usageCount === 1 ? '' : 's'} que usa${usageCount === 1 ? '' : 'n'} la categoría "${cat.name}". ¿Eliminarla de todos modos?`
+        : `¿Estás seguro de eliminar la categoría "${cat.name}"?`;
+
+    if (!confirm(message)) return;
+
     appConfig.categories[kind].splice(index, 1);
     persistConfig();
-    renderConfigCategories();
-    updateCategoryOptions('new');
-    updateCategoryOptions('edit');
-    updateMovementFilterOptions();
-    render();
+    refreshCategoryUI();
+}
+
+function renderIconGrid(containerId, hiddenInputId, selectedIcon) {
+    const gridContainer = $(containerId);
+    const hiddenInput = $(hiddenInputId);
+    if (!gridContainer || !hiddenInput) return;
+
+    hiddenInput.value = selectedIcon || '';
+    gridContainer.innerHTML = Object.keys(categoryIconsMap).map(iconKey => `
+        <div class="icon-option-item ${iconKey === selectedIcon ? 'selected' : ''}" data-icon="${iconKey}" title="${iconKey}">
+            ${categoryIconsMap[iconKey]}
+        </div>
+    `).join('');
 }
 
 function openEditCategoryModal(kind, index) {
@@ -1584,45 +1552,12 @@ function openEditCategoryModal(kind, index) {
     if (!cat) return;
 
     editingCategoryData = { kind, index };
-    
     if ($('editCatName')) $('editCatName').value = cat.name;
     if ($('editCatKind')) $('editCatKind').value = kind;
 
-    const gridContainer = $('editIconSelectorGrid');
-    const hiddenInput = $('editCatIcon');
-    if (gridContainer && hiddenInput) {
-        hiddenInput.value = cat.icon || 'Compras';
-        gridContainer.innerHTML = Object.keys(categoryIconsMap).map(iconKey => {
-            const svgCode = categoryIconsMap[iconKey];
-            const isSelected = iconKey === hiddenInput.value ? 'selected' : '';
-            return `
-                <div class="icon-option-item ${isSelected}" data-icon="${iconKey}" title="${iconKey}">
-                    ${svgCode}
-                </div>
-            `;
-        }).join('');
-    }
-
+    renderIconGrid('editIconSelectorGrid', 'editCatIcon', cat.icon || 'Compras');
     clearValidationErrors($('categoryEditForm'));
     openModal($('categoryEditDlg'));
-}
-
-function renderIconSelector(selectedIcon = null) {
-    const gridContainer = $('iconSelectorGrid');
-    const hiddenInput = $('newCatIcon');
-    if (!gridContainer || !hiddenInput) return;
-
-    hiddenInput.value = selectedIcon || '';
-
-    gridContainer.innerHTML = Object.keys(categoryIconsMap).map(iconKey => {
-        const svgCode = categoryIconsMap[iconKey];
-        const isSelected = iconKey === selectedIcon ? 'selected' : '';
-        return `
-            <div class="icon-option-item ${isSelected}" data-icon="${iconKey}" title="${iconKey}">
-                ${svgCode}
-            </div>
-        `;
-    }).join('');
 }
 
 function selectCategoryIcon(iconKey, targetInputId, containerSelector) {
@@ -1644,72 +1579,54 @@ function bindEvents() {
 
     setupCategoryTabs();
 
-    if ($('openExportDlgBtn')) {
-        $('openExportDlgBtn').addEventListener('click', () => {
-            ['expMovements', 'expRemittances', 'expInstallments', 'expDayCounter'].forEach(id => {
-                const cb = $(id);
-                if (cb) cb.checked = false;
-            });
-            openModal($('exportDlg'));
+    $('openExportDlgBtn')?.addEventListener('click', () => {
+        ['expMovements', 'expRemittances', 'expInstallments', 'expDayCounter'].forEach(id => {
+            if ($(id)) $(id).checked = false;
         });
-    }
+        openModal($('exportDlg'));
+    });
 
-    if ($('cancelExportBtn')) {
-        $('cancelExportBtn').addEventListener('click', () => {
-            closeModal($('exportDlg'));
+    $('cancelExportBtn')?.addEventListener('click', () => closeModal($('exportDlg')));
+
+    $('exportForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        executeCustomExport();
+    });
+
+    $('importCsvBtn')?.addEventListener('click', () => $('csvFileInput')?.click());
+    $('csvFileInput')?.addEventListener('change', importMovementsCsv);
+
+    $('importSelectForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        applyImportSelection({
+            movements: $('impSelectMovs')?.checked || false,
+            remittances: $('impSelectRemit')?.checked || false,
+            installments: $('impSelectInst')?.checked || false,
+            dayCounter: $('impSelectDays')?.checked || false
         });
-    }
+    });
 
-    if ($('exportForm')) {
-        $('exportForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            executeCustomExport();
-        });
-    }
+    $('cancelImportSelect')?.addEventListener('click', () => {
+        pendingParsedSections = null;
+        closeModal($('importSelectDlg'));
+    });
 
-    if ($('importCsvBtn')) {
-        $('importCsvBtn').addEventListener('click', () => {
-            $('csvFileInput')?.click();
-        });
-    }
-
-    if ($('csvFileInput')) {
-        $('csvFileInput').addEventListener('change', importMovementsCsv);
-    }
-
-    if ($('importSelectForm')) {
-        $('importSelectForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const selection = {
-                movements: $('impSelectMovs')?.checked || false,
-                remittances: $('impSelectRemit')?.checked || false,
-                installments: $('impSelectInst')?.checked || false,
-                dayCounter: $('impSelectDays')?.checked || false
-            };
-            applyImportSelection(selection);
-        });
-    }
-
-    if ($('cancelImportSelect')) {
-        $('cancelImportSelect').addEventListener('click', () => {
-            pendingParsedSections = null;
-            closeModal($('importSelectDlg'));
-        });
-    }
-
-    if ($('catChartWrapper')) {
-        $('catChartWrapper').addEventListener('click', (e) => {
-            const segment = e.target.closest('[data-donut-category]');
-            if (segment) {
-                toggleDonutSegment(segment.dataset.donutCategory);
-            }
-        });
-    }
+    $('catChartWrapper')?.addEventListener('click', (e) => {
+        const segment = e.target.closest('[data-donut-category]');
+        if (segment) toggleDonutSegment(segment.dataset.donutCategory);
+    });
 
     if ($('categories')) {
         $('categories').addEventListener('click', (e) => {
             const item = e.target.closest('[data-list-category]');
-            if (item) toggleDonutSegment(item.dataset.listCategory);
+            if (item) {
+                toggleDonutSegment(item.dataset.listCategory);
+                setTimeout(() => {
+                    if (document.activeElement && document.activeElement.closest('#categories')) {
+                        document.activeElement.blur();
+                    }
+                }, 0);
+            }
         });
 
         $('categories').addEventListener('keydown', (e) => {
@@ -1721,181 +1638,124 @@ function bindEvents() {
         });
     }
 
-    document.addEventListener('click', (e) => {
-        const chart = $('catChartWrapper');
-        const list = $('categories');
-        const eventPath = e.composedPath();
-        if (
-            selectedDonutCategory &&
-            chart && list &&
-            !eventPath.includes(chart) &&
-            !eventPath.includes(list)
-        ) {
+    $('categoriesContainer')?.addEventListener('click', (e) => {
+        if (!selectedDonutCategory) return;
+
+        const clickedSegment = e.target.closest('[data-donut-category]');
+        const clickedListItem = e.target.closest('[data-list-category]');
+        const clickedBadge = e.target.closest('.cat-floating-badge');
+
+        if (!clickedSegment && !clickedListItem && !clickedBadge) {
             selectedDonutCategory = null;
             renderCategoriesRedesign();
         }
     });
 
-    if ($('iconSelectorGrid')) {
-        $('iconSelectorGrid').addEventListener('click', (e) => {
-            const item = e.target.closest('.icon-option-item');
-            if (item && item.dataset.icon) {
-                selectCategoryIcon(item.dataset.icon, 'newCatIcon', '#iconSelectorGrid');
-            }
-        });
-    }
+    $('editIconSelectorGrid')?.addEventListener('click', (e) => {
+        const item = e.target.closest('.icon-option-item');
+        if (item?.dataset.icon) selectCategoryIcon(item.dataset.icon, 'editCatIcon', '#editIconSelectorGrid');
+    });
 
-    if ($('editIconSelectorGrid')) {
-        $('editIconSelectorGrid').addEventListener('click', (e) => {
-            const item = e.target.closest('.icon-option-item');
-            if (item && item.dataset.icon) {
-                selectCategoryIcon(item.dataset.icon, 'editCatIcon', '#editIconSelectorGrid');
-            }
-        });
-    }
+    $('categoryManagerList')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-action="open-edit-category"]');
+        if (btn) openEditCategoryModal(btn.dataset.kind, Number(btn.dataset.index));
+    });
 
-    if ($('categoryManagerList')) {
-        $('categoryManagerList').addEventListener('click', (e) => {
-            const btn = e.target.closest('[data-action="open-edit-category"]');
-            if (btn) {
-                openEditCategoryModal(btn.dataset.kind, Number(btn.dataset.index));
-            }
-        });
-    }
+    $('openCreateCategoryBtn')?.addEventListener('click', () => {
+        if ($('newCatName')) $('newCatName').value = '';
+        if ($('newCatKind')) $('newCatKind').value = 'expense';
+        renderIconGrid('iconSelectorGrid', 'newCatIcon', null);
+        clearValidationErrors($('categoryCreateForm'));
+        openModal($('categoryCreateDlg'));
+    });
 
-    if ($('openCreateCategoryBtn')) {
-        $('openCreateCategoryBtn').addEventListener('click', () => {
-            if ($('newCatName')) $('newCatName').value = '';
-            if ($('newCatKind')) $('newCatKind').value = 'expense';
-            renderIconSelector(null);
-            clearValidationErrors($('categoryCreateForm'));
-            openModal($('categoryCreateDlg'));
-        });
-    }
+    $('cancelCreateCategoryBtn')?.addEventListener('click', () => {
+        clearValidationErrors($('categoryCreateForm'));
+        closeModal($('categoryCreateDlg'));
+    });
 
-    if ($('cancelCreateCategoryBtn')) {
-        $('cancelCreateCategoryBtn').addEventListener('click', () => {
-            clearValidationErrors($('categoryCreateForm'));
-            closeModal($('categoryCreateDlg'));
-        });
-    }
+    $('categoryCreateForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nameInput = $('newCatName');
+        const kindSelect = $('newCatKind');
+        const iconSelect = $('newCatIcon');
 
-    if ($('categoryCreateForm')) {
-        $('categoryCreateForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const nameInput = $('newCatName');
-            const kindSelect = $('newCatKind');
-            const iconSelect = $('newCatIcon');
+        if (!validateRequiredFields(e.target, [nameInput])) return;
 
-            if (!nameInput || !nameInput.value.trim()) {
-                if (nameInput) {
-                    nameInput.classList.add('input-error');
-                    nameInput.focus();
-                }
-                return;
-            }
-            nameInput.classList.remove('input-error');
+        if (!iconSelect?.value) {
+            alert('Selecciona un icono.');
+            return;
+        }
 
-            if (!iconSelect || !iconSelect.value) {
-                alert('Selecciona un icono.');
-                return;
-            }
+        const name = nameInput.value.trim();
+        const kind = kindSelect ? kindSelect.value : 'expense';
+        const icon = iconSelect.value;
 
-            const name = nameInput.value.trim();
-            const kind = kindSelect ? kindSelect.value : 'expense';
-            const icon = iconSelect.value;
+        appConfig.colorCounter = (appConfig.colorCounter || 0) + 1;
+        const hue = (appConfig.colorCounter * 137.5) % 360;
+        const color = `hsl(${Math.round(hue)}, 70%, 50%)`;
 
-            const totalCategories = appConfig.categories.expense.length + appConfig.categories.income.length;
-            const hue = (totalCategories * 137.5) % 360;
-            const color = `hsl(${Math.round(hue)}, 70%, 50%)`;
-
-            if (!appConfig.categories[kind].some(c => c.name.toLowerCase() === name.toLowerCase())) {
-                appConfig.categories[kind].push({ name, color, icon });
-                
-                appConfig.categories[kind].sort((a, b) => 
-                    a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
-                );
-
-                persistConfig();
-                closeModal($('categoryCreateDlg'));
-                renderConfigCategories();
-                updateCategoryOptions('new');
-                updateCategoryOptions('edit');
-                updateMovementFilterOptions();
-                render();
-            } else {
-                alert('Esta categoría ya existe.');
-                nameInput.focus();
-            }
-        });
-    }
-
-    if ($('cancelEditCategoryBtn')) {
-        $('cancelEditCategoryBtn').addEventListener('click', () => {
-            closeModal($('categoryEditDlg'));
-        });
-    }
-
-    if ($('deleteCategoryBtn')) {
-        $('deleteCategoryBtn').addEventListener('click', () => {
-            if (!editingCategoryData) return;
-            const { kind, index } = editingCategoryData;
-            closeModal($('categoryEditDlg'));
-            removeCategory(kind, index);
-        });
-    }
-
-    if ($('categoryEditForm')) {
-        $('categoryEditForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (!editingCategoryData) return;
-
-            const nameInput = $('editCatName');
-            if (!nameInput.value.trim()) {
-                nameInput.classList.add('input-error');
-                nameInput.focus();
-                return;
-            }
-            nameInput.classList.remove('input-error');
-
-            const newName = nameInput.value.trim();
-            const newKind = $('editCatKind').value;
-            const newIcon = $('editCatIcon').value;
-
-            const { kind: oldKind, index: oldIndex } = editingCategoryData;
-            const targetCat = appConfig.categories[oldKind][oldIndex];
-
-            const exists = appConfig.categories[newKind].some((c, idx) => c.name.toLowerCase() === newName.toLowerCase() && !(oldKind === newKind && idx === oldIndex));
-            if (exists) {
-                alert('Ya existe una categoría con ese nombre.');
-                nameInput.focus();
-                return;
-            }
-
-            targetCat.name = newName;
-            targetCat.icon = newIcon;
-
-            if (oldKind !== newKind) {
-                appConfig.categories[oldKind].splice(oldIndex, 1);
-                appConfig.categories[newKind].push(targetCat);
-            }
-
-            ['expense', 'income'].forEach(k => {
-                appConfig.categories[k].sort((a, b) => 
-                    a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
-                );
-            });
+        if (!appConfig.categories[kind].some(c => c.name.toLowerCase() === name.toLowerCase())) {
+            appConfig.categories[kind].push({ name, color, icon });
+            appConfig.categories[kind].sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
 
             persistConfig();
-            closeModal($('categoryEditDlg'));
-            renderConfigCategories();
-            updateCategoryOptions('new');
-            updateCategoryOptions('edit');
-            updateMovementFilterOptions();
-            render();
+            closeModal($('categoryCreateDlg'));
+            refreshCategoryUI();
+        } else {
+            alert('Esta categoría ya existe.');
+            nameInput.focus();
+        }
+    });
+
+    $('cancelEditCategoryBtn')?.addEventListener('click', () => closeModal($('categoryEditDlg')));
+
+    $('deleteCategoryBtn')?.addEventListener('click', () => {
+        if (!editingCategoryData) return;
+        const { kind, index } = editingCategoryData;
+        closeModal($('categoryEditDlg'));
+        removeCategory(kind, index);
+    });
+
+    $('categoryEditForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!editingCategoryData) return;
+
+        const nameInput = $('editCatName');
+        if (!validateRequiredFields(e.target, [nameInput])) return;
+
+        const newName = nameInput.value.trim();
+        const newKind = $('editCatKind').value;
+        const newIcon = $('editCatIcon').value;
+
+        const { kind: oldKind, index: oldIndex } = editingCategoryData;
+        const targetCat = appConfig.categories[oldKind][oldIndex];
+
+        const exists = appConfig.categories[newKind].some((c, idx) =>
+            c.name.toLowerCase() === newName.toLowerCase() && !(oldKind === newKind && idx === oldIndex)
+        );
+        if (exists) {
+            alert('Ya existe una categoría con ese nombre.');
+            nameInput.focus();
+            return;
+        }
+
+        targetCat.name = newName;
+        targetCat.icon = newIcon;
+
+        if (oldKind !== newKind) {
+            appConfig.categories[oldKind].splice(oldIndex, 1);
+            appConfig.categories[newKind].push(targetCat);
+        }
+
+        ['expense', 'income'].forEach(k => {
+            appConfig.categories[k].sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
         });
-    }
+
+        persistConfig();
+        closeModal($('categoryEditDlg'));
+        refreshCategoryUI();
+    });
 
     if ($('remittancesList')) {
         const listContainer = $('remittancesList');
@@ -1928,22 +1788,15 @@ function bindEvents() {
 
         listContainer.addEventListener('keydown', (e) => {
             const remId = e.target.dataset.remitId;
-            if (!remId) return;
-
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                e.target.blur();
-
-                if (e.target.classList.contains('remit-concept-field')) {
-                    addRemitItem(remId);
-                }
-            }
+            if (!remId || e.key !== 'Enter') return;
+            e.preventDefault();
+            e.target.blur();
+            if (e.target.classList.contains('remit-concept-field')) addRemitItem(remId);
         });
 
         listContainer.addEventListener('input', (e) => {
             const remId = e.target.dataset.remitId;
-            if (!remId) return;
-            const rem = remittancesList.find(r => r.id === remId);
+            const rem = remId ? remittancesList.find(r => r.id === remId) : null;
             if (!rem) return;
 
             if (e.target.classList.contains('remit-recv-input')) {
@@ -1962,8 +1815,7 @@ function bindEvents() {
 
         listContainer.addEventListener('focusin', (e) => {
             const remId = e.target.dataset.remitId;
-            if (!remId) return;
-            const rem = remittancesList.find(r => r.id === remId);
+            const rem = remId ? remittancesList.find(r => r.id === remId) : null;
             if (!rem) return;
 
             let val = 0;
@@ -1977,724 +1829,518 @@ function bindEvents() {
                 return;
             }
 
-            if (rem.sendCurr === 'EUR') {
-                e.target.value = val > 0 ? String(val).replace('.', ',') : '';
-            } else {
-                e.target.value = val > 0 ? String(val) : '';
-            }
+            e.target.value = val > 0 ? (rem.sendCurr === 'EUR' ? String(val).replace('.', ',') : String(val)) : '';
         });
 
         listContainer.addEventListener('focusout', (e) => {
             const remId = e.target.dataset.remitId;
-            if (!remId) return;
-            const rem = remittancesList.find(r => r.id === remId);
+            const rem = remId ? remittancesList.find(r => r.id === remId) : null;
             if (!rem) return;
 
-            if (e.target.classList.contains('remit-recv-input')) {
-                rem.items[Number(e.target.dataset.index)].recvAmount = parseInputNumber(e.target.value);
-                persistRemittancesList();
-                renderRemittancesList();
-            } else if (e.target.classList.contains('remit-tc-input')) {
-                const val = parseInputNumber(e.target.value);
-                rem.tc = val > 0 ? val : 1;
-                persistRemittancesList();
-                renderRemittancesList();
-            } else if (e.target.classList.contains('remit-comm-input')) {
-                rem.commission = parseInputNumber(e.target.value);
-                persistRemittancesList();
-                renderRemittancesList();
-            }
-        });
-    }
+            const isRecv = e.target.classList.contains('remit-recv-input');
+            const isTc = e.target.classList.contains('remit-tc-input');
+            const isComm = e.target.classList.contains('remit-comm-input');
+            if (!isRecv && !isTc && !isComm) return;
 
-    if ($('remitEditForm')) {
-        $('remitEditForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (!editingRemittanceId) return;
-
-            const nameInput = $('editRemitName');
-            if (!nameInput.value.trim()) {
-                nameInput.classList.add('input-error');
-                nameInput.focus();
-                return;
-            }
-            nameInput.classList.remove('input-error');
-
-            remittancesList = remittancesList.map(r => r.id === editingRemittanceId ? {
-                ...r,
-                name: nameInput.value.trim(),
-                sendCurr: $('editRemitSendCurr').value,
-                recvCurr: $('editRemitRecvCurr').value
-            } : r);
+            const parsed = parseInputNumber(e.target.value);
+            if (isRecv) rem.items[Number(e.target.dataset.index)].recvAmount = parsed;
+            else if (isTc) rem.tc = parsed > 0 ? parsed : 1;
+            else if (isComm) rem.commission = parsed;
 
             persistRemittancesList();
-            closeModal($('remitEditDlg'));
             renderRemittancesList();
         });
     }
 
-    if ($('cancelEditRemitBtn')) {
-        $('cancelEditRemitBtn').addEventListener('click', () => {
-            closeModal($('remitEditDlg'));
+    $('remitEditForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!editingRemittanceId) return;
+
+        const nameInput = $('editRemitName');
+        if (!validateRequiredFields(e.target, [nameInput])) return;
+
+        remittancesList = remittancesList.map(r => r.id === editingRemittanceId ? {
+            ...r,
+            name: nameInput.value.trim(),
+            sendCurr: $('editRemitSendCurr').value,
+            recvCurr: $('editRemitRecvCurr').value
+        } : r);
+
+        persistRemittancesList();
+        closeModal($('remitEditDlg'));
+        renderRemittancesList();
+    });
+
+    $('cancelEditRemitBtn')?.addEventListener('click', () => closeModal($('remitEditDlg')));
+
+    $('installmentsList')?.addEventListener('click', (e) => {
+        const editBtn = e.target.closest('[data-action="edit-inst-purchase"]');
+        if (editBtn) {
+            e.stopPropagation();
+            return editInstallmentPurchase(editBtn.dataset.purchaseId);
+        }
+
+        const paidTarget = e.target.closest('[data-action="toggle-inst-paid"]');
+        if (paidTarget) {
+            e.stopPropagation();
+            return toggleInstallmentPaid(paidTarget.dataset.purchaseId, Number(paidTarget.dataset.instNumber));
+        }
+
+        const header = e.target.closest('[data-action="toggle-inst-accordion"]');
+        if (header) {
+            e.stopPropagation();
+            toggleInstallmentAccordion(header.dataset.purchaseId);
+        }
+    });
+
+    $('addDayCounterMonthBtn')?.addEventListener('click', () => {
+        const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        $('newMonthName').value = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
+        $('newMonthTarget').value = '15';
+        clearValidationErrors($('dayCounterMonthNewForm'));
+        openModal($('dayCounterMonthNewDlg'));
+    });
+
+    $('cancelNewDayCounterMonth')?.addEventListener('click', () => closeModal($('dayCounterMonthNewDlg')));
+
+    $('dayCounterMonthNewForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nameInput = $('newMonthName');
+        const targetInput = $('newMonthTarget');
+        if (!nameInput.value.trim() || !targetInput.value) return;
+
+        const newMonthId = crypto.randomUUID();
+        dayCounterMonths.push({
+            id: newMonthId,
+            name: nameInput.value.trim(),
+            targetDays: parseInt(targetInput.value) || 15,
+            expanded: true,
+            days: []
         });
-    }
+        persistDayCounter();
+        closeModal($('dayCounterMonthNewDlg'));
+        renderDayCounter();
+        scrollCardIntoView($(`dc_month_box_${newMonthId}`), true);
+    });
 
-    if ($('installmentsList')) {
-        $('installmentsList').addEventListener('click', (e) => {
-            const editBtn = e.target.closest('[data-action="edit-inst-purchase"]');
-            if (editBtn) {
-                e.stopPropagation();
-                return editInstallmentPurchase(editBtn.dataset.purchaseId);
-            }
+    $('cancelEditDayCounterMonth')?.addEventListener('click', () => closeModal($('dayCounterMonthEditDlg')));
 
-            const paidTarget = e.target.closest('[data-action="toggle-inst-paid"]');
-            if (paidTarget) {
-                e.stopPropagation();
-                return toggleInstallmentPaid(paidTarget.dataset.purchaseId, Number(paidTarget.dataset.instNumber));
-            }
-
-            const header = e.target.closest('[data-action="toggle-inst-accordion"]');
-            if (header) {
-                e.stopPropagation();
-                toggleInstallmentAccordion(header.dataset.purchaseId);
-            }
-        });
-    }
-
-    if ($('addDayCounterMonthBtn')) {
-        $('addDayCounterMonthBtn').addEventListener('click', () => {
-            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            const defaultName = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
-            $('newMonthName').value = defaultName;
-            $('newMonthTarget').value = '15';
-            clearValidationErrors($('dayCounterMonthNewForm'));
-            openModal($('dayCounterMonthNewDlg'));
-        });
-    }
-
-    if ($('cancelNewDayCounterMonth')) {
-        $('cancelNewDayCounterMonth').addEventListener('click', () => closeModal($('dayCounterMonthNewDlg')));
-    }
-
-    if ($('dayCounterMonthNewForm')) {
-        $('dayCounterMonthNewForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const nameInput = $('newMonthName');
-            const targetInput = $('newMonthTarget');
-            if (!nameInput.value.trim() || !targetInput.value) return;
-
-            const newMonthId = crypto.randomUUID();
-            dayCounterMonths.push({
-                id: newMonthId,
-                name: nameInput.value.trim(),
-                targetDays: parseInt(targetInput.value) || 15,
-                expanded: true,
-                days: []
-            });
-            persistDayCounter();
-            closeModal($('dayCounterMonthNewDlg'));
-            renderDayCounter();
-            scrollCardIntoView($(`dc_month_box_${newMonthId}`), true);
-        });
-    }
-
-    if ($('cancelEditDayCounterMonth')) {
-        $('cancelEditDayCounterMonth').addEventListener('click', () => closeModal($('dayCounterMonthEditDlg')));
-    }
-
-    if ($('deleteMonthModalBtn')) {
-        $('deleteMonthModalBtn').addEventListener('click', () => {
-            if (!editingMonthId) return;
-            if (confirm('¿Eliminar este mes y todos sus días registrados?')) {
-                dayCounterMonths = dayCounterMonths.filter(x => x.id !== editingMonthId);
-                persistDayCounter();
-                closeModal($('dayCounterMonthEditDlg'));
-                renderDayCounter();
-            }
-        });
-    }
-
-    if ($('dayCounterMonthEditForm')) {
-        $('dayCounterMonthEditForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (!editingMonthId) return;
-
-            const nameInput = $('editMonthName');
-            const targetInput = $('editMonthTarget');
-            if (!nameInput.value.trim() || !targetInput.value) return;
-
-            dayCounterMonths = dayCounterMonths.map(m => m.id === editingMonthId ? {
-                ...m,
-                name: nameInput.value.trim(),
-                targetDays: parseInt(targetInput.value) || 15
-            } : m);
-
+    $('deleteMonthModalBtn')?.addEventListener('click', () => {
+        if (!editingMonthId) return;
+        if (confirm('¿Eliminar este mes y todos sus días registrados?')) {
+            dayCounterMonths = dayCounterMonths.filter(x => x.id !== editingMonthId);
             persistDayCounter();
             closeModal($('dayCounterMonthEditDlg'));
             renderDayCounter();
-        });
-    }
+        }
+    });
 
-    if ($('dayCounterMonthsList')) {
-        const listEl = $('dayCounterMonthsList');
+    $('dayCounterMonthEditForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!editingMonthId) return;
 
-        listEl.addEventListener('click', (e) => {
-            const editMonthBtn = e.target.closest('[data-action="edit-dc-month"]');
-            if (editMonthBtn) {
-                e.stopPropagation();
-                editingMonthId = editMonthBtn.dataset.monthId;
-                const month = dayCounterMonths.find(x => x.id === editingMonthId);
-                if (month) {
-                    $('editMonthName').value = month.name;
-                    $('editMonthTarget').value = month.targetDays;
-                    clearValidationErrors($('dayCounterMonthEditForm'));
-                    openModal($('dayCounterMonthEditDlg'));
-                }
-                return;
+        const nameInput = $('editMonthName');
+        const targetInput = $('editMonthTarget');
+        if (!nameInput.value.trim() || !targetInput.value) return;
+
+        dayCounterMonths = dayCounterMonths.map(m => m.id === editingMonthId ? {
+            ...m,
+            name: nameInput.value.trim(),
+            targetDays: parseInt(targetInput.value) || 15
+        } : m);
+
+        persistDayCounter();
+        closeModal($('dayCounterMonthEditDlg'));
+        renderDayCounter();
+    });
+
+    $('dayCounterMonthsList')?.addEventListener('click', (e) => {
+        const editMonthBtn = e.target.closest('[data-action="edit-dc-month"]');
+        if (editMonthBtn) {
+            e.stopPropagation();
+            editingMonthId = editMonthBtn.dataset.monthId;
+            const month = dayCounterMonths.find(x => x.id === editingMonthId);
+            if (month) {
+                $('editMonthName').value = month.name;
+                $('editMonthTarget').value = month.targetDays;
+                clearValidationErrors($('dayCounterMonthEditForm'));
+                openModal($('dayCounterMonthEditDlg'));
+            }
+            return;
+        }
+
+        const toggleHeader = e.target.closest('[data-action="toggle-dc-month"]');
+        if (toggleHeader) {
+            e.stopPropagation();
+            toggleDayCounterMonthAccordion(toggleHeader.dataset.monthId);
+            return;
+        }
+
+        const openAddDayBtn = e.target.closest('[data-action="open-add-dc-day"]');
+        if (openAddDayBtn) {
+            e.stopPropagation();
+            editingDayMonthId = openAddDayBtn.dataset.monthId;
+            editingDayIndex = null;
+            $('dayDlgTitle').textContent = 'Registrar día de trabajo';
+            $('dayDate').value = `${currentMonth}-${pad(today.getDate())}`;
+            $('dayNameDisplay').value = getDayNameFromDate($('dayDate').value);
+            $('dayEntryTime').value = '18:00';
+            $('dayExitTime').value = calculateExitTime('18:00');
+            $('dayLocation').value = '';
+
+            if ($('dayModalActionsSplit')) $('dayModalActionsSplit').style.display = 'none';
+            if ($('dayModalActionsNormal')) $('dayModalActionsNormal').style.display = 'flex';
+
+            const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
+            if ($('copyPreviousDayWrapper')) {
+                $('copyPreviousDayWrapper').style.display = month?.days?.length > 0 ? 'block' : 'none';
             }
 
-            const toggleHeader = e.target.closest('[data-action="toggle-dc-month"]');
-            if (toggleHeader) {
-                e.stopPropagation();
-                toggleDayCounterMonthAccordion(toggleHeader.dataset.monthId);
-                return;
-            }
+            clearValidationErrors($('dayCounterDayForm'));
+            openModal($('dayCounterDayDlg'));
+            return;
+        }
 
-            const openAddDayBtn = e.target.closest('[data-action="open-add-dc-day"]');
-            if (openAddDayBtn) {
-                e.stopPropagation();
-                editingDayMonthId = openAddDayBtn.dataset.monthId;
-                editingDayIndex = null;
-                $('dayDlgTitle').textContent = 'Registrar día de trabajo';
-                $('dayDate').value = `${currentMonth}-${pad(today.getDate())}`;
-                $('dayNameDisplay').value = getDayNameFromDate($('dayDate').value);
-                $('dayEntryTime').value = '18:00';
-                $('dayExitTime').value = calculateExitTime('18:00');
-                $('dayLocation').value = '';
+        const editDayBtn = e.target.closest('[data-action="edit-dc-day"]');
+        if (editDayBtn) {
+            e.stopPropagation();
+            editingDayMonthId = editDayBtn.dataset.monthId;
+            editingDayIndex = Number(editDayBtn.dataset.index);
+            const day = dayCounterMonths.find(x => x.id === editingDayMonthId)?.days[editingDayIndex];
+            if (day) {
+                $('dayDlgTitle').textContent = 'Editar día de trabajo';
+                $('dayDate').value = day.date;
+                $('dayNameDisplay').value = day.dayName;
+                $('dayEntryTime').value = day.entryTime;
+                $('dayExitTime').value = day.exitTime;
+                $('dayLocation').value = day.location;
+                if ($('copyPreviousDayWrapper')) $('copyPreviousDayWrapper').style.display = 'none';
 
-                if ($('dayModalActionsSplit')) $('dayModalActionsSplit').style.display = 'none';
-                if ($('dayModalActionsNormal')) $('dayModalActionsNormal').style.display = 'flex';
-
-                const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
-                const copyWrapper = $('copyPreviousDayWrapper');
-                if (month && month.days && month.days.length > 0) {
-                    copyWrapper.style.display = 'block';
-                } else {
-                    copyWrapper.style.display = 'none';
-                }
+                if ($('dayModalActionsSplit')) $('dayModalActionsSplit').style.display = 'flex';
+                if ($('dayModalActionsNormal')) $('dayModalActionsNormal').style.display = 'none';
 
                 clearValidationErrors($('dayCounterDayForm'));
                 openModal($('dayCounterDayDlg'));
-                return;
             }
-
-            const editDayBtn = e.target.closest('[data-action="edit-dc-day"]');
-            if (editDayBtn) {
-                e.stopPropagation();
-                editingDayMonthId = editDayBtn.dataset.monthId;
-                editingDayIndex = Number(editDayBtn.dataset.index);
-                const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
-                const day = month?.days[editingDayIndex];
-                if (day) {
-                    $('dayDlgTitle').textContent = 'Editar día de trabajo';
-                    $('dayDate').value = day.date;
-                    $('dayNameDisplay').value = day.dayName;
-                    $('dayEntryTime').value = day.entryTime;
-                    $('dayExitTime').value = day.exitTime;
-                    $('dayLocation').value = day.location;
-                    $('copyPreviousDayWrapper').style.display = 'none';
-
-                    if ($('dayModalActionsSplit')) $('dayModalActionsSplit').style.display = 'flex';
-                    if ($('dayModalActionsNormal')) $('dayModalActionsNormal').style.display = 'none';
-
-                    clearValidationErrors($('dayCounterDayForm'));
-                    openModal($('dayCounterDayDlg'));
-                }
-                return;
-            }
-        });
-    }
+        }
+    });
 
     if ($('deleteDayModalBtn')) {
         $('deleteDayModalBtn').onclick = () => {
-            if (editingDayMonthId !== null && editingDayIndex !== null) {
-                if (confirm('¿Eliminar este día registrado?')) {
-                    const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
-                    if (month && month.days) {
-                        const daysWrapper = document.querySelector(`#dc_month_details_${editingDayMonthId} .dc-days-wrapper`);
-                        const savedScrollTop = daysWrapper ? daysWrapper.scrollTop : 0;
+            if (editingDayMonthId === null || editingDayIndex === null) return;
+            if (!confirm('¿Eliminar este día registrado?')) return;
 
-                        month.days.splice(editingDayIndex, 1);
-                        persistDayCounter();
-                        closeModal($('dayCounterDayDlg'));
-                        renderDayCounter();
+            const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
+            if (month?.days) {
+                const savedScrollTop = document.querySelector(`#dc_month_details_${editingDayMonthId} .dc-days-wrapper`)?.scrollTop || 0;
 
-                        const updatedWrapper = document.querySelector(`#dc_month_details_${editingDayMonthId} .dc-days-wrapper`);
-                        if (updatedWrapper) {
-                            updatedWrapper.scrollTop = savedScrollTop;
-                        }
-                    }
-                }
+                month.days.splice(editingDayIndex, 1);
+                persistDayCounter();
+                closeModal($('dayCounterDayDlg'));
+                renderDayCounter();
+
+                const updatedWrapper = document.querySelector(`#dc_month_details_${editingDayMonthId} .dc-days-wrapper`);
+                if (updatedWrapper) updatedWrapper.scrollTop = savedScrollTop;
             }
         };
     }
 
-    if ($('dayDate')) {
-        $('dayDate').addEventListener('change', () => {
-            const dateStr = $('dayDate').value;
-            $('dayNameDisplay').value = getDayNameFromDate(dateStr);
-        });
-    }
+    $('dayDate')?.addEventListener('change', () => {
+        $('dayNameDisplay').value = getDayNameFromDate($('dayDate').value);
+    });
 
-    if ($('dayEntryTime')) {
-        $('dayEntryTime').addEventListener('change', () => {
-            $('dayExitTime').value = calculateExitTime($('dayEntryTime').value);
-        });
-    }
+    $('dayEntryTime')?.addEventListener('change', () => {
+        $('dayExitTime').value = calculateExitTime($('dayEntryTime').value);
+    });
 
-    if ($('copyPreviousDayBtn')) {
-        $('copyPreviousDayBtn').addEventListener('click', () => {
-            const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
-            if (month && month.days && month.days.length > 0) {
-                const lastDay = month.days[month.days.length - 1];
-                $('dayEntryTime').value = lastDay.entryTime;
-                $('dayExitTime').value = lastDay.exitTime;
-                $('dayLocation').value = lastDay.location;
-            }
-        });
-    }
+    $('copyPreviousDayBtn')?.addEventListener('click', () => {
+        const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
+        const lastDay = month?.days?.at(-1);
+        if (lastDay) {
+            $('dayEntryTime').value = lastDay.entryTime;
+            $('dayExitTime').value = lastDay.exitTime;
+            $('dayLocation').value = lastDay.location;
+        }
+    });
 
-    if ($('cancelDayCounterDay')) {
-        $('cancelDayCounterDay').addEventListener('click', () => closeModal($('dayCounterDayDlg')));
-    }
-    if ($('cancelDayCounterDayNormal')) {
-        $('cancelDayCounterDayNormal').addEventListener('click', () => closeModal($('dayCounterDayDlg')));
-    }
+    $('cancelDayCounterDay')?.addEventListener('click', () => closeModal($('dayCounterDayDlg')));
+    $('cancelDayCounterDayNormal')?.addEventListener('click', () => closeModal($('dayCounterDayDlg')));
 
-    if ($('dayCounterDayForm')) {
-        $('dayCounterDayForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
-            if (!month) return;
+    $('dayCounterDayForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
+        const dateStr = $('dayDate').value;
+        if (!month || !dateStr) return;
 
-            const dateStr = $('dayDate').value;
-            const entryStr = $('dayEntryTime').value;
-            const exitStr = $('dayExitTime').value;
-            const locationStr = $('dayLocation').value.trim();
+        if (!month.days) month.days = [];
+        const duplicateIndex = month.days.findIndex((d, idx) => d.date === dateStr && (editingDayIndex === null || idx !== editingDayIndex));
 
-            if (!dateStr) return;
+        if (duplicateIndex !== -1) {
+            alert('Este día ya ha sido registrado en este mes.');
+            $('dayDate').focus();
+            return;
+        }
 
-            if (!month.days) month.days = [];
-            const duplicateIndex = month.days.findIndex((d, idx) => d.date === dateStr && (editingDayIndex === null || idx !== editingDayIndex));
-            
-            if (duplicateIndex !== -1) {
-                alert('Este día ya ha sido registrado en este mes.');
-                $('dayDate').focus();
-                return;
-            }
+        const savedScrollTop = document.querySelector(`#dc_month_details_${month.id} .dc-days-wrapper`)?.scrollTop || 0;
 
-            const daysWrapperBefore = document.querySelector(`#dc_month_details_${month.id} .dc-days-wrapper`);
-            const savedScrollTop = daysWrapperBefore ? daysWrapperBefore.scrollTop : 0;
+        const dayObj = {
+            date: dateStr,
+            dayName: getDayNameFromDate(dateStr),
+            entryTime: $('dayEntryTime').value,
+            exitTime: $('dayExitTime').value,
+            location: $('dayLocation').value.trim()
+        };
 
-            const dayObj = {
-                date: dateStr,
-                dayName: getDayNameFromDate(dateStr),
-                entryTime: entryStr,
-                exitTime: exitStr,
-                location: locationStr || ''
-            };
+        if (editingDayIndex !== null && editingDayIndex >= 0) {
+            month.days[editingDayIndex] = dayObj;
+        } else {
+            month.days.push(dayObj);
+            month.days.sort((a, b) => a.date.localeCompare(b.date));
+        }
 
-            if (editingDayIndex !== null && editingDayIndex >= 0) {
-                month.days[editingDayIndex] = dayObj;
-            } else {
-                month.days.push(dayObj);
-                month.days.sort((a, b) => a.date.localeCompare(b.date));
-            }
+        persistDayCounter();
+        closeModal($('dayCounterDayDlg'));
+        renderDayCounter();
 
-            persistDayCounter();
-            closeModal($('dayCounterDayDlg'));
-            renderDayCounter();
+        const daysWrapperAfter = document.querySelector(`#dc_month_details_${month.id} .dc-days-wrapper`);
+        if (daysWrapperAfter) {
+            daysWrapperAfter.scrollTop = editingDayIndex === null ? daysWrapperAfter.scrollHeight : savedScrollTop;
+        }
+    });
 
-            const daysWrapperAfter = document.querySelector(`#dc_month_details_${month.id} .dc-days-wrapper`);
-            if (daysWrapperAfter) {
-                if (editingDayIndex === null) {
-                    daysWrapperAfter.scrollTop = daysWrapperAfter.scrollHeight;
-                } else {
-                    daysWrapperAfter.scrollTop = savedScrollTop;
-                }
-            }
-        });
-    }
+    $('addBtn')?.addEventListener('click', openNewMovement);
 
-    if ($('addBtn')) $('addBtn').addEventListener('click', openNewMovement);
-    
-    if ($('cancelNew')) $('cancelNew').addEventListener('click', () => {
+    $('cancelNew')?.addEventListener('click', () => {
         clearValidationErrors($('newForm'));
         closeModal($('newDlg'));
     });
-    if ($('cancelEdit')) $('cancelEdit').addEventListener('click', () => {
+
+    $('cancelEdit')?.addEventListener('click', () => {
         clearValidationErrors($('editForm'));
         closeModal($('editDlg'));
     });
 
-    if ($('newKind')) $('newKind').addEventListener('change', () => updateCategoryOptions('new'));
-    if ($('editKind')) $('editKind').addEventListener('change', () => updateCategoryOptions('edit'));
+    $('newKind')?.addEventListener('change', () => updateCategoryOptions('new'));
+    $('editKind')?.addEventListener('change', () => updateCategoryOptions('edit'));
 
-    if ($('month')) $('month').addEventListener('change', render);
-    if ($('search')) $('search').addEventListener('input', render);
-    if ($('movementFilter')) $('movementFilter').addEventListener('change', render);
-    if ($('closeDetailBtn')) $('closeDetailBtn').addEventListener('click', () => closeModal($('detailDlg')));
+    $('month')?.addEventListener('change', render);
+    $('search')?.addEventListener('input', render);
+    $('movementFilter')?.addEventListener('change', render);
+    $('closeDetailBtn')?.addEventListener('click', () => closeModal($('detailDlg')));
 
-    if ($('rows')) {
-        $('rows').addEventListener('click', event => {
-            const editBtn = event.target.closest('[data-edit]');
-            const row = event.target.closest('.movement-row');
+    $('rows')?.addEventListener('click', event => {
+        const editBtn = event.target.closest('[data-edit]');
+        if (editBtn) return editMovement(editBtn.dataset.edit);
 
-            if (editBtn) return editMovement(editBtn.dataset.edit);
-            if (row) {
-                const itemBtn = row.querySelector('[data-edit]');
-                if (itemBtn) showMovementDetail(itemBtn.dataset.edit);
-            }
-        });
-    }
+        const itemBtn = event.target.closest('.movement-row')?.querySelector('[data-edit]');
+        if (itemBtn) showMovementDetail(itemBtn.dataset.edit);
+    });
 
-    if ($('newForm')) {
-        $('newForm').addEventListener('submit', event => {
-            event.preventDefault();
-            
-            const descInput = $('newDesc');
-            const amountInput = $('newAmount');
-            const dateInput = $('newDate');
+    $('newForm')?.addEventListener('submit', event => {
+        event.preventDefault();
+        const descInput = $('newDesc');
+        const amountInput = $('newAmount');
+        const dateInput = $('newDate');
 
-            let isValid = true;
-            [descInput, amountInput, dateInput].forEach(el => {
-                if (!el.value.trim()) {
-                    el.classList.add('input-error');
-                    isValid = false;
-                } else {
-                    el.classList.remove('input-error');
-                }
-            });
+        if (!validateRequiredFields(event.target, [descInput, amountInput, dateInput])) return;
 
-            if (!isValid) {
-                const firstInvalid = event.target.querySelector('.input-error');
-                if (firstInvalid) firstInvalid.focus();
-                return;
-            }
+        const item = {
+            id: crypto.randomUUID(),
+            timestamp: Date.now(),
+            desc: descInput.value.trim(),
+            kind: $('newKind').value,
+            amount: Math.round(Number(amountInput.value) * 100) / 100,
+            date: dateInput.value,
+            category: $('newCategory').value,
+            notes: $('newNotes').value.trim()
+        };
 
-            const item = {
-                id: crypto.randomUUID(),
-                timestamp: Date.now(),
-                desc: descInput.value.trim(),
-                kind: $('newKind').value,
-                amount: Math.round(Number(amountInput.value) * 100) / 100,
-                date: dateInput.value,
-                category: $('newCategory').value,
-                notes: $('newNotes').value.trim()
-            };
+        movements.push(item);
+        persist();
+        clearValidationErrors($('newForm'));
+        closeModal($('newDlg'));
+        if ($('month')) $('month').value = item.date.slice(0, 7);
+        render();
+    });
 
-            movements.push(item);
-            persist();
-            clearValidationErrors($('newForm'));
-            closeModal($('newDlg'));
-            if ($('month')) $('month').value = item.date.slice(0, 7);
-            render();
-        });
-    }
+    $('editForm')?.addEventListener('submit', event => {
+        event.preventDefault();
+        if (!editingId) return;
 
-    if ($('editForm')) {
-        $('editForm').addEventListener('submit', event => {
-            event.preventDefault();
-            if (!editingId) return;
+        const descInput = $('editDesc');
+        const amountInput = $('editAmount');
+        const dateInput = $('editDate');
 
-            const descInput = $('editDesc');
-            const amountInput = $('editAmount');
-            const dateInput = $('editDate');
+        if (!validateRequiredFields(event.target, [descInput, amountInput, dateInput])) return;
 
-            let isValid = true;
-            [descInput, amountInput, dateInput].forEach(el => {
-                if (!el.value.trim()) {
-                    el.classList.add('input-error');
-                    isValid = false;
-                } else {
-                    el.classList.remove('input-error');
-                }
-            });
+        const existingItem = movements.find(m => m.id === editingId);
+        const item = {
+            id: editingId,
+            timestamp: existingItem?.timestamp || Date.now(),
+            desc: descInput.value.trim(),
+            kind: $('editKind').value,
+            amount: Math.round(Number(amountInput.value) * 100) / 100,
+            date: dateInput.value,
+            category: $('editCategory').value,
+            notes: $('editNotes').value.trim()
+        };
 
-            if (!isValid) {
-                const firstInvalid = event.target.querySelector('.input-error');
-                if (firstInvalid) firstInvalid.focus();
-                return;
-            }
+        movements = movements.map(existing => existing.id === editingId ? item : existing);
+        persist();
+        clearValidationErrors($('editForm'));
+        closeModal($('editDlg'));
+        render();
+    });
 
-            const existingItem = movements.find(m => m.id === editingId);
-            const item = {
-                id: editingId,
-                timestamp: existingItem?.timestamp || Date.now(),
-                desc: descInput.value.trim(),
-                kind: $('editKind').value,
-                amount: Math.round(Number(amountInput.value) * 100) / 100,
-                date: dateInput.value,
-                category: $('editCategory').value,
-                notes: $('editNotes').value.trim()
-            };
+    $('configBtn')?.addEventListener('click', () => {
+        $('userNameInput').value = appConfig.userName;
+        $('currencySelect').value = appConfig.currency || 'EUR';
+        $('themeSelect').value = appConfig.theme || 'light';
 
-            movements = movements.map(existing => existing.id === editingId ? item : existing);
-            persist();
-            clearValidationErrors($('editForm'));
-            closeModal($('editDlg'));
-            render();
-        });
-    }
+        const utils = appConfig.utilities || { financeManager: true, remittances: true, installments: true, dayCounter: true };
+        if ($('toggleUtilFinanceManager')) $('toggleUtilFinanceManager').checked = utils.financeManager !== false;
+        if ($('toggleUtilRemit')) $('toggleUtilRemit').checked = utils.remittances !== false;
+        if ($('toggleUtilInstallments')) $('toggleUtilInstallments').checked = utils.installments !== false;
+        if ($('toggleUtilDayCounter')) $('toggleUtilDayCounter').checked = utils.dayCounter !== false;
 
-    if ($('configBtn')) {
-        $('configBtn').addEventListener('click', () => {
-            $('userNameInput').value = appConfig.userName;
-            $('currencySelect').value = appConfig.currency || 'EUR';
-            $('themeSelect').value = appConfig.theme || 'light';
+        openModal($('configDlg'));
+    });
 
-            const utils = appConfig.utilities || { financeManager: true, remittances: true, installments: true, dayCounter: true };
-            if ($('toggleUtilFinanceManager')) $('toggleUtilFinanceManager').checked = utils.financeManager !== false;
-            if ($('toggleUtilRemit')) $('toggleUtilRemit').checked = utils.remittances !== false;
-            if ($('toggleUtilInstallments')) $('toggleUtilInstallments').checked = utils.installments !== false;
-            if ($('toggleUtilDayCounter')) $('toggleUtilDayCounter').checked = utils.dayCounter !== false;
+    $('saveConfigBtn')?.addEventListener('click', () => {
+        const newName = $('userNameInput').value.trim();
+        if (newName) appConfig.userName = newName;
+        appConfig.currency = $('currencySelect').value;
+        appConfig.theme = $('themeSelect').value;
 
-            openModal($('configDlg'));
-        });
-    }
+        appConfig.utilities = {
+            financeManager: $('toggleUtilFinanceManager')?.checked ?? true,
+            remittances: $('toggleUtilRemit')?.checked ?? true,
+            installments: $('toggleUtilInstallments')?.checked ?? true,
+            dayCounter: $('toggleUtilDayCounter')?.checked ?? true
+        };
 
-    if ($('saveConfigBtn')) {
-        $('saveConfigBtn').addEventListener('click', () => {
-            const newName = $('userNameInput').value.trim();
-            if (newName) appConfig.userName = newName;
-            appConfig.currency = $('currencySelect').value;
-            appConfig.theme = $('themeSelect').value;
+        persistConfig();
+        refreshCategoryUI();
+        closeModal($('configDlg'));
+    });
 
-            appConfig.utilities = {
-                financeManager: $('toggleUtilFinanceManager') ? $('toggleUtilFinanceManager').checked : true,
-                remittances: $('toggleUtilRemit') ? $('toggleUtilRemit').checked : true,
-                installments: $('toggleUtilInstallments') ? $('toggleUtilInstallments').checked : true,
-                dayCounter: $('toggleUtilDayCounter') ? $('toggleUtilDayCounter').checked : true
-            };
+    $('cancelConfigBtn')?.addEventListener('click', () => closeModal($('configDlg')));
 
-            persistConfig();
-            updateCategoryOptions('new');
-            updateCategoryOptions('edit');
-            updateMovementFilterOptions();
-            render();
-            closeModal($('configDlg'));
-        });
-    }
+    $('editCategoriesBtn')?.addEventListener('click', () => {
+        renderConfigCategories();
+        clearValidationErrors($('categoriesDlg'));
+        openModal($('categoriesDlg'));
+    });
 
-    if ($('cancelConfigBtn')) $('cancelConfigBtn').addEventListener('click', () => closeModal($('configDlg')));
-
-    if ($('editCategoriesBtn')) {
-        $('editCategoriesBtn').addEventListener('click', () => {
-            renderConfigCategories();
-            clearValidationErrors($('categoriesDlg'));
-            openModal($('categoriesDlg'));
-        });
-    }
-
-    if ($('closeCategoriesDlg')) $('closeCategoriesDlg').addEventListener('click', () => {
+    $('closeCategoriesDlg')?.addEventListener('click', () => {
         clearValidationErrors($('categoriesDlg'));
         closeModal($('categoriesDlg'));
     });
 
-    if ($('addRemittanceBtn')) {
-        $('addRemittanceBtn').addEventListener('click', () => {
-            $('remitNewForm')?.reset();
-            if ($('newRemitName')) {
-                const monthName = today.toLocaleDateString('es-ES', { month: 'long' });
-                const capitalizedMonth = monthName.charAt(0).toUpperCase() + monthName.slice(1);
-                $('newRemitName').value = `${capitalizedMonth} ${today.getFullYear()}`;
-            }
-            clearValidationErrors($('remitNewForm'));
-            openModal($('remitNewDlg'));
-        });
-    }
+    $('addRemittanceBtn')?.addEventListener('click', () => {
+        $('remitNewForm')?.reset();
+        if ($('newRemitName')) {
+            const monthName = today.toLocaleDateString('es-ES', { month: 'long' });
+            $('newRemitName').value = `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} ${today.getFullYear()}`;
+        }
+        clearValidationErrors($('remitNewForm'));
+        openModal($('remitNewDlg'));
+    });
 
-    if ($('cancelNewRemitBtn')) $('cancelNewRemitBtn').addEventListener('click', () => {
+    $('cancelNewRemitBtn')?.addEventListener('click', () => {
         clearValidationErrors($('remitNewForm'));
         closeModal($('remitNewDlg'));
     });
 
-    if ($('remitNewForm')) {
-        $('remitNewForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const remitNameInput = $('newRemitName');
-            if (!remitNameInput.value.trim()) {
-                remitNameInput.classList.add('input-error');
-                remitNameInput.focus();
-                return;
-            }
-            remitNameInput.classList.remove('input-error');
+    $('remitNewForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const remitNameInput = $('newRemitName');
+        if (!validateRequiredFields(e.target, [remitNameInput])) return;
 
-            const newRemId = crypto.randomUUID();
-            remittancesList.push({
-                id: newRemId,
-                name: remitNameInput.value.trim(),
-                sendCurr: $('newRemitSendCurr').value,
-                recvCurr: $('newRemitRecvCurr').value,
-                tc: 3.75,
-                commission: 0,
-                expanded: true,
-                items: []
-            });
-            persistRemittancesList();
-            clearValidationErrors($('remitNewForm'));
-            closeModal($('remitNewDlg'));
-            renderRemittancesList();
-            scrollCardIntoView($(`remit_box_${newRemId}`), true);
+        const newRemId = crypto.randomUUID();
+        remittancesList.push({
+            id: newRemId,
+            name: remitNameInput.value.trim(),
+            sendCurr: $('newRemitSendCurr').value,
+            recvCurr: $('newRemitRecvCurr').value,
+            tc: 3.75,
+            commission: 0,
+            expanded: true,
+            items: []
         });
-    }
+        persistRemittancesList();
+        clearValidationErrors($('remitNewForm'));
+        closeModal($('remitNewDlg'));
+        renderRemittancesList();
+        scrollCardIntoView($(`remit_box_${newRemId}`), true);
+    });
 
     ['new', 'edit'].forEach(prefix => {
         ['FinancedAmount', 'InterestAmount', 'TotalCount'].forEach(field => {
-            const el = $(`${prefix}Inst${field}`);
-            if (el) el.addEventListener('input', () => autoCalculateInstallment(prefix));
+            $(`${prefix}Inst${field}`)?.addEventListener('input', () => autoCalculateInstallment(prefix));
         });
     });
 
-    if ($('addInstallmentPurchaseBtn')) {
-        $('addInstallmentPurchaseBtn').addEventListener('click', () => {
-            $('installmentNewForm')?.reset();
-            if ($('newInstFirstDate')) {
-                $('newInstFirstDate').value = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
-            }
-            clearValidationErrors($('installmentNewForm'));
-            openModal($('installmentNewDlg'));
-        });
-    }
+    $('addInstallmentPurchaseBtn')?.addEventListener('click', () => {
+        $('installmentNewForm')?.reset();
+        if ($('newInstFirstDate')) {
+            $('newInstFirstDate').value = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+        }
+        clearValidationErrors($('installmentNewForm'));
+        openModal($('installmentNewDlg'));
+    });
 
-    if ($('cancelNewInstallmentBtn')) $('cancelNewInstallmentBtn').addEventListener('click', () => {
+    $('cancelNewInstallmentBtn')?.addEventListener('click', () => {
         clearValidationErrors($('installmentNewForm'));
         closeModal($('installmentNewDlg'));
     });
 
-    if ($('installmentNewForm')) {
-        $('installmentNewForm').addEventListener('submit', (e) => {
-            e.preventDefault();
+    $('installmentNewForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = readInstallmentForm('new');
+        if (!data) return;
 
-            const nameInput = $('newInstName');
-            const financedInput = $('newInstFinancedAmount');
-            const countInput = $('newInstTotalCount');
-            const regularInput = $('newInstRegularAmount');
-            const dateInput = $('newInstFirstDate');
-
-            let isValid = true;
-            [nameInput, financedInput, countInput, regularInput, dateInput].forEach(el => {
-                if (!el.value.trim()) {
-                    el.classList.add('input-error');
-                    isValid = false;
-                } else {
-                    el.classList.remove('input-error');
-                }
-            });
-
-            if (!isValid) {
-                const firstInvalid = e.target.querySelector('.input-error');
-                if (firstInvalid) firstInvalid.focus();
-                return;
-            }
-
-            const financedAmount = parseFloat(financedInput.value.replace(',', '.')) || 0;
-            const interestAmount = parseFloat($('newInstInterestAmount').value.replace(',', '.')) || 0;
-            const totalAmount = financedAmount + interestAmount;
-            const totalCount = parseInt(countInput.value) || 1;
-            const regularAmount = parseFloat(regularInput.value.replace(',', '.')) || 0;
-            const finalAmountInput = $('newInstFinalAmount').value.trim();
-            const finalAmount = finalAmountInput ? parseFloat(finalAmountInput.replace(',', '.')) : regularAmount;
-            const firstDateStr = dateInput.value;
-
-            installmentsPurchases.push({
-                id: crypto.randomUUID(),
-                name: nameInput.value.trim(),
-                currency: $('newInstCurrency').value,
-                financedAmount,
-                interestAmount,
-                totalAmount,
-                totalCount,
-                regularAmount,
-                finalAmount,
-                firstDate: firstDateStr,
-                expanded: false,
-                installments: buildInstallmentsArray(totalCount, regularAmount, finalAmount, firstDateStr)
-            });
-
-            persistInstallments();
-            clearValidationErrors($('installmentNewForm'));
-            closeModal($('installmentNewDlg'));
-            renderInstallments();
+        installmentsPurchases.push({
+            id: crypto.randomUUID(),
+            ...data,
+            expanded: false,
+            installments: buildInstallmentsArray(data.totalCount, data.regularAmount, data.finalAmount, data.firstDate)
         });
-    }
 
-    if ($('installmentEditForm')) {
-        $('installmentEditForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (!editingInstallmentId) return;
+        persistInstallments();
+        clearValidationErrors($('installmentNewForm'));
+        closeModal($('installmentNewDlg'));
+        renderInstallments();
+    });
 
-            const nameInput = $('editInstName');
-            const financedInput = $('editInstFinancedAmount');
-            const countInput = $('editInstTotalCount');
-            const regularInput = $('editInstRegularAmount');
-            const dateInput = $('editInstFirstDate');
+    $('installmentEditForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!editingInstallmentId) return;
 
-            let isValid = true;
-            [nameInput, financedInput, countInput, regularInput, dateInput].forEach(el => {
-                if (!el.value.trim()) {
-                    el.classList.add('input-error');
-                    isValid = false;
-                } else {
-                    el.classList.remove('input-error');
-                }
-            });
+        const data = readInstallmentForm('edit');
+        if (!data) return;
 
-            if (!isValid) {
-                const firstInvalid = e.target.querySelector('.input-error');
-                if (firstInvalid) firstInvalid.focus();
-                return;
-            }
+        const existing = installmentsPurchases.find(p => p.id === editingInstallmentId);
+        const updatedInstallments = buildInstallmentsArray(data.totalCount, data.regularAmount, data.finalAmount, data.firstDate, existing?.installments);
 
-            const financedAmount = parseFloat(financedInput.value.replace(',', '.')) || 0;
-            const interestAmount = parseFloat($('editInstInterestAmount').value.replace(',', '.')) || 0;
-            const totalAmount = financedAmount + interestAmount;
-            const totalCount = parseInt(countInput.value) || 1;
-            const regularAmount = parseFloat(regularInput.value.replace(',', '.')) || 0;
-            const finalAmountInput = $('editInstFinalAmount').value.trim();
-            const finalAmount = finalAmountInput ? parseFloat(finalAmountInput.replace(',', '.')) : regularAmount;
-            const firstDateStr = dateInput.value;
+        installmentsPurchases = installmentsPurchases.map(p => p.id === editingInstallmentId ? {
+            ...p,
+            ...data,
+            installments: updatedInstallments
+        } : p);
 
-            const existing = installmentsPurchases.find(p => p.id === editingInstallmentId);
-            const updatedInstallments = buildInstallmentsArray(totalCount, regularAmount, finalAmount, firstDateStr, existing?.installments);
-
-            installmentsPurchases = installmentsPurchases.map(p => p.id === editingInstallmentId ? {
-                ...p,
-                name: nameInput.value.trim(),
-                currency: $('editInstCurrency').value,
-                financedAmount,
-                interestAmount,
-                totalAmount,
-                totalCount,
-                regularAmount,
-                finalAmount,
-                firstDate: firstDateStr,
-                installments: updatedInstallments
-            } : p);
-
-            persistInstallments();
-            clearValidationErrors($('installmentEditForm'));
-            closeModal($('installmentEditDlg'));
-            renderInstallments();
-        });
-    }
+        persistInstallments();
+        clearValidationErrors($('installmentEditForm'));
+        closeModal($('installmentEditDlg'));
+        renderInstallments();
+    });
 }
 
 function init() {
     if ($('month')) $('month').value = currentMonth;
     if ($('newDate')) $('newDate').value = `${currentMonth}-${pad(today.getDate())}`;
 
-    if ($('movementsCard')) $('movementsCard').classList.add('expanded');
+    $('movementsCard')?.classList.add('expanded');
     if ($('movementsContainer')) $('movementsContainer').style.display = 'block';
     if ($('toggleMovementsIcon')) $('toggleMovementsIcon').innerHTML = '<polyline points="18 15 12 9 6 15"></polyline>';
 

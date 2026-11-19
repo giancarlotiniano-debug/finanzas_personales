@@ -115,18 +115,6 @@ input[type="number"] {
     -ms-user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
-}
-
-#movementsCard .section-heading,
-#categoriesCard .section-heading,
-#remittancesCard .section-heading,
-#installmentsCard .section-heading,
-#dayCounterCard .section-heading,
-#movementsCard .mobile-toggle-btn,
-#categoriesCard .mobile-toggle-btn,
-#remittancesCard .mobile-toggle-btn,
-#installmentsCard .mobile-toggle-btn,
-#dayCounterCard .mobile-toggle-btn {
     cursor: pointer;
     outline: none;
 }
@@ -344,7 +332,6 @@ button {
     font-weight: 650;
 }
 
-button.addcat,
 button.aceptarmovimiento {
     background: var(--primario);
     color: var(--fondo);
@@ -390,7 +377,7 @@ button.cancelarmovimiento {
 
 #configBtn {
     background: var(--primario);
-    color: var(--blue);
+    color: var(--secundario);
     width: 38px;
     height: 38px;
     border-radius: 10px;
@@ -475,12 +462,13 @@ body.dark-mode button.button-add svg {
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    background: var(--fondo);
-    border: 1px solid var(--primario);
+    background: var(--tarjetas);
 }
 
 .editar-movimiento svg {
     color: var(--primario);
+    width: 20px;
+    height: 20px;
 }
 
 .edit-category-button {
@@ -518,7 +506,7 @@ body.dark-mode button.button-add svg {
 
 #editCategoriesBtn {
     background: var(--primario) !important;
-    color: var(--blue) !important;
+    color: var(--secundario) !important;
     width: 44px;
     height: 44px;
     border-radius: 10px;
@@ -604,7 +592,6 @@ body.dark-mode button.button-add svg {
 .toolbar input,
 .toolbar select {
     border: 1px solid var(--fondo);
-    border-width: 1px;
     border-radius: 9px;
     padding: 9px;
     background: var(--fondo);
@@ -644,10 +631,6 @@ body.dark-mode button.button-add svg {
 }
 
 .table-wrapper:hover::-webkit-scrollbar-thumb {
-    background: var(--tarjetas);
-}
-
-.table-wrapper::-webkit-scrollbar-thumb:hover {
     background: var(--tarjetas);
 }
 
@@ -824,7 +807,7 @@ tr.movement-row:hover td:last-child {
 }
 
 .cat-donut-segment.selected {
-    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.25));
+    filter: drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.25));
 }
 
 .cat-center-info {
@@ -909,10 +892,28 @@ tr.movement-row:hover td:last-child {
     border-radius: 10px;
     padding: 6px 8px;
     transition: background-color 0.15s ease, outline-color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+    touch-action: manipulation;
 }
+
+.cat-breakdown-item,
+.cat-breakdown-item * {
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+.cat-breakdown-item:active,
+.cat-breakdown-item:focus,
+.cat-breakdown-item:focus-visible {
+    background-color: transparent !important;
+    outline: none !important;
+}
+
 .cat-breakdown-item:hover {
     background: var(--fondo);
 }
+
 .cat-breakdown-item.selected {
     background: var(--fondo);
     border: 1px solid var(--primario);
@@ -930,8 +931,9 @@ tr.movement-row:hover td:last-child {
     justify-content: center;
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: 6px;
     background: var(--fondo);
+    border: 1.5px solid currentColor;
     color: currentColor;
     flex-shrink: 0;
 }
@@ -966,6 +968,10 @@ tr.movement-row:hover td:last-child {
     color: var(--primario);
 }
 
+.cat-breakdown-item:not(.selected) {
+    background-color: transparent;
+}
+
 .cat-percentage-badge {
     font-size: 0.75rem;
     font-weight: 700;
@@ -989,32 +995,8 @@ body.dark-mode .cat-percentage-badge {
     margin-top: 15px;
 }
 
-.utility-category-newbutton {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 650;
-    background: var(--fondo);
-    color: var(--primario);
-}
-
-.day-newbutton {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 650;
-    background: var(--tarjetas);
-    color: var(--primario);
-}
-
+.utility-category-newbutton,
+.day-newbutton,
 .imp-exp-button {
     width: 100%;
     display: flex;
@@ -1024,15 +1006,22 @@ body.dark-mode .cat-percentage-badge {
     padding: 12px;
     border-radius: 8px;
     font-weight: 650;
-    background: var(--fondo);
     color: var(--primario);
+}
+
+.utility-category-newbutton,
+.imp-exp-button {
+    background: var(--fondo);
+}
+
+.day-newbutton {
+    background: var(--tarjetas);
 }
 
 .remit-tc-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0;
     padding: 12px;
     margin-bottom: 14px;
     background: var(--tarjetas);
@@ -1057,15 +1046,15 @@ body.dark-mode .cat-percentage-badge {
     font-size: 15px;
 }
 
-.remit-recv-input {
+.remit-recv-input,
+.remit-comm-input {
     background: var(--tarjetas);
 }
 
-.remit-comm-input {
-    background-color: var(--tarjetas);
+.remit-items-wrapper {
+    margin-bottom: 2px;
+    padding: 0 12px;
 }
-
-.remit-items-wrapper { margin-bottom: 2px; padding: 0 12px; }
 
 .remit-item-row {
     display: flex;
@@ -1076,7 +1065,9 @@ body.dark-mode .cat-percentage-badge {
     border-bottom: 2px solid var(--tarjetas);
 }
 
-.remit-item-row.is-last { border-bottom: none; }
+.remit-item-row.is-last {
+    border-bottom: none;
+}
 
 .remit-item-concept {
     font-weight: 600;
@@ -1136,7 +1127,7 @@ body.dark-mode .cat-percentage-badge {
     margin-bottom: 6px;
 }
 
-.remit-total-label { font-weight: 550; color: var(--texto) }
+.remit-total-label { font-weight: 550; color: var(--texto); }
 .remit-total-send { margin-right: 8px; font-weight: 750; color: var(--primario); }
 .remit-total-recv { font-weight: 750; color: var(--texto); }
 
@@ -1166,7 +1157,7 @@ body.dark-mode .cat-percentage-badge {
     color: var(--texto);
 }
 
-.remit-grand-total-val { font-weight:750; color: var(--primario); }
+.remit-grand-total-val { font-weight: 750; color: var(--primario); }
 
 .remit-details-body {
     padding: 20px 20px !important;
@@ -1276,17 +1267,6 @@ body.dark-mode .installment-purchase-header.all-paid {
 
 .editbutton-xs svg {
     stroke: var(--primario);
-}
-
-.installment-purchase-card button.soft.icon-btn,
-.card button.soft.icon-btn {
-    background: var(--fondo) !important;
-    border: 1px solid var(--primario);
-}
-
-.installment-purchase-card button.soft.icon-btn svg,
-.card button.soft.icon-btn svg {
-    stroke: var(--primario) !important;
 }
 
 .dc-day-row {
@@ -1414,15 +1394,29 @@ dialog::backdrop {
     cursor: not-allowed;
 }
 
-.field input[type="date"] {
-    -webkit-appearance: none;
-    appearance: none;
+input[type="date"],
+input[type="time"] {
     width: 100%;
+    max-width: 100%;
     min-width: 0;
-    text-align: left;
-    padding: 0 11px;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 44px;
+    min-height: 44px;
+    max-height: 44px;
+    padding: 0 12px;
+    text-align: left;
+}
+
+input[type="date"]::-webkit-date-and-time-value,
+input[type="time"]::-webkit-date-and-time-value {
+    text-align: left;
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
 }
 
 .modal-actions {
@@ -1434,11 +1428,6 @@ dialog::backdrop {
 
 .modal-actions-split {
     justify-content: space-between;
-}
-
-.categories-formgrid {
-    margin-bottom: 15px;
-    align-items: end;
 }
 
 .categories-add-row {
@@ -1595,34 +1584,12 @@ dialog::backdrop {
 .detail-table tr:last-child th,
 .detail-table tr:last-child td { border-bottom: none; }
 
-input[type="date"],
-input[type="time"] {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    -webkit-appearance: none;
-    appearance: none;
-    height: 44px;
-    padding: 0 12px;
-}
-
-input[type="date"]::-webkit-date-and-time-value,
-input[type="time"]::-webkit-date-and-time-value {
-    text-align: left;
-    margin: 0;
-    width: 100%;
-    overflow: hidden;
-}
-
 .dc-days-wrapper {
     display: flex;
     flex-direction: column;
     gap: 16px;
     margin-bottom: 12px;
-    max-height: 432px; 
+    max-height: 432px;
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
@@ -1666,7 +1633,7 @@ input[type="time"]::-webkit-date-and-time-value {
     max-height: 20px !important;
     margin: 0;
     cursor: pointer;
-    accent-color: var(--blue);
+    accent-color: var(--primario);
 }
 
 .config-backup-actions {
@@ -1675,14 +1642,9 @@ input[type="time"]::-webkit-date-and-time-value {
     gap: 10px;
 }
 
-.config-backup-actions .utility-new-btn {
-    min-width: 0;
-    white-space: nowrap;
-}
-
 body.no-scroll {
     overflow: hidden;
-    padding-right: var(--scrollbar-width, 0px); 
+    padding-right: var(--scrollbar-width, 0px);
 }
 
 /* ==========================================
@@ -1719,22 +1681,7 @@ body.no-scroll {
 }
 
 @media (max-width: 760px) {
-    header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 50;
-        background: var(--primario);
-        padding: calc(14px + env(safe-area-inset-top, 0px)) 0 14px;
-        transition: background-color 0.2s ease;
-    }
     .header-content { padding: 0 13px; }
-    main {
-        max-width: 1120px;
-        margin: calc(88px + env(safe-area-inset-top, 0px)) auto 28px;
-        padding: 0 20px;
-    }
 
     .cards {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1831,18 +1778,17 @@ body.no-scroll {
     }
 
     .formgrid {
-        grid-template-columns: 1fr 1fr;
         gap: 10px;
-        width: 100%;
-    }
-
-    .field {
-        min-width: 0;
-        width: 100%;
     }
 
     .table-wrapper {
         max-height: 500px;
         overflow-y: auto;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .cat-breakdown-item:hover {
+        background: var(--fondo);
     }
 }
