@@ -43,21 +43,34 @@
             </div>
         </div>
 
-        <!-- Tarjetas de métricas -->
-        <section class="cards" id="metricsCardsSection">
-            <div class="card">
-                <div class="metric-label">INGRESOS</div>
-                <div class="metric income" id="income">0,00 €</div>
-            </div>
+        <!-- Tarjeta unificada de métricas y barra interactiva -->
+        <section class="metrics-unified-section" id="metricsCardsSection">
+            <div class="card metrics-unified-card">
+                <div class="metrics-top-row">
+                    <div class="metrics-side-group">
+                        <div class="metrics-side-item">
+                            <div class="metric-label">Ingresos</div>
+                            <div class="metric-side-val income" id="income">0,00 €</div>
+                        </div>
+                        <div class="metrics-side-item">
+                            <div class="metric-label">Gastos</div>
+                            <div class="metric-side-val expense" id="expense">0,00 €</div>
+                        </div>
+                    </div>
 
-            <div class="card">
-                <div class="metric-label">GASTOS</div>
-                <div class="metric expense" id="expense">0,00 €</div>
-            </div>
+                    <div class="metrics-balance-block">
+                        <div class="metric-label">Balance</div>
+                        <div class="metric-side-val balance" id="balance">0,00 €</div>
+                    </div>
+                </div>
 
-            <div class="card balance-card">
-                <div class="metric-label">BALANCE MENSUAL</div>
-                <div class="metric balance" id="balance">0,00 €</div>
+                <div class="usage-bar-interactive" id="cashflowUsageBar" role="button" tabindex="0" aria-expanded="false" aria-label="Ver porcentaje de uso de ingresos">
+                    <div class="usage-bar-track">
+                        <div class="usage-bar-income-fill" id="cashflowIncomeFill" style="width: 0%;"></div>
+                        <div class="usage-bar-expense-fill" id="cashflowExpenseFill" style="width: 0%;"></div>
+                    </div>
+                    <div class="usage-bar-tooltip" id="cashflowUsageTooltip" aria-live="polite"></div>
+                </div>
             </div>
         </section>
 
@@ -360,7 +373,6 @@
         </form>
     </dialog>
 
-    <!-- Modal de Detalles / Edición de Remesa -->
     <dialog id="remitEditDlg">
         <form class="modal" id="remitEditForm" tabindex="-1">
             <h2>Detalles de la remesa</h2>

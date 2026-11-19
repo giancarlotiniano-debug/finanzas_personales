@@ -144,7 +144,7 @@ input[type="number"] {
 }
 
 /* ==========================================
-   3. LAYOUT GENERAL
+   3. LAYOUT GENERAL Y TARJETA UNIFICADA
    ========================================== */
 header {
     position: fixed;
@@ -211,21 +211,44 @@ main {
     color: var(--texto);
 }
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.metrics-unified-section {
+    margin-bottom: 20px;
+}
+
+.metrics-unified-card {
+    display: flex;
+    flex-direction: column;
     gap: 16px;
 }
 
-.balance-card {
-    grid-column: 1 / -1;
+.metrics-top-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
-.card {
-    background: var(--tarjetas);
-    border-radius: 16px;
-    padding: 20px;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+.metrics-balance-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    min-width: 0;
+    margin-left: auto;
+}
+
+.metrics-side-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.metrics-side-item {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
 }
 
 .metric-label {
@@ -235,15 +258,120 @@ main {
 }
 
 .metric {
-    font-size: 27px;
+    font-size: 28px;
     font-weight: 750;
-    margin-top: 7px;
+    margin-top: 4px;
     letter-spacing: -0.5px;
+}
+
+.metric-side-val {
+    font-size: 18px;
+    font-weight: 750;
+    margin-top: 4px;
+    letter-spacing: -0.3px;
 }
 
 .income { color: var(--ingresos-font-card); }
 .expense { color: var(--gastos-font-card); }
 .balance { color: var(--balance-font-card); }
+
+.usage-bar-interactive {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    outline: none;
+}
+
+.usage-bar-interactive:focus-visible .usage-bar-track {
+    box-shadow: 0 0 0 2px var(--primario);
+}
+
+.usage-bar-track {
+    position: relative;
+    width: 100%;
+    height: 12px;
+    border-radius: 999px;
+    background: var(--fondo);
+    border: 1px solid rgba(21, 150, 107, 0.25);
+    overflow: hidden;
+}
+
+body.dark-mode .usage-bar-track {
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.usage-bar-income-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: var(--ingresos-font-card);
+    transition: width 0.35s ease, background-color 0.25s ease;
+    z-index: 1;
+}
+
+.usage-bar-expense-fill {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 0%;
+    background: var(--gastos-font-card);
+    transition: width 0.35s ease, background-color 0.25s ease;
+    z-index: 2;
+}
+
+.usage-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: var(--primario);
+    transition: width 0.35s ease, background-color 0.25s ease;
+}
+
+.usage-bar-fill.is-healthy {
+    background: var(--ingresos-font-card);
+}
+
+.usage-bar-fill.is-warning {
+    background: #d97706;
+}
+
+.usage-bar-fill.is-exceeded {
+    background: var(--gastos-font-card);
+}
+
+.usage-bar-tooltip {
+    display: none;
+    align-self: flex-start;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: var(--fondo);
+    border: 1px solid var(--primario);
+    color: var(--texto);
+    font-size: 12.5px;
+    font-weight: 700;
+}
+
+.usage-bar-interactive.show-percentage .usage-bar-tooltip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.card {
+    background: var(--tarjetas);
+    border-radius: 16px;
+    padding: 20px;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
 
 .layout {
     display: grid;
@@ -1683,13 +1811,10 @@ body.no-scroll {
 @media (max-width: 760px) {
     .header-content { padding: 0 13px; }
 
-    .cards {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-    }
-
-    .cards .card { padding: 15px; }
-    .cards .metric { font-size: 22px; }
+    .metrics-unified-card { padding: 16px; gap: 14px; }
+    .metric { font-size: 24px; }
+    .metric-side-val { font-size: 16px; }
+    .metrics-side-group { gap: 16px; }
 
     .layout,
     .utilities-layout {

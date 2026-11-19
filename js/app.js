@@ -85,6 +85,7 @@ let editingDayIndex = null;
 let currentCatKind = 'expense';
 let selectedDonutCategory = null;
 let lastAccordionToggleAt = 0;
+let currentUsageText = 'Sin movimientos en este mes';
 
 const accordionConfig = [
     { btnId: 'toggleMovementsBtn', containerId: 'movementsContainer', iconId: 'toggleMovementsIcon', cardEl: 'movementsCard' },
@@ -749,8 +750,60 @@ function applyImportSelection(selection) {
 }
 
 /* ==========================================
-   5. MOVIMIENTOS Y CATEGORÍAS
+   5. MOVIMIENTOS, BARRA DE USO Y CATEGORÍAS
    ========================================== */
+function updateCashflowUsageBar(totalIncome, totalExpenses) {
+    const incomeFillEl = $('cashflowIncomeFill');
+    const expenseFillEl = $('cashflowExpenseFill');
+    const tooltipEl = $('cashflowUsageTooltip');
+    const barEl = $('cashflowUsageBar');
+    if (!incomeFillEl || !expenseFillEl || !tooltipEl || !barEl) return;
+
+    if (totalIncome <= 0 && totalExpenses <= 0) {
+        incomeFillEl.style.width = '0%';
+        expenseFillEl.style.width = '0%';
+        currentUsageText = '0,0% de uso · Sin movimientos';
+    } else if (totalIncome > 0 && totalExpenses <= 0) {
+        incomeFillEl.style.width = '100%';
+        expenseFillEl.style.width = '0%';
+        currentUsageText = '0,0% de uso · 100% ingresos disponibles';
+    } else if (totalIncome <= 0 && totalExpenses > 0) {
+        incomeFillEl.style.width = '0%';
+        expenseFillEl.style.width = '50%';
+        currentUsageText = 'Gastos sin ingresos registrados';
+    } else {
+        const usageRatio = totalExpenses / totalIncome;
+        const usagePct = usageRatio * 100;
+        const expenseBarPct = Math.min(50, Math.max(0, usageRatio * 50));
+
+        incomeFillEl.style.width = '100%';
+        expenseFillEl.style.width = `${expenseBarPct}%`;
+
+        currentUsageText = usagePct > 100
+            ? `${usagePct.toFixed(1)}% de uso · Gastos superan ingresos`
+            : `${usagePct.toFixed(1)}% de uso de ingresos`;
+    }
+
+    tooltipEl.textContent = currentUsageText;
+    if (barEl.classList.contains('show-percentage')) {
+        tooltipEl.textContent = currentUsageText;
+    }
+}
+
+function toggleCashflowUsageTooltip(forceState) {
+    const barEl = $('cashflowUsageBar');
+    const tooltipEl = $('cashflowUsageTooltip');
+    if (!barEl || !tooltipEl) return;
+
+    const nextState = typeof forceState === 'boolean'
+        ? forceState
+        : !barEl.classList.contains('show-percentage');
+
+    barEl.classList.toggle('show-percentage', nextState);
+    barEl.setAttribute('aria-expanded', String(nextState));
+    tooltipEl.textContent = currentUsageText;
+}
+
 function setupCategoryTabs() {
     const btnExpense = $('catTabExpense');
     const btnIncome = $('catTabIncome');
@@ -915,6 +968,7 @@ function render() {
     $('income').textContent = formatMoney(totalIncome);
     $('expense').textContent = formatMoney(totalExpenses);
     $('balance').textContent = formatMoney(totalIncome - totalExpenses);
+    updateCashflowUsageBar(totalIncome, totalExpenses);
 
     const query = $('search').value.toLowerCase();
     const filterVal = $('movementFilter')?.value || 'all';
@@ -1579,6 +1633,27 @@ function bindEvents() {
     });
 
     setupCategoryTabs();
+
+    const usageBar = $('cashflowUsageBar');
+    if (usageBar) {
+        usageBar.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleCashflowUsageTooltip();
+        });
+        usageBar.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleCashflowUsageTooltip();
+            }
+        });
+    }
+
+    document.addEventListener('click', (e) => {
+        const barEl = $('cashflowUsageBar');
+        if (barEl?.classList.contains('show-percentage') && !e.target.closest('#cashflowUsageBar')) {
+            toggleCashflowUsageTooltip(false);
+        }
+    });
 
     $('openExportDlgBtn')?.addEventListener('click', () => {
         ['expMovements', 'expRemittances', 'expInstallments', 'expDayCounter'].forEach(id => {
