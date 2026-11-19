@@ -97,8 +97,11 @@ input[type="number"] {
    3. LAYOUT GENERAL
    ========================================== */
 header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
     background: var(--primario);
-    padding: calc(18px + env(safe-area-inset-top, 0px)) 0 18px;
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 0 14px;
     transition: background-color 0.2s ease;
 }
 
