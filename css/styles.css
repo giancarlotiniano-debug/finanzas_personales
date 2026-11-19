@@ -937,12 +937,8 @@ body.dark-mode .cat-percentage-badge {
     padding: 12px;
     border-radius: 8px;
     font-weight: 650;
-    background: var(--primario);
-    color: var(--fondo);
-}
-
-.dark-mode .utility-category-newbutton {
-    color: var(--texto);
+    background: var(--fondo);
+    color: var(--primario);
 }
 
 .imp-exp-button {
@@ -1657,7 +1653,6 @@ body.no-scroll {
     transition: background-color 0.2s ease;
 }
     .header-content { padding: 0 13px; }
-    
     main {
     max-width: 1120px;
     margin: calc(88px + env(safe-area-inset-top, 0px)) auto 28px;
