@@ -916,7 +916,7 @@ tr.movement-row:hover td:last-child {
 
 .cat-breakdown-item.selected {
     background: var(--fondo);
-    border: 1px solid var(--primario);
+    border: 1px solid var(--cat-color, var(--primario));
 }
 
 .cat-breakdown-left {

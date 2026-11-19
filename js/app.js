@@ -884,6 +884,7 @@ function renderCategoriesRedesign() {
 
             return `
                 <div class="cat-breakdown-item ${isSelected ? 'selected' : ''}"
+                     style="--cat-color: ${accentColor};"
                      data-list-category="${escapeHtml(name)}" role="button" tabindex="0"
                      aria-pressed="${isSelected}">
                     <div class="cat-breakdown-left">
