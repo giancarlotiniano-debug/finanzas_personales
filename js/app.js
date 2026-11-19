@@ -200,6 +200,14 @@ function clearValidationErrors(formEl) {
     formEl.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
 }
 
+/* Desplazamiento suave hacia una tarjeta interna abierta para que su contenido se vea en pantalla */
+function scrollCardIntoView(cardEl, shouldScroll = true) {
+    if (!shouldScroll || !cardEl) return;
+    requestAnimationFrame(() => {
+        cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+}
+
 /* Funciones auxiliares para control de modales y bloqueo de scroll de fondo */
 function openModal(dialogEl) {
     if (!dialogEl) return;
@@ -344,6 +352,12 @@ function setupMainAccordion(btnId, containerId, iconId, cardId) {
             icon.innerHTML = willBeExpanded
                 ? '<polyline points="18 15 12 9 6 15"></polyline>'
                 : '<polyline points="6 9 12 15 18 9"></polyline>';
+        }
+
+        if (willBeExpanded && card && window.innerWidth <= 760) {
+            requestAnimationFrame(() => {
+                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
         }
     });
 }
@@ -1055,7 +1069,7 @@ function renderRemittancesList() {
             <div class="installment-purchase-card" id="remit_box_${rem.id}">
                 <div class="installment-purchase-header" data-action="toggle-remit" data-remit-id="${rem.id}">
                     <div class="flex-col">
-                        <span class="installment-card-title"">${escapeHtml(rem.name)}</span>
+                        <span class="installment-card-title">${escapeHtml(rem.name)}</span>
                         <span class="installment-card-subtitle" id="remit_header_summary_${rem.id}">
                             ${rem.sendCurr} → ${rem.recvCurr} • Total: ${formatCurrencyCustom(grandTotal, rem.sendCurr)} 
                         </span>
@@ -1110,10 +1124,13 @@ function toggleRemitAccordion(remId) {
     const rem = remittancesList.find(r => r.id === remId);
     if (rem) {
         const willBeExpanded = !rem.expanded;
-        remittancesList.forEach(r => r.expanded = false);
+        remittancesList.forEach(r => {
+            if (r.id !== remId) r.expanded = false;
+        });
         rem.expanded = willBeExpanded;
         persistRemittancesList();
         renderRemittancesList();
+        scrollCardIntoView($(`remit_box_${remId}`), willBeExpanded);
     }
 }
 
@@ -1259,10 +1276,13 @@ function toggleInstallmentAccordion(purchaseId) {
     const purchase = installmentsPurchases.find(p => p.id === purchaseId);
     if (purchase) {
         const willBeExpanded = !purchase.expanded;
-        installmentsPurchases.forEach(p => p.expanded = false);
+        installmentsPurchases.forEach(p => {
+            if (p.id !== purchaseId) p.expanded = false;
+        });
         purchase.expanded = willBeExpanded;
         persistInstallments();
         renderInstallments();
+        scrollCardIntoView($(`purchase_box_${purchaseId}`), willBeExpanded);
     }
 }
 
@@ -1384,7 +1404,9 @@ function toggleDayCounterMonthAccordion(monthId) {
     const month = dayCounterMonths.find(x => x.id === monthId);
     if (month) {
         const willBeExpanded = !month.expanded;
-        dayCounterMonths.forEach(m => m.expanded = false);
+        dayCounterMonths.forEach(m => {
+            if (m.id !== monthId) m.expanded = false;
+        });
         month.expanded = willBeExpanded;
         persistDayCounter();
         renderDayCounter();
@@ -1394,6 +1416,7 @@ function toggleDayCounterMonthAccordion(monthId) {
             if (daysWrapper) {
                 daysWrapper.scrollTop = daysWrapper.scrollHeight;
             }
+            scrollCardIntoView($(`dc_month_box_${monthId}`), true);
         }
     }
 }
@@ -1690,14 +1713,14 @@ function bindEvents() {
     }
 
     if ($('openCreateCategoryBtn')) {
-    $('openCreateCategoryBtn').addEventListener('click', () => {
-        if ($('newCatName')) $('newCatName').value = '';
-        if ($('newCatKind')) $('newCatKind').value = 'expense';
-        renderIconSelector(null); // Sin icono seleccionado por defecto
-        clearValidationErrors($('categoryCreateForm'));
-        openModal($('categoryCreateDlg'));
-    });
-}
+        $('openCreateCategoryBtn').addEventListener('click', () => {
+            if ($('newCatName')) $('newCatName').value = '';
+            if ($('newCatKind')) $('newCatKind').value = 'expense';
+            renderIconSelector(null);
+            clearValidationErrors($('categoryCreateForm'));
+            openModal($('categoryCreateDlg'));
+        });
+    }
 
     if ($('cancelCreateCategoryBtn')) {
         $('cancelCreateCategoryBtn').addEventListener('click', () => {
@@ -1707,63 +1730,55 @@ function bindEvents() {
     }
 
     if ($('categoryCreateForm')) {
-    $('categoryCreateForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const nameInput = $('newCatName');
-        const kindSelect = $('newCatKind');
-        const iconSelect = $('newCatIcon');
+        $('categoryCreateForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const nameInput = $('newCatName');
+            const kindSelect = $('newCatKind');
+            const iconSelect = $('newCatIcon');
 
-        if (!nameInput || !nameInput.value.trim()) {
-            if (nameInput) {
-                nameInput.classList.add('input-error');
+            if (!nameInput || !nameInput.value.trim()) {
+                if (nameInput) {
+                    nameInput.classList.add('input-error');
+                    nameInput.focus();
+                }
+                return;
+            }
+            nameInput.classList.remove('input-error');
+
+            if (!iconSelect || !iconSelect.value) {
+                alert('Selecciona un icono.');
+                return;
+            }
+
+            const name = nameInput.value.trim();
+            const kind = kindSelect ? kindSelect.value : 'expense';
+            const icon = iconSelect.value;
+
+            const totalCategories = appConfig.categories.expense.length + appConfig.categories.income.length;
+            const hue = (totalCategories * 137.5) % 360;
+            const color = `hsl(${Math.round(hue)}, 70%, 50%)`;
+
+            if (!appConfig.categories[kind].some(c => c.name.toLowerCase() === name.toLowerCase())) {
+                appConfig.categories[kind].push({ name, color, icon });
+                
+                appConfig.categories[kind].sort((a, b) => 
+                    a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
+                );
+
+                persistConfig();
+                closeModal($('categoryCreateDlg'));
+                renderConfigCategories();
+                updateCategoryOptions('new');
+                updateCategoryOptions('edit');
+                updateMovementFilterOptions();
+                render();
+            } else {
+                alert('Esta categoría ya existe.');
                 nameInput.focus();
             }
-            return;
-        }
-        nameInput.classList.remove('input-error');
-
-        // Validación de icono requerido
-        if (!iconSelect || !iconSelect.value) {
-            alert('Selecciona un icono.');
-            return;
-        }
-
-        const name = nameInput.value.trim();
-        const kind = kindSelect ? kindSelect.value : 'expense';
-        const icon = iconSelect.value;
-
-        // Resto de la lógica para guardar...
-        const autoColors = [
-            '#3b82f6', '#10b981', '#f59e0b', '#ef4444', 
-            '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16', 
-            '#6366f1', '#d97706', '#14b8a6', '#64748b'
-        ];
-        
-        const totalCategories = appConfig.categories.expense.length + appConfig.categories.income.length;
-        const hue = (totalCategories * 137.5) % 360; // Ángulo áureo para máxima separación visual
-        const color = `hsl(${Math.round(hue)}, 70%, 50%)`;
-
-        if (!appConfig.categories[kind].some(c => c.name.toLowerCase() === name.toLowerCase())) {
-            appConfig.categories[kind].push({ name, color, icon });
-            
-            appConfig.categories[kind].sort((a, b) => 
-                a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
-            );
-
-            persistConfig();
-            closeModal($('categoryCreateDlg'));
-            renderConfigCategories();
-            updateCategoryOptions('new');
-            updateCategoryOptions('edit');
-            updateMovementFilterOptions();
-            render();
-        } else {
-            alert('Esta categoría ya existe.');
-            nameInput.focus();
-        }
-    });
-}
+        });
+    }
 
     if ($('cancelEditCategoryBtn')) {
         $('cancelEditCategoryBtn').addEventListener('click', () => {
@@ -2015,8 +2030,9 @@ function bindEvents() {
             const targetInput = $('newMonthTarget');
             if (!nameInput.value.trim() || !targetInput.value) return;
 
+            const newMonthId = crypto.randomUUID();
             dayCounterMonths.push({
-                id: crypto.randomUUID(),
+                id: newMonthId,
                 name: nameInput.value.trim(),
                 targetDays: parseInt(targetInput.value) || 15,
                 expanded: true,
@@ -2025,6 +2041,7 @@ function bindEvents() {
             persistDayCounter();
             closeModal($('dayCounterMonthNewDlg'));
             renderDayCounter();
+            scrollCardIntoView($(`dc_month_box_${newMonthId}`), true);
         });
     }
 
@@ -2459,8 +2476,9 @@ function bindEvents() {
             }
             remitNameInput.classList.remove('input-error');
 
+            const newRemId = crypto.randomUUID();
             remittancesList.push({
-                id: crypto.randomUUID(),
+                id: newRemId,
                 name: remitNameInput.value.trim(),
                 sendCurr: $('newRemitSendCurr').value,
                 recvCurr: $('newRemitRecvCurr').value,
@@ -2473,6 +2491,7 @@ function bindEvents() {
             clearValidationErrors($('remitNewForm'));
             closeModal($('remitNewDlg'));
             renderRemittancesList();
+            scrollCardIntoView($(`remit_box_${newRemId}`), true);
         });
     }
 

@@ -349,8 +349,6 @@ button.cancelarmovimiento {
     height: 20px;
 }
 
-/* aqui lo que he borrado */
-
 .action-icon-btn.mobile-toggle-btn {
     background: var(--fondo);
     font-weight: 900;
@@ -1046,8 +1044,6 @@ body.dark-mode .cat-percentage-badge {
     border: 1px solid var(--tarjetas);
 }
 
-
-
 .remit-totals-box {
     border-top: 1.5px solid var(--primario);
     padding-top: 12px;
@@ -1065,8 +1061,8 @@ body.dark-mode .cat-percentage-badge {
 }
 
 .remit-total-label { font-weight: 550; color: var(--texto) }
-.remit-total-send { margin-right: 8px; font-weight: 750; color: var(--primario); } /* monto a enviar euros */
-.remit-total-recv { font-weight: 750; color: var(--texto); } /* monto a enviar soles */
+.remit-total-send { margin-right: 8px; font-weight: 750; color: var(--primario); }
+.remit-total-recv { font-weight: 750; color: var(--texto); }
 
 .remit-commission-line {
     display: flex;
@@ -1107,6 +1103,7 @@ body.dark-mode .cat-percentage-badge {
     margin-bottom: 12px;
     background: var(--tarjetas);
     overflow: hidden !important;
+    scroll-margin-top: calc(78px + env(safe-area-inset-top, 0px));
 }
 
 .installment-purchase-header {
@@ -1196,7 +1193,6 @@ body.dark-mode .installment-purchase-header.all-paid {
     stroke: var(--primario);
 }
 
-/* Icono "editar" en la lista de movimientos" */
 .installment-purchase-card button.soft.icon-btn,
 .card button.soft.icon-btn {
     background: var(--fondo) !important;
@@ -1406,7 +1402,6 @@ dialog::backdrop {
 }
 
 .category-section-title.category-section-divider {
-    /*este es el divisor entre gastos e ingresos de la lista de categorias*/
     margin-top: 16px;
     padding-top: 16px;
     border-top: 1px solid var(--primario);
@@ -1601,10 +1596,8 @@ input[type="time"]::-webkit-date-and-time-value {
     white-space: nowrap;
 }
 
-/* Bloquea el scroll de la página principal cuando hay un modal abierto */
 body.no-scroll {
     overflow: hidden;
-    /* Opcional: previene pequeños saltos de diseño si la barra de scroll vertical desaparece de golpe */
     padding-right: var(--scrollbar-width, 0px); 
 }
 
@@ -1643,21 +1636,21 @@ body.no-scroll {
 
 @media (max-width: 760px) {
     header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
-    background: var(--primario);
-    padding: calc(14px + env(safe-area-inset-top, 0px)) 0 14px;
-    transition: background-color 0.2s ease;
-}
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        background: var(--primario);
+        padding: calc(14px + env(safe-area-inset-top, 0px)) 0 14px;
+        transition: background-color 0.2s ease;
+    }
     .header-content { padding: 0 13px; }
     main {
-    max-width: 1120px;
-    margin: calc(88px + env(safe-area-inset-top, 0px)) auto 28px;
-    padding: 0 20px;
-}
+        max-width: 1120px;
+        margin: calc(88px + env(safe-area-inset-top, 0px)) auto 28px;
+        padding: 0 20px;
+    }
 
     .cards {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1674,7 +1667,10 @@ body.no-scroll {
         gap: 16px;
     }
 
-    .layout .summary-card { order: -1; }
+    .layout .summary-card {
+        order: -1;
+        scroll-margin-top: calc(78px + env(safe-area-inset-top, 0px));
+    }
 
     .summary-card:not(.expanded) #movementsContainer,
     .summary-card:not(.expanded) #categoriesContainer,
