@@ -1644,7 +1644,9 @@ body.no-scroll {
 }
 
 @media (max-width: 760px) {
-    header { padding: 14px 0; }
+    header {
+        padding: calc(14px + env(safe-area-inset-top, 0px)) 0 14px;
+    }
     .header-content { padding: 0 13px; }
     main { margin: 20px auto; padding: 0 13px; }
 
