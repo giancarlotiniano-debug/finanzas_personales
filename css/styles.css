@@ -97,8 +97,10 @@ input[type="number"] {
    3. LAYOUT GENERAL
    ========================================== */
 header {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 50;
     background: var(--primario);
     padding: calc(14px + env(safe-area-inset-top, 0px)) 0 14px;
@@ -145,7 +147,7 @@ body.dark-mode .logo {
 
 main {
     max-width: 1120px;
-    margin: 28px auto;
+    margin: calc(88px + env(safe-area-inset-top, 0px)) auto 28px;
     padding: 0 20px;
 }
 
@@ -1645,10 +1647,22 @@ body.no-scroll {
 
 @media (max-width: 760px) {
     header {
-        padding: calc(14px + env(safe-area-inset-top, 0px)) 0 14px;
-    }
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: var(--primario);
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 0 14px;
+    transition: background-color 0.2s ease;
+}
     .header-content { padding: 0 13px; }
-    main { margin: 20px auto; padding: 0 13px; }
+    
+    main {
+    max-width: 1120px;
+    margin: calc(88px + env(safe-area-inset-top, 0px)) auto 28px;
+    padding: 0 20px;
+}
 
     .cards {
         grid-template-columns: repeat(2, minmax(0, 1fr));
