@@ -1119,7 +1119,7 @@ function renderRemittancesList() {
         }).join('');
 
         return `
-            <div class="installment-purchase-card" id="remit_box_${rem.id}">
+            <div class="installment-purchase-card ${rem.expanded ? 'is-open' : ''}" id="remit_box_${rem.id}">
                 <div class="installment-purchase-header" data-action="toggle-remit" data-remit-id="${rem.id}">
                     <div class="flex-col">
                         <span class="installment-card-title">${escapeHtml(rem.name)}</span>
@@ -1131,7 +1131,7 @@ function renderRemittancesList() {
                         <button type="button" class="editbutton-xs" data-action="edit-remit" data-remit-id="${rem.id}" title="Detalles de la remesa" aria-label="Detalles de la remesa">
                             <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
                         </button>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
                 </div>
 
@@ -1304,7 +1304,7 @@ function renderInstallments() {
         `).join('');
 
         return `
-            <div class="installment-purchase-card" id="purchase_box_${purchase.id}">
+            <div class="installment-purchase-card ${purchase.expanded ? 'is-open' : ''}" id="purchase_box_${purchase.id}">
                 <div class="installment-purchase-header ${allPaid ? 'all-paid' : ''}" data-action="toggle-inst-accordion" data-purchase-id="${purchase.id}">
                     <div class="flex-col">
                         <span class="installment-card-title">${escapeHtml(purchase.name)}</span>
@@ -1314,7 +1314,7 @@ function renderInstallments() {
                         <button type="button" class="editbutton-xs" data-action="edit-inst-purchase" data-purchase-id="${purchase.id}" title="Editar compra" aria-label="Editar compra">
                             <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
                         </button>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
                 </div>
                 <div id="inst_details_${purchase.id}" class="installment-installments-list" style="display: ${purchase.expanded ? 'flex' : 'none'};">
@@ -1424,7 +1424,7 @@ function renderDayCounter() {
         `).join('');
 
         return `
-            <div class="installment-purchase-card" id="dc_month_box_${month.id}">
+            <div class="installment-purchase-card ${month.expanded ? 'is-open' : ''}" id="dc_month_box_${month.id}">
                 <div class="installment-purchase-header" data-action="toggle-dc-month" data-month-id="${month.id}">
                     <div class="flex-col">
                         <span class="installment-card-title">${escapeHtml(month.name)}</span>
@@ -1434,7 +1434,7 @@ function renderDayCounter() {
                         <button type="button" class="editbutton-xs" data-action="edit-dc-month" data-month-id="${month.id}" title="Editar mes" aria-label="Editar mes">
                             <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
                         </button>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
                 </div>
                 <div id="dc_month_details_${month.id}" class="installment-installments-list" style="display: ${month.expanded ? 'flex' : 'none'};">
@@ -1442,7 +1442,7 @@ function renderDayCounter() {
                         ${daysHtml || '<div class="empty empty-mini">Sin días registrados en este mes.</div>'}
                     </div>
                     <div class="utility-footer-action" style="margin-top: 0;">
-                        <button type="button" class="utility-category-newbutton" data-action="open-add-dc-day" data-month-id="${month.id}">
+                        <button type="button" class="day-newbutton" data-action="open-add-dc-day" data-month-id="${month.id}">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             Nuevo día
                         </button>

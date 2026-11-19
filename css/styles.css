@@ -423,7 +423,6 @@ button.cancelarmovimiento {
     justify-content: center;
     border-radius: 10px;
     line-height: 1;
-    border: 1px solid var(--primario);
     cursor: pointer;
 }
 
@@ -1001,6 +1000,19 @@ body.dark-mode .cat-percentage-badge {
     color: var(--primario);
 }
 
+.day-newbutton {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 650;
+    background: var(--tarjetas);
+    color: var(--primario);
+}
+
 .imp-exp-button {
     width: 100%;
     display: flex;
@@ -1009,9 +1021,9 @@ body.dark-mode .cat-percentage-badge {
     gap: 8px;
     padding: 12px;
     border-radius: 8px;
-    font-weight: 550;
+    font-weight: 650;
     background: var(--fondo);
-    color: var(--texto);
+    color: var(--primario);
 }
 
 .remit-tc-row {
@@ -1184,6 +1196,14 @@ body.dark-mode .cat-percentage-badge {
     -webkit-tap-highlight-color: transparent;
 }
 
+.installment-purchase-header .chevron-icon {
+    transition: transform 0.2s ease;
+}
+
+.installment-purchase-card.is-open .installment-purchase-header .chevron-icon {
+    transform: rotate(180deg);
+}
+
 .installment-card-title {
     color: var(--primario);
 }
@@ -1198,7 +1218,7 @@ body.dark-mode .cat-percentage-badge {
     padding: 20px 20px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
     border-top: 1px solid var(--primario);
     max-height: 700px !important;
     overflow-y: auto !important;
