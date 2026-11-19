@@ -322,44 +322,86 @@ function updateMovementFilterOptions() {
     filterSelect.value = exists ? currentSelection : 'all';
 }
 
-function setupMainAccordion(btnId, containerId, iconId, cardId) {
-    const btn = $(btnId);
-    if (!btn) return;
+/* Cierra automáticamente todas las tarjetas internas de remesas, cuotas y contador de días */
+function collapseAllInternalCards() {
+    if (remittancesList.some(r => r.expanded)) {
+        remittancesList.forEach(r => r.expanded = false);
+        persistRemittancesList();
+        renderRemittancesList();
+    }
 
-    btn.addEventListener('click', () => {
-        const container = $(containerId);
-        const icon = $(iconId);
-        const card = $(cardId);
-        if (!container) return;
+    if (installmentsPurchases.some(p => p.expanded)) {
+        installmentsPurchases.forEach(p => p.expanded = false);
+        persistInstallments();
+        renderInstallments();
+    }
 
-        const isCurrentlyExpanded = container.style.display === 'block';
-        const willBeExpanded = !isCurrentlyExpanded;
+    if (dayCounterMonths.some(m => m.expanded)) {
+        dayCounterMonths.forEach(m => m.expanded = false);
+        persistDayCounter();
+        renderDayCounter();
+    }
+}
 
-        accordionConfig.forEach(item => {
-            const c = $(item.containerId);
-            const ic = $(item.iconId);
-            const cr = $(item.cardEl);
-            if (c && c !== container) {
-                c.style.display = 'none';
-                if (cr) cr.classList.remove('expanded');
-                if (ic) ic.innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
-            }
-        });
+function toggleMainAccordionById(containerId, iconId, cardId) {
+    const container = $(containerId);
+    const icon = $(iconId);
+    const card = $(cardId);
+    if (!container) return;
 
-        container.style.display = willBeExpanded ? 'block' : 'none';
-        if (card) card.classList.toggle('expanded', willBeExpanded);
-        if (icon) {
-            icon.innerHTML = willBeExpanded
-                ? '<polyline points="18 15 12 9 6 15"></polyline>'
-                : '<polyline points="6 9 12 15 18 9"></polyline>';
-        }
+    const isCurrentlyExpanded = container.style.display === 'block';
+    const willBeExpanded = !isCurrentlyExpanded;
 
-        if (willBeExpanded && card && window.innerWidth <= 760) {
-            requestAnimationFrame(() => {
-                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
+    accordionConfig.forEach(item => {
+        const c = $(item.containerId);
+        const ic = $(item.iconId);
+        const cr = $(item.cardEl);
+        if (c && c !== container) {
+            c.style.display = 'none';
+            if (cr) cr.classList.remove('expanded');
+            if (ic) ic.innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
         }
     });
+
+    container.style.display = willBeExpanded ? 'block' : 'none';
+    if (card) card.classList.toggle('expanded', willBeExpanded);
+    if (icon) {
+        icon.innerHTML = willBeExpanded
+            ? '<polyline points="18 15 12 9 6 15"></polyline>'
+            : '<polyline points="6 9 12 15 18 9"></polyline>';
+    }
+
+    // Cierra todas las tarjetas internas al cerrar esta sección o cambiar a otra
+    collapseAllInternalCards();
+
+    if (willBeExpanded && card && window.innerWidth <= 760) {
+        requestAnimationFrame(() => {
+            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+}
+
+function setupMainAccordion(btnId, containerId, iconId, cardId) {
+    const btn = $(btnId);
+    const card = $(cardId);
+
+    if (btn) {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMainAccordionById(containerId, iconId, cardId);
+        });
+    }
+
+    if (card) {
+        card.addEventListener('click', (e) => {
+            const container = $(containerId);
+            if (container && container.contains(e.target)) return;
+
+            if (e.target.closest('button, input, select, textarea, a, label')) return;
+
+            toggleMainAccordionById(containerId, iconId, cardId);
+        });
+    }
 }
 
 /* ==========================================

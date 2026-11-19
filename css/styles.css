@@ -93,6 +93,68 @@ input[type="number"] {
     gap: 8px;
 }
 
+/* Evitar selección de texto, resaltado y destello táctil en pestañas principales */
+#movementsCard .section-heading,
+#categoriesCard .section-heading,
+#remittancesCard .section-heading,
+#installmentsCard .section-heading,
+#dayCounterCard .section-heading,
+#movementsCard .section-heading *,
+#categoriesCard .section-heading *,
+#remittancesCard .section-heading *,
+#installmentsCard .section-heading *,
+#dayCounterCard .section-heading *,
+#movementsCard .mobile-toggle-btn,
+#categoriesCard .mobile-toggle-btn,
+#remittancesCard .mobile-toggle-btn,
+#installmentsCard .mobile-toggle-btn,
+#dayCounterCard .mobile-toggle-btn {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#movementsCard .section-heading,
+#categoriesCard .section-heading,
+#remittancesCard .section-heading,
+#installmentsCard .section-heading,
+#dayCounterCard .section-heading,
+#movementsCard .mobile-toggle-btn,
+#categoriesCard .mobile-toggle-btn,
+#remittancesCard .mobile-toggle-btn,
+#installmentsCard .mobile-toggle-btn,
+#dayCounterCard .mobile-toggle-btn {
+    cursor: pointer;
+    outline: none;
+}
+
+#movementsCard .section-heading:focus,
+#movementsCard .section-heading:active,
+#categoriesCard .section-heading:focus,
+#categoriesCard .section-heading:active,
+#remittancesCard .section-heading:focus,
+#remittancesCard .section-heading:active,
+#installmentsCard .section-heading:focus,
+#installmentsCard .section-heading:active,
+#dayCounterCard .section-heading:focus,
+#dayCounterCard .section-heading:active,
+#movementsCard .mobile-toggle-btn:focus,
+#movementsCard .mobile-toggle-btn:active,
+#categoriesCard .mobile-toggle-btn:focus,
+#categoriesCard .mobile-toggle-btn:active,
+#remittancesCard .mobile-toggle-btn:focus,
+#remittancesCard .mobile-toggle-btn:active,
+#installmentsCard .mobile-toggle-btn:focus,
+#installmentsCard .mobile-toggle-btn:active,
+#dayCounterCard .mobile-toggle-btn:focus,
+#dayCounterCard .mobile-toggle-btn:active {
+    outline: none;
+    box-shadow: none;
+}
+
 /* ==========================================
    3. LAYOUT GENERAL
    ========================================== */
