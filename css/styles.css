@@ -98,7 +98,7 @@ input[type="number"] {
    ========================================== */
 header {
     background: var(--primario);
-    padding: 18px 0;
+    padding: calc(18px + env(safe-area-inset-top, 0px)) 0 18px;
     transition: background-color 0.2s ease;
 }
 
