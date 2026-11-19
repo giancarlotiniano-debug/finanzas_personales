@@ -1009,9 +1009,9 @@ body.dark-mode .cat-percentage-badge {
     gap: 8px;
     padding: 12px;
     border-radius: 8px;
-    font-weight: 650;
+    font-weight: 550;
     background: var(--fondo);
-    color: var(--primario);
+    color: var(--texto);
 }
 
 .remit-tc-row {
@@ -1181,6 +1181,7 @@ body.dark-mode .cat-percentage-badge {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     transition: background-color 0.2s ease, border-radius 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .installment-card-title {
@@ -1742,6 +1743,14 @@ body.no-scroll {
     .summary-card:not(.expanded) .movement-controls,
     .summary-card:not(.expanded) #editCategoriesBtn {
         display: none !important;
+    }
+
+    .summary-card.expanded #movementsContainer,
+    .summary-card.expanded #categoriesContainer,
+    .summary-card.expanded #remitContainer,
+    .summary-card.expanded #installmentsContainer,
+    .summary-card.expanded #dayCounterContainer {
+        display: block !important;
     }
 
     .toolbar input {

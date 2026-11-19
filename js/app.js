@@ -81,6 +81,7 @@ let editingDayMonthId = null;
 let editingDayIndex = null;
 let currentCatKind = 'expense';
 let selectedDonutCategory = null;
+let lastAccordionToggleAt = 0;
 
 const accordionConfig = [
     { btnId: 'toggleMovementsBtn', containerId: 'movementsContainer', iconId: 'toggleMovementsIcon', cardEl: 'movementsCard' },
@@ -344,6 +345,10 @@ function collapseAllInternalCards() {
 }
 
 function toggleMainAccordionById(containerId, iconId, cardId) {
+    const now = Date.now();
+    if (now - lastAccordionToggleAt < 180) return;
+    lastAccordionToggleAt = now;
+
     const container = $(containerId);
     const icon = $(iconId);
     const card = $(cardId);
@@ -384,6 +389,7 @@ function toggleMainAccordionById(containerId, iconId, cardId) {
 function setupMainAccordion(btnId, containerId, iconId, cardId) {
     const btn = $(btnId);
     const card = $(cardId);
+    const container = $(containerId);
 
     if (btn) {
         btn.addEventListener('click', (e) => {
@@ -392,12 +398,17 @@ function setupMainAccordion(btnId, containerId, iconId, cardId) {
         });
     }
 
+    if (container) {
+        container.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
+
     if (card) {
         card.addEventListener('click', (e) => {
-            const container = $(containerId);
-            if (container && container.contains(e.target)) return;
+            if (container && (container === e.target || container.contains(e.target))) return;
 
-            if (e.target.closest('button, input, select, textarea, a, label')) return;
+            if (e.target.closest('button, input, select, textarea, a, label, .installment-purchase-card, .installment-purchase-header, .installment-installments-list')) return;
 
             toggleMainAccordionById(containerId, iconId, cardId);
         });
@@ -1912,6 +1923,7 @@ function bindEvents() {
 
             const header = e.target.closest('[data-action="toggle-remit"]');
             if (header) {
+                e.stopPropagation();
                 toggleRemitAccordion(header.dataset.remitId);
             }
         });
@@ -2045,6 +2057,7 @@ function bindEvents() {
 
             const header = e.target.closest('[data-action="toggle-inst-accordion"]');
             if (header) {
+                e.stopPropagation();
                 toggleInstallmentAccordion(header.dataset.purchaseId);
             }
         });
@@ -2144,6 +2157,7 @@ function bindEvents() {
 
             const toggleHeader = e.target.closest('[data-action="toggle-dc-month"]');
             if (toggleHeader) {
+                e.stopPropagation();
                 toggleDayCounterMonthAccordion(toggleHeader.dataset.monthId);
                 return;
             }
