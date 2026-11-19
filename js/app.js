@@ -957,8 +957,8 @@ function render() {
                 </td>
                 <td>
                     <div class="actions">
-                        <button class="soft icon-btn" data-edit="${item.id}" title="Editar" aria-label="Editar">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <button class="editar-movimiento" data-edit="${item.id}" title="Editar" aria-label="Editar">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         </button>
                     </div>
                 </td>
@@ -1043,7 +1043,7 @@ function renderRemittancesList() {
                     </div>
                     <div class="flex-center-gap">
                         <input type="text" inputmode="decimal" enterkeyhint="done" class="remit-recv-input remit-input-num" data-remit-id="${rem.id}" data-index="${idx}" value="${formattedVal}" placeholder="0,00">
-                        <button type="button" class="danger icon-btn btn-xs" data-action="remove-remit-item" data-remit-id="${rem.id}" data-index="${idx}" title="Eliminar concepto" aria-label="Eliminar concepto">
+                        <button type="button" class="small-delete-button" data-action="remove-remit-item" data-remit-id="${rem.id}" data-index="${idx}" title="Eliminar concepto" aria-label="Eliminar concepto">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                         </button>
                     </div>
@@ -1055,13 +1055,13 @@ function renderRemittancesList() {
             <div class="installment-purchase-card" id="remit_box_${rem.id}">
                 <div class="installment-purchase-header" data-action="toggle-remit" data-remit-id="${rem.id}">
                     <div class="flex-col">
-                        <span>${escapeHtml(rem.name)}</span>
+                        <span class="installment-card-title"">${escapeHtml(rem.name)}</span>
                         <span class="installment-card-subtitle" id="remit_header_summary_${rem.id}">
                             ${rem.sendCurr} → ${rem.recvCurr} • Total: ${formatCurrencyCustom(grandTotal, rem.sendCurr)} 
                         </span>
                     </div>
                     <div class="flex-center-gap">
-                        <button type="button" class="soft icon-btn btn-xs" data-action="edit-remit" data-remit-id="${rem.id}" title="Detalles de la remesa" aria-label="Detalles de la remesa">
+                        <button type="button" class="editbutton-xs" data-action="edit-remit" data-remit-id="${rem.id}" title="Detalles de la remesa" aria-label="Detalles de la remesa">
                             <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
                         </button>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -1237,11 +1237,11 @@ function renderInstallments() {
             <div class="installment-purchase-card" id="purchase_box_${purchase.id}">
                 <div class="installment-purchase-header ${allPaid ? 'all-paid' : ''}" data-action="toggle-inst-accordion" data-purchase-id="${purchase.id}">
                     <div class="flex-col">
-                        <span>${escapeHtml(purchase.name)}</span>
+                        <span class="installment-card-title">${escapeHtml(purchase.name)}</span>
                         <span class="installment-card-subtitle">Total: ${formatCurrencyCustom(purchase.totalAmount, curr)} (${progressText})</span>
                     </div>
                     <div class="flex-center-gap">
-                        <button type="button" class="soft icon-btn btn-xs" data-action="edit-inst-purchase" data-purchase-id="${purchase.id}" title="Editar compra" aria-label="Editar compra">
+                        <button type="button" class="editbutton-xs" data-action="edit-inst-purchase" data-purchase-id="${purchase.id}" title="Editar compra" aria-label="Editar compra">
                             <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
                         </button>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -1343,7 +1343,7 @@ function renderDayCounter() {
                     <span class="dc-day-loc">${escapeHtml(day.location)}</span>
                 </div>
                 <div class="dc-day-right">
-                    <button type="button" class="soft icon-btn btn-xs" data-action="edit-dc-day" data-month-id="${month.id}" data-index="${idx}" title="Editar día" aria-label="Editar día">
+                    <button type="button" class="editbutton-xs" data-action="edit-dc-day" data-month-id="${month.id}" data-index="${idx}" title="Editar día" aria-label="Editar día">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     </button>
                 </div>
@@ -1354,11 +1354,11 @@ function renderDayCounter() {
             <div class="installment-purchase-card" id="dc_month_box_${month.id}">
                 <div class="installment-purchase-header" data-action="toggle-dc-month" data-month-id="${month.id}">
                     <div class="flex-col">
-                        <span>${escapeHtml(month.name)}</span>
+                        <span class="installment-card-title">${escapeHtml(month.name)}</span>
                         <span class="installment-card-subtitle">Días trabajados: ${totalWorked} • Días extras: ${extras}</span>
                     </div>
                     <div class="flex-center-gap">
-                        <button type="button" class="soft icon-btn btn-xs" data-action="edit-dc-month" data-month-id="${month.id}" title="Editar mes" aria-label="Editar mes">
+                        <button type="button" class="editbutton-xs" data-action="edit-dc-month" data-month-id="${month.id}" title="Editar mes" aria-label="Editar mes">
                             <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
                         </button>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -1369,7 +1369,7 @@ function renderDayCounter() {
                         ${daysHtml || '<div class="empty empty-mini">Sin días registrados en este mes.</div>'}
                     </div>
                     <div class="utility-footer-action" style="margin-top: 0;">
-                        <button type="button" class="soft utility-new-btn" data-action="open-add-dc-day" data-month-id="${month.id}">
+                        <button type="button" class="utility-category-newbutton" data-action="open-add-dc-day" data-month-id="${month.id}">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             Nuevo día
                         </button>
@@ -1482,7 +1482,7 @@ function renderConfigCategories() {
                         <span class="category-item-name">${escapeHtml(cat.name)}</span>
                     </div>
                     <div class="category-item-controls">
-                        <button type="button" class="soft icon-btn btn-xs" data-action="open-edit-category" data-kind="${kind}" data-index="${originalIndex}" title="Editar categoría" aria-label="Editar categoría">
+                        <button type="button" class="edit-category-button" data-action="open-edit-category" data-kind="${kind}" data-index="${originalIndex}" title="Editar categoría" aria-label="Editar categoría">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--button-principal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         </button>
                     </div>
