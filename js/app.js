@@ -330,7 +330,6 @@ function applyUtilitiesVisibility() {
     const financeLayout = $('financeManagerLayout');
     if (financeLayout) {
         financeLayout.style.display = showFinance ? '' : 'none';
-        financeLayout.style.marginBottom = showFinance ? '26px' : '0px';
     }
 
     if ($('remittancesCard')) $('remittancesCard').style.display = showRemit ? '' : 'none';
@@ -1525,6 +1524,20 @@ function render() {
     updateFilterButtonIndicator();
     updateActiveFilterCaption();
 
+    const chronologicalMovements = [...movements].sort((a, b) => {
+        const dateCmp = String(a.date || '').localeCompare(String(b.date || ''));
+        if (dateCmp !== 0) return dateCmp;
+        return (a.timestamp || 0) - (b.timestamp || 0);
+    });
+
+    let runningBalance = 0;
+    const runningBalanceById = new Map();
+    chronologicalMovements.forEach(item => {
+        const amt = Number(item.amount) || 0;
+        runningBalance += item.kind === 'income' ? amt : -amt;
+        runningBalanceById.set(item.id, Math.round(runningBalance * 100) / 100);
+    });
+
     const formattedDates = visibleMovements.map(item =>
         new Date(item.date + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })
     );
@@ -1545,6 +1558,7 @@ function render() {
 
         const borderClass = dateFormatted !== nextDate ? 'no-border' : '';
         const { accentColor: catColor, iconSvg } = getCategoryMeta(item.kind, item.category);
+        const remainingAfterMove = runningBalanceById.get(item.id) ?? 0;
 
         rowsHtml += `
             <tr class="movement-row ${borderClass}">
@@ -1561,7 +1575,10 @@ function render() {
                     <span class="category-text">${escapeHtml(item.category)}</span>
                 </td>
                 <td class="amount ${item.kind === 'income' ? 'income' : 'expense'}">
-                    ${item.kind === 'income' ? '+' : '−'}${formatMoney(item.amount)}
+                    <div class="movement-amount-stack">
+                        <span>${item.kind === 'income' ? '+' : '−'}${formatMoney(item.amount)}</span>
+                        <span class="movement-balance-sub">${formatMoney(remainingAfterMove)}</span>
+                    </div>
                 </td>
                 <td>
                     <div class="actions">
@@ -2924,7 +2941,7 @@ function bindEvents() {
 
     $('addRemittanceBtn')?.addEventListener('click', () => {
         $('remitNewForm')?.reset();
-        $('newRemitName').value = `Remesa #${remittancesList.length + 1}`;
+        $('newRemitName').value = `${SPANISH_MONTH_NAMES[today.getMonth()]} ${today.getFullYear()}`;
         clearValidationErrors($('remitNewForm'));
         openModal($('remitNewDlg'));
     });

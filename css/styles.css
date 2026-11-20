@@ -114,7 +114,7 @@ input[type="number"] {
 }
 
 /* ==========================================
-   3. LAYOUT GENERAL Y CONTENEDOR MAESTRO
+   3. LAYOUT GENERAL Y TARJETAS DE FINANZAS
    ========================================== */
 header {
     position: fixed;
@@ -171,23 +171,31 @@ main {
     padding: 0 20px;
 }
 
-/* Contenedor único unificado de finanzas con espaciado simétrico */
-.finance-master-card {
+/* Tres tarjetas independientes del gestor de finanzas */
+.finance-stack {
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    background: var(--tarjetas);
-    border-radius: 22px;
-    padding: 20px;
+    gap: 14px;
     margin-bottom: 26px;
+}
+
+.finance-subcard {
+    background: var(--tarjetas);
+    border-radius: 20px;
+    padding: 16px 18px;
     transition: background-color 0.2s ease;
+}
+
+.finance-list-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
 .metrics-top-block {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 0 6px;
+    gap: 6px;
 }
 
 .metrics-top-row {
@@ -250,22 +258,13 @@ main {
     outline: none;
 }
 
-.usage-bar-interactive:focus-visible .usage-bar-track {
-    box-shadow: 0 0 0 2px var(--primario);
-}
-
 .usage-bar-track {
     position: relative;
     width: 100%;
     height: 11px;
     border-radius: 999px;
     background: var(--fondo);
-    border: 1px solid rgba(21, 150, 107, 0.25);
     overflow: hidden;
-}
-
-body.dark-mode .usage-bar-track {
-    border-color: rgba(255, 255, 255, 0.08);
 }
 
 .usage-bar-income-fill {
@@ -308,7 +307,7 @@ body.dark-mode .usage-bar-track {
     gap: 6px;
 }
 
-/* Fila 1: Botón Filtro (izq) + Switch Movimientos/Categorías (der) */
+/* Tarjeta 2: Botón Filtro (izq) + Switch Movimientos/Categorías (der) */
 .finance-controls-row {
     display: flex;
     align-items: center;
@@ -324,8 +323,8 @@ body.dark-mode .usage-bar-track {
     gap: 6px;
     height: 44px;
     padding: 0 16px;
-    border-radius: 999px;
-    background: var(--fondo);
+    border-radius: 25px;
+    background: var(--tarjetas);
     color: var(--primario);
     font-weight: 700;
     font-size: 14.5px;
@@ -343,18 +342,18 @@ body.dark-mode .usage-bar-track {
 
 .filter-pill-btn.has-active-filters {
     background-color: var(--primario);
-    color: #00ff6e;
+    color: var(--blanco);
 }
 
 .filter-pill-btn.has-active-filters svg {
-    stroke: #00ff6e;
+    stroke: var(--blanco);
 }
 
 /* Switch segmentado Movimientos / Categorías */
 .view-mode-switch {
     display: inline-flex;
     align-items: center;
-    background: var(--fondo);
+    background: var(--tarjetas);
     border-radius: 25px;
     padding: 3px;
     height: 44px;
@@ -370,7 +369,7 @@ body.dark-mode .usage-bar-track {
     border-radius: 25px;
     background: transparent;
     color: var(--texto);
-    opacity: 0.65;
+    opacity: 0.5;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -404,8 +403,9 @@ body.dark-mode .usage-bar-track {
 
 .view-mode-option.active {
     padding: 0 12px;
-    background: var(--primario);
-    color: var(--blanco);
+    background: var(--fondo);
+    color: var(--primario);
+    border: 1px solid var(--primario);
     opacity: 1;
 }
 
@@ -413,13 +413,12 @@ body.dark-mode .usage-bar-track {
     display: inline;
 }
 
-/* Fila 2: Título + subtítulo de filtro activo (izq) + Acción principal [+ Nuevo] o [Editar] (der) */
+/* Tarjeta 3: Título + subtítulo de filtro activo (izq) + Acción principal [+ Nuevo] o [Editar] (der) */
 .finance-view-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 0 6px;
 }
 
 .finance-view-title-group {
@@ -468,13 +467,6 @@ body.dark-mode .usage-bar-track {
     stroke: var(--primario);
 }
 
-.finance-active-filter-caption {
-    font-size: 12.5px;
-    font-weight: 600;
-    line-height: 1.3;
-    word-break: break-word;
-}
-
 .edit-cats-pill-btn {
     display: inline-flex;
     align-items: center;
@@ -484,8 +476,8 @@ body.dark-mode .usage-bar-track {
     width: 90px;
     padding: 0 15px;
     border-radius: 25px;
-    background: var(--fondo);
-    color: var(--primario);
+    background: var(--primario);
+    color: var(--blanco);
     font-weight: 700;
     font-size: 14.5px;
     cursor: pointer;
@@ -493,7 +485,7 @@ body.dark-mode .usage-bar-track {
 }
 
 .edit-cats-pill-btn svg {
-    stroke: var(--primario);
+    stroke: var(--blanco);
     flex-shrink: 0;
 }
 
@@ -505,9 +497,9 @@ body.dark-mode .usage-bar-track {
     height: 44px;
     width: 90px;
     padding: 0 16px;
-    border-radius: 999px;
-    background: var(--fondo);
-    color: var(--primario);
+    border-radius: 25px;
+    background: var(--primario);
+    color: var(--blanco);
     font-weight: 700;
     font-size: 14.5px;
     cursor: pointer;
@@ -516,7 +508,7 @@ body.dark-mode .usage-bar-track {
 }
 
 .pill-new-btn svg {
-    stroke: var(--primario);
+    stroke: var(--blanco);
     flex-shrink: 0;
 }
 
@@ -629,8 +621,7 @@ button.cancelarmovimiento {
     width: 44px;
     height: 44px;
     border-radius: 10px;
-    background-color: var(--tarjetas);
-    border: 1px solid var(--red);
+    background-color: var(--red);
     align-items: center;
     justify-content: center;
     display: flex;
@@ -640,8 +631,8 @@ button.cancelarmovimiento {
 .large-delete-button svg {
     width: 22px;
     height: 22px;
-    stroke: var(--red);
-    stroke-width: 1px;
+    stroke: var(--blanco);
+    stroke-width: 2px;
 }
 
 #configBtn {
@@ -873,7 +864,7 @@ tr.movement-row:hover td:last-child {
     background: var(--fondo);
     border-radius: 30px;
     padding: 4px;
-    margin: 0 0 18px 0;
+    margin: 0 0 8px 0;
     gap: 4px;
 }
 
@@ -902,7 +893,7 @@ tr.movement-row:hover td:last-child {
     justify-content: center;
     align-items: center;
     position: relative;
-    margin: 15px 0;
+    margin: 12px 0;
     padding: 10px 0;
 }
 
@@ -1001,9 +992,9 @@ tr.movement-row:hover td:last-child {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    margin-top: 10px;
+    margin-top: 6px;
     border-top: 1px solid var(--fondo);
-    padding-top: 16px;
+    padding-top: 14px;
     max-height: 480px;
     overflow-y: auto;
 }
@@ -1493,7 +1484,6 @@ dialog::backdrop {
     padding: 0 13px;
     border-radius: 12px;
     background: var(--fondo);
-    border: 1px solid rgba(128, 128, 128, 0.22);
     color: var(--texto);
 }
 
@@ -1559,7 +1549,7 @@ dialog::backdrop {
 
 .filter-date-tabs {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 4px;
     padding: 4px;
     border-radius: 14px;
@@ -1770,7 +1760,6 @@ body.dark-mode .filter-cal-day.is-in-week {
     padding: 0 12px;
     border-radius: 11px;
     background: var(--fondo);
-    border: 1px solid rgba(128, 128, 128, 0.22);
 }
 
 .filter-amount-box input {
@@ -1796,13 +1785,23 @@ body.dark-mode .filter-cal-day.is-in-week {
 }
 
 .filter-reset-btn {
+    width: 44px;
     height: 44px;
-    padding: 0 14px;
+    padding: 0;
     border-radius: 10px;
     background: var(--fondo);
     color: var(--red);
-    font-size: 14px;
-    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.filter-reset-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 1.8;
 }
 
 .filter-modal-actions {
@@ -1868,9 +1867,9 @@ input[type="time"] {
     align-items: center;
     -webkit-appearance: none;
     appearance: none;
-    height: 44px;
+    height: 54px;
     min-height: 44px;
-    max-height: 44px;
+    max-height: 54px;
     padding: 0 12px;
     text-align: left;
 }
@@ -2123,23 +2122,44 @@ body.no-scroll {
     display: none;
 }
 
+.movement-amount-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+}
+
+.movement-amount-stack > span:first-child {
+    line-height: 1.25;
+}
+
+.movement-balance-sub {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--texto);
+    opacity: 0.5;
+    line-height: 1.25;
+    white-space: nowrap;
+}
+
 /* ==========================================
    9. RESPONSIVE DESIGN
    ========================================== */
 @media (min-width: 761px) {
     .section-title { white-space: nowrap; }
 
-    .finance-master-card table th:nth-child(1),
-    .finance-master-card table td:nth-child(1) { width: 44%; }
+    .finance-stack table th:nth-child(1),
+    .finance-stack table td:nth-child(1) { width: 44%; }
 
-    .finance-master-card table th:nth-child(2),
-    .finance-master-card table td:nth-child(2) { width: 22%; text-align: right; }
+    .finance-stack table th:nth-child(2),
+    .finance-stack table td:nth-child(2) { width: 22%; text-align: right; }
 
-    .finance-master-card table th:nth-child(3),
-    .finance-master-card table td:nth-child(3) { width: 18%; text-align: right; }
+    .finance-stack table th:nth-child(3),
+    .finance-stack table td:nth-child(3) { width: 18%; text-align: right; }
 
-    .finance-master-card table th:nth-child(4),
-    .finance-master-card table td:nth-child(4) { width: 16%; text-align: center; }
+    .finance-stack table th:nth-child(4),
+    .finance-stack table td:nth-child(4) { width: 16%; text-align: center; }
 
     .mobile-toggle-btn { display: none !important; }
 
@@ -2162,22 +2182,27 @@ body.no-scroll {
         font-weight: 500;
         color: var(--texto);
         opacity: 0.5;
-        line-height: 1.2;
+        line-height: 1.25;
     }
 
     .header-content { padding: 0 13px; }
 
-    .finance-master-card {
-        gap: 22px;
-        padding: 16px 14px 18px;
-        border-radius: 20px;
+    .finance-stack {
+        gap: 12px;
+    }
+
+    .finance-subcard {
+        padding: 15px 15px;
+        border-radius: 25px;
     }
 
     .metrics-side-val { font-size: 16px; }
     .metrics-side-group { gap: 14px; }
 
     .finance-controls-row {
+        padding: 0px 10px;
         gap: 8px;
+        background: var(--fondo);
     }
 
     .filter-pill-btn {
@@ -2242,13 +2267,13 @@ body.no-scroll {
         display: block !important;
     }
 
-    .finance-master-card table,
-    .finance-master-card table tbody {
+    .finance-stack table,
+    .finance-stack table tbody {
         display: block;
         width: 100%;
     }
 
-    .finance-master-card table thead { display: none; }
+    .finance-stack table thead { display: none; }
 
     tr.movement-row {
         display: grid;
@@ -2261,23 +2286,23 @@ body.no-scroll {
     }
 
     tr.date-header-row td {
-        padding: 10px 4px 4px;
+        padding: 10px 0;
         display: block;
         border: 0;
     }
 
-    .finance-master-card table tbody tr.movement-row td {
+    .finance-stack table tbody tr.movement-row td {
         display: block;
         border: 0;
         padding: 0;
     }
 
-    .finance-master-card table tbody tr.movement-row td:nth-child(2),
-    .finance-master-card table thead tr th:nth-child(2) {
+    .finance-stack table tbody tr.movement-row td:nth-child(2),
+    .finance-stack table thead tr th:nth-child(2) {
         display: none !important;
     }
 
-    .finance-master-card table tbody tr.movement-row td.amount {
+    .finance-stack table tbody tr.movement-row td.amount {
         text-align: right;
         white-space: nowrap;
     }
@@ -2292,14 +2317,14 @@ body.no-scroll {
         -webkit-mask-image: linear-gradient(
             to bottom,
             transparent 0%,
-            #000 24px,
+            #000 14px,
             #000 calc(100% - 24px),
             transparent 100%
         );
         mask-image: linear-gradient(
             to bottom,
             transparent 0%,
-            #000 24px,
+            #000 14px,
             #000 calc(100% - 24px),
             transparent 100%
         );
