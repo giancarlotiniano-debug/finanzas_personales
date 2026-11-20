@@ -43,9 +43,9 @@
             </div>
         </div>
 
-        <!-- Tarjeta unificada de métricas y barra interactiva -->
-        <section class="metrics-unified-section" id="metricsCardsSection">
-            <div class="card metrics-unified-card">
+        <!-- Contenedor único unificado -->
+        <section class="finance-master-card" id="financeManagerLayout">
+            <div class="metrics-top-block" id="metricsCardsSection">
                 <div class="metrics-top-row">
                     <div class="metrics-side-group">
                         <div class="metrics-side-item">
@@ -72,85 +72,77 @@
                     <div class="usage-bar-tooltip" id="cashflowUsageTooltip" aria-live="polite"></div>
                 </div>
             </div>
+
+            <div class="finance-controls-row">
+                <button type="button" class="filter-pill-btn" id="openFilterBtn" title="Filtrar movimientos" aria-label="Filtrar movimientos">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a1.5 1.5 0 0 1 1.5-1.5h11A1.5 1.5 0 0 1 17 5v1.2a2 2 0 0 1-.6 1.4L12 12v6.5l-4-2V12L3.6 7.6A2 2 0 0 1 3 6.2V5zm13 7h5m-7 4h7m-7 4h7"/></svg>
+                    <span>Filtro</span>
+                    <span class="filter-active-dot is-hidden" id="filterActiveDot"></span>
+                </button>
+
+                <div class="view-mode-switch" role="tablist" aria-label="Cambiar entre movimientos y categorías">
+                    <button type="button" class="view-mode-option active" data-view-mode="movements" id="switchModeMovements" role="tab" aria-selected="true" title="Movimientos" aria-label="Movimientos">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M11 8h6M11 12h6M11 16h6"/><circle cx="7.5" cy="8" r="1" fill="currentColor" stroke="none"/><circle cx="7.5" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="7.5" cy="16" r="1" fill="currentColor" stroke="none"/></svg>
+                        <span class="view-mode-label">Movimientos</span>
+                    </button>
+                    <button type="button" class="view-mode-option" data-view-mode="categories" id="switchModeCategories" role="tab" aria-selected="false" title="Categorías" aria-label="Categorías">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 4.2a1.5 1.5 0 0 0-1.9-1.4A9 9 0 1 0 21.2 15.4a1.5 1.5 0 0 0-1.4-1.9H12a1.5 1.5 0 0 1-1.5-1.5V4.2z"/><path d="M14 3.5A1.5 1.5 0 0 1 15.8 2a8.5 8.5 0 0 1 6.2 6.2A1.5 1.5 0 0 1 20.5 10h-5A1.5 1.5 0 0 1 14 8.5v-5z"/></svg>
+                        <span class="view-mode-label">Categorías</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="finance-view-header">
+                <h2 class="finance-view-title" id="activeViewTitle">Movimientos</h2>
+                <div class="finance-view-actions">
+                    <button type="button" class="edit-cats-pill-btn is-hidden" id="editCategoriesBtn" title="Editar categorías" aria-label="Editar categorías">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <span>Editar</span>
+                    </button>
+                    <button class="pill-new-btn" id="addBtn" type="button" aria-label="Nuevo movimiento">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <span>Nuevo</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vista: Movimientos -->
+            <div id="movementsContainer">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Movimiento</th>
+                                <th class="text-right">Categoría</th>
+                                <th class="text-right">Importe</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rows"></tbody>
+                    </table>
+                </div>
+
+                <div id="empty" class="empty">
+                    Aún no hay movimientos registrados.
+                </div>
+            </div>
+
+            <!-- Vista: Categorías -->
+            <div id="categoriesContainer" class="is-hidden">
+                <div class="cat-type-selector">
+                    <button type="button" class="cat-tab-btn active" data-kind="expense" id="catTabExpense">Gastos</button>
+                    <button type="button" class="cat-tab-btn" data-kind="income" id="catTabIncome">Ingresos</button>
+                </div>
+
+                <div class="cat-chart-container">
+                    <div id="catChartWrapper" class="cat-chart-wrapper"></div>
+                </div>
+
+                <div id="categories" class="cat-breakdown-list">
+                    <div class="empty">Añade movimientos para ver el desglose.</div>
+                </div>
+            </div>
         </section>
-
-        <!-- Fila superior: Movimientos y Categorías -->
-        <div class="layout" id="financeManagerLayout">
-            <section class="card summary-card" id="movementsCard">
-                <div class="section-heading">
-                    <div class="section-title">Registro de movimientos</div>
-                    <div class="heading-actions">
-                        <div class="movement-controls">
-                            <div class="month-picker-wrapper" id="monthPickerBtn" title="Seleccionar mes">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                <input class="month" id="month" type="month" aria-label="Seleccionar mes">
-                            </div>
-                            <button class="button-add" id="addBtn" type="button" aria-label="Nuevo movimiento">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            </button>
-                        </div>
-                        <button class="action-icon-btn mobile-toggle-btn" id="toggleMovementsBtn" title="Desplegar movimientos" aria-label="Desplegar movimientos">
-                            <svg id="toggleMovementsIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="movementsContainer">
-                    <div class="toolbar">
-                        <input id="search" placeholder="Buscar" aria-label="Buscar">
-                        <select id="movementFilter" aria-label="Filtrar">
-                            <option value="all">Todos</option>
-                        </select>
-                    </div>
-
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Movimiento</th>
-                                    <th class="text-right">Categoría</th>
-                                    <th class="text-right">Importe</th>
-                                    <th class="text-center">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="rows"></tbody>
-                        </table>
-                    </div>
-
-                    <div id="empty" class="empty">
-                        Aún no hay movimientos registrados.
-                    </div>
-                </div>
-            </section>
-
-            <section class="card summary-card" id="categoriesCard">
-                <div class="section-heading">
-                    <div class="section-title">Resumen por categorías</div>
-                    <div class="heading-actions">
-                        <button class="action-icon-btn" id="editCategoriesBtn" title="Editar categorías" aria-label="Editar categorías">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        </button>
-                        <button class="action-icon-btn mobile-toggle-btn" id="toggleCategoriesBtn" title="Desplegar resumen" aria-label="Desplegar resumen">
-                            <svg id="toggleCategoriesIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </button>
-                    </div>
-                </div>
-                <div id="categoriesContainer">
-                    <div class="cat-type-selector">
-                        <button type="button" class="cat-tab-btn active" data-kind="expense" id="catTabExpense">Gastos</button>
-                        <button type="button" class="cat-tab-btn" data-kind="income" id="catTabIncome">Ingresos</button>
-                    </div>
-
-                    <div class="cat-chart-container">
-                        <div id="catChartWrapper" class="cat-chart-wrapper"></div>
-                    </div>
-
-                    <div id="categories" class="cat-breakdown-list">
-                        <div class="empty">Añade movimientos para ver el desglose.</div>
-                    </div>
-                </div>
-            </section>
-        </div>
 
         <!-- ==========================================
              SECCIÓN DE UTILIDADES
@@ -243,6 +235,78 @@
     </footer>
 
     <!-- Modales -->
+    <dialog id="filterDlg">
+        <form class="modal filter-modal" id="filterForm" tabindex="-1">
+            <h2>Filtrar movimientos</h2>
+
+            <div class="filter-section">
+                <label for="filterSearchInput" class="filter-section-label">Buscar</label>
+                <div class="filter-search-box">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input id="filterSearchInput" type="search" placeholder="Concepto, categoría o nota...">
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <span class="filter-section-label">Por gasto/ingreso</span>
+                <div class="filter-segmented" role="group" aria-label="Filtrar por gasto o ingreso">
+                    <button type="button" class="filter-seg-btn active" data-filter-kind="all">Todos</button>
+                    <button type="button" class="filter-seg-btn" data-filter-kind="expense">Gastos</button>
+                    <button type="button" class="filter-seg-btn" data-filter-kind="income">Ingresos</button>
+                </div>
+                <div class="filter-category-box is-hidden" id="filterCategoryBox">
+                    <label for="filterCategorySelect" class="filter-sub-label" id="filterCategoryLabel">Categoría</label>
+                    <select id="filterCategorySelect"></select>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <span class="filter-section-label">Por fecha</span>
+
+                <div class="filter-date-tabs" role="tablist" aria-label="Modo de selección de fecha">
+                    <button type="button" class="filter-date-tab" data-date-mode="day">Día</button>
+                    <button type="button" class="filter-date-tab" data-date-mode="week">Semana</button>
+                    <button type="button" class="filter-date-tab active" data-date-mode="month">Mes</button>
+                    <button type="button" class="filter-date-tab" data-date-mode="year">Año</button>
+                    <button type="button" class="filter-date-tab" data-date-mode="custom">Rango</button>
+                </div>
+
+                <div id="filterDatePickerPanel" class="filter-date-panel is-hidden"></div>
+            </div>
+
+            <div class="filter-section">
+                <span class="filter-section-label">Por rango de importes</span>
+                <div class="filter-two-cols">
+                    <div class="field">
+                        <label for="filterMinAmount">Desde</label>
+                        <div class="filter-amount-box">
+                            <input id="filterMinAmount" type="text" inputmode="decimal" placeholder="0,00">
+                            <span class="filter-currency-suffix" id="filterCurrMin">€</span>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="filterMaxAmount">Hasta</label>
+                        <div class="filter-amount-box">
+                            <input id="filterMaxAmount" type="text" inputmode="decimal" placeholder="0,00">
+                            <span class="filter-currency-suffix" id="filterCurrMax">€</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions modal-actions-split filter-modal-actions">
+                <button type="button" class="filter-reset-btn" id="resetFiltersBtn">Limpiar</button>
+                <div class="flex-center-gap">
+                    <button type="button" class="cancelarmovimiento" id="cancelFilterBtn">Cancelar</button>
+                    <button type="submit" class="aceptarmovimiento">Aplicar</button>
+                </div>
+            </div>
+        </form>
+    </dialog>
+
     <dialog id="newDlg">
         <form class="modal" id="newForm" tabindex="-1">
             <h2>Nuevo movimiento</h2>

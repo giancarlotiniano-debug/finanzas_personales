@@ -82,22 +82,83 @@ let editingCategoryData = null;
 let editingMonthId = null;
 let editingDayMonthId = null;
 let editingDayIndex = null;
+let activeFinanceViewMode = 'movements'; // 'movements' | 'categories'
 let currentCatKind = 'expense';
 let selectedDonutCategory = null;
 let lastAccordionToggleAt = 0;
 let currentUsageText = 'Sin movimientos en este mes';
 
-const accordionConfig = [
-    { btnId: 'toggleMovementsBtn', containerId: 'movementsContainer', iconId: 'toggleMovementsIcon', cardEl: 'movementsCard' },
-    { btnId: 'toggleCategoriesBtn', containerId: 'categoriesContainer', iconId: 'toggleCategoriesIcon', cardEl: 'categoriesCard' },
+const today = new Date();
+const pad = (number) => String(number).padStart(2, '0');
+const currentMonth = `${today.getFullYear()}-${pad(today.getMonth() + 1)}`;
+
+const SPANISH_MONTH_NAMES = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+];
+const WEEKDAY_LABELS_MON = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
+
+let movementFilters = {
+    query: '',
+    kind: 'all', // 'all' | 'expense' | 'income'
+    category: 'all', // 'all' o nombre de categoría
+    dateMode: 'month', // 'day' | 'week' | 'month' | 'year' | 'custom'
+    startDate: '',
+    endDate: '',
+    minAmount: null,
+    maxAmount: null
+};
+
+let filterDraft = {
+    kind: 'all',
+    dateMode: 'month',
+    pickerOpen: false,
+    startDate: '',
+    endDate: '',
+    anchorDate: '',
+    calYear: today.getFullYear(),
+    calMonth: today.getMonth(), // 0-11
+    pickerYear: today.getFullYear(),
+    pickerMonth: today.getMonth() // 0-11
+};
+
+const utilityAccordionConfig = [
     { btnId: 'toggleRemitBtn', containerId: 'remitContainer', iconId: 'toggleRemitIcon', cardEl: 'remittancesCard' },
     { btnId: 'toggleInstallmentsBtn', containerId: 'installmentsContainer', iconId: 'toggleInstallmentsIcon', cardEl: 'installmentsCard' },
     { btnId: 'toggleDayCounterBtn', containerId: 'dayCounterContainer', iconId: 'toggleDayCounterIcon', cardEl: 'dayCounterCard' }
 ];
 
-const today = new Date();
-const pad = (number) => String(number).padStart(2, '0');
-const currentMonth = `${today.getFullYear()}-${pad(today.getMonth() + 1)}`;
+function setFinanceViewMode(mode) {
+    activeFinanceViewMode = mode === 'categories' ? 'categories' : 'movements'; //[cite: 11]
+    selectedDonutCategory = null; //[cite: 11]
+
+    const btnMov = $('switchModeMovements'); //[cite: 11]
+    const btnCat = $('switchModeCategories'); //[cite: 11]
+    const titleEl = $('activeViewTitle'); //[cite: 11]
+    const movContainer = $('movementsContainer'); //[cite: 11]
+    const catContainer = $('categoriesContainer'); //[cite: 11]
+    const editCatsBtn = $('editCategoriesBtn'); //[cite: 11]
+    const addBtn = $('addBtn'); //[cite: 11]
+
+    const isCategories = activeFinanceViewMode === 'categories'; //[cite: 11]
+
+    btnMov?.classList.toggle('active', !isCategories); //[cite: 11]
+    btnMov?.setAttribute('aria-selected', String(!isCategories)); //[cite: 11]
+
+    btnCat?.classList.toggle('active', isCategories); //[cite: 11]
+    btnCat?.setAttribute('aria-selected', String(isCategories)); //[cite: 11]
+
+    if (titleEl) {
+        titleEl.textContent = isCategories ? 'Categorías' : 'Movimientos'; //[cite: 11]
+    }
+
+    movContainer?.classList.toggle('is-hidden', isCategories); //[cite: 11]
+    catContainer?.classList.toggle('is-hidden', !isCategories); //[cite: 11]
+    editCatsBtn?.classList.toggle('is-hidden', !isCategories); //[cite: 11]
+    addBtn?.classList.toggle('is-hidden', isCategories); //[cite: 11]
+
+    render(); //[cite: 11]
+}
 
 /* ==========================================
    2. UTILIDADES DE FORMATO, FECHAS Y MODALES
@@ -235,19 +296,10 @@ function applyUtilitiesVisibility() {
     const showInst = utils.installments !== false;
     const showDays = utils.dayCounter !== false;
 
-    const metricsSection = $('metricsCardsSection');
-    if (metricsSection) {
-        metricsSection.style.display = showFinance ? '' : 'none';
-        metricsSection.style.marginBottom = showFinance ? '20px' : '0px';
-    }
-
-    if ($('movementsCard')) $('movementsCard').style.display = showFinance ? '' : 'none';
-    if ($('categoriesCard')) $('categoriesCard').style.display = showFinance ? '' : 'none';
-
     const financeLayout = $('financeManagerLayout');
     if (financeLayout) {
         financeLayout.style.display = showFinance ? '' : 'none';
-        financeLayout.style.marginBottom = showFinance ? '25px' : '0px';
+        financeLayout.style.marginBottom = showFinance ? '26px' : '0px';
     }
 
     if ($('remittancesCard')) $('remittancesCard').style.display = showRemit ? '' : 'none';
@@ -265,6 +317,8 @@ function updateCurrencyLabels() {
     const symbol = getCurrencySymbol(appConfig.currency);
     if ($('newAmountLabel')) $('newAmountLabel').textContent = `Importe (${symbol})`;
     if ($('editAmountLabel')) $('editAmountLabel').textContent = `Importe (${symbol})`;
+    if ($('filterCurrMin')) $('filterCurrMin').textContent = symbol;
+    if ($('filterCurrMax')) $('filterCurrMax').textContent = symbol;
 }
 
 const getSortedCategories = (kind) =>
@@ -279,35 +333,15 @@ function updateCategoryOptions(prefix) {
         .join('');
 }
 
-function updateMovementFilterOptions() {
-    const filterSelect = $('movementFilter');
-    if (!filterSelect) return;
-
-    const currentSelection = filterSelect.value || 'all';
-    const expenseCats = getSortedCategories('expense');
-    const incomeCats = getSortedCategories('income');
-
-    filterSelect.innerHTML = `
-        <option value="all">Todos</option>
-        <optgroup label="Gastos">
-            <option value="type:expense">Todos los gastos</option>
-            ${expenseCats.map(c => `<option value="cat:expense:${escapeHtml(c.name)}">- ${escapeHtml(c.name)}</option>`).join('')}
-        </optgroup>
-        <optgroup label="Ingresos">
-            <option value="type:income">Todos los ingresos</option>
-            ${incomeCats.map(c => `<option value="cat:income:${escapeHtml(c.name)}">- ${escapeHtml(c.name)}</option>`).join('')}
-        </optgroup>
-    `;
-
-    const exists = Array.from(filterSelect.options).some(opt => opt.value === currentSelection);
-    filterSelect.value = exists ? currentSelection : 'all';
-}
-
 function refreshCategoryUI() {
     renderConfigCategories();
     updateCategoryOptions('new');
     updateCategoryOptions('edit');
-    updateMovementFilterOptions();
+    if (movementFilters.kind !== 'all' && movementFilters.category !== 'all') {
+        const stillExists = getSortedCategories(movementFilters.kind).some(c => c.name === movementFilters.category);
+        if (!stillExists) movementFilters.category = 'all';
+    }
+    updateFilterButtonIndicator();
     render();
 }
 
@@ -331,14 +365,10 @@ function collapseAllInternalCards() {
     }
 }
 
-function toggleMainAccordionById(containerId, iconId, cardId) {
+function toggleUtilityAccordionById(containerId, iconId, cardId) {
     const now = Date.now();
     if (now - lastAccordionToggleAt < 180) return;
     lastAccordionToggleAt = now;
-
-    if (selectedDonutCategory !== null) {
-        selectedDonutCategory = null;
-    }
 
     const container = $(containerId);
     const icon = $(iconId);
@@ -347,7 +377,7 @@ function toggleMainAccordionById(containerId, iconId, cardId) {
 
     const willBeExpanded = container.style.display !== 'block';
 
-    accordionConfig.forEach(item => {
+    utilityAccordionConfig.forEach(item => {
         const c = $(item.containerId);
         const ic = $(item.iconId);
         const cr = $(item.cardEl);
@@ -367,7 +397,6 @@ function toggleMainAccordionById(containerId, iconId, cardId) {
     }
 
     collapseAllInternalCards();
-    renderCategoriesRedesign();
 
     if (willBeExpanded && card && window.innerWidth <= 760) {
         requestAnimationFrame(() => {
@@ -376,7 +405,7 @@ function toggleMainAccordionById(containerId, iconId, cardId) {
     }
 }
 
-function setupMainAccordion(btnId, containerId, iconId, cardId) {
+function setupUtilityAccordion(btnId, containerId, iconId, cardId) {
     const btn = $(btnId);
     const card = $(cardId);
     const container = $(containerId);
@@ -384,12 +413,12 @@ function setupMainAccordion(btnId, containerId, iconId, cardId) {
 
     btn?.addEventListener('click', (e) => {
         e.stopPropagation();
-        toggleMainAccordionById(containerId, iconId, cardId);
+        toggleUtilityAccordionById(containerId, iconId, cardId);
     });
 
     heading?.addEventListener('click', (e) => {
-        if (e.target.closest('button, input, select, textarea, a, label, .movement-controls')) return;
-        toggleMainAccordionById(containerId, iconId, cardId);
+        if (e.target.closest('button, input, select, textarea, a, label')) return;
+        toggleUtilityAccordionById(containerId, iconId, cardId);
     });
 
     container?.addEventListener('click', (e) => e.stopPropagation());
@@ -750,8 +779,431 @@ function applyImportSelection(selection) {
 }
 
 /* ==========================================
-   5. MOVIMIENTOS, BARRA DE USO Y CATEGORÍAS
+   5. MOVIMIENTOS, FILTROS (DÍA/SEMANA/MES/AÑO/RANGO), BARRA DE USO Y CATEGORÍAS
    ========================================== */
+function getMonthBounds(monthStr) {
+    const [y, m] = (monthStr || currentMonth).split('-').map(Number);
+    const firstDay = `${y}-${pad(m)}-01`;
+    const lastDayNum = new Date(y, m, 0).getDate();
+    const lastDay = `${y}-${pad(m)}-${pad(lastDayNum)}`;
+    return { start: firstDay, end: lastDay };
+}
+
+function toIsoDateLocal(dateObj) {
+    return `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}`;
+}
+
+function parseIsoParts(isoStr) {
+    const [y, m, d] = String(isoStr || '').split('-').map(Number);
+    if (!y || !m || !d) return null;
+    return { y, m, d };
+}
+
+function toIsoFromParts(y, mZeroBased, d) {
+    return `${y}-${pad(mZeroBased + 1)}-${pad(d)}`;
+}
+
+function getMonthRangeIso(year, monthZeroBased) {
+    const startDate = toIsoFromParts(year, monthZeroBased, 1);
+    const lastDay = new Date(year, monthZeroBased + 1, 0).getDate();
+    const endDate = toIsoFromParts(year, monthZeroBased, lastDay);
+    return { startDate, endDate };
+}
+
+function getYearRangeIso(year) {
+    return {
+        startDate: `${year}-01-01`,
+        endDate: `${year}-12-31`
+    };
+}
+
+function getMondayToSundayWeekRange(isoDateStr) {
+    const parts = parseIsoParts(isoDateStr) || {
+        y: today.getFullYear(),
+        m: today.getMonth() + 1,
+        d: today.getDate()
+    };
+    const jsDay = new Date(parts.y, parts.m - 1, parts.d).getDay(); // 0=Dom, 1=Lun ... 6=Sáb
+    const diffFromMonday = (jsDay + 6) % 7;
+
+    const monday = new Date(parts.y, parts.m - 1, parts.d - diffFromMonday);
+    const sunday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 6);
+
+    return {
+        startDate: toIsoDateLocal(monday),
+        endDate: toIsoDateLocal(sunday)
+    };
+}
+
+function getAvailableFilterYears() {
+    const years = new Set();
+    for (let y = 1990; y <= 2050; y++) {
+        years.add(y);
+    }
+    movements.forEach(m => {
+        const y = Number(String(m.date || '').slice(0, 4));
+        if (y) years.add(y);
+    });
+    const pickerY = Number(filterDraft.pickerYear);
+    if (pickerY) years.add(pickerY);
+    return Array.from(years).sort((a, b) => a - b);
+}
+
+function computeRangeForMode(mode, seedDateStr, yearVal, monthZeroBased) {
+    const safeSeed = seedDateStr || toIsoDateLocal(today);
+    const seedParts = parseIsoParts(safeSeed) || {
+        y: today.getFullYear(),
+        m: today.getMonth() + 1,
+        d: today.getDate()
+    };
+
+    if (mode === 'day') {
+        return { startDate: safeSeed, endDate: safeSeed, anchorDate: safeSeed };
+    }
+    if (mode === 'week') {
+        const wk = getMondayToSundayWeekRange(safeSeed);
+        return { startDate: wk.startDate, endDate: wk.endDate, anchorDate: safeSeed };
+    }
+    if (mode === 'year') {
+        const yr = getYearRangeIso(yearVal);
+        return { startDate: yr.startDate, endDate: yr.endDate, anchorDate: safeSeed };
+    }
+    if (mode === 'custom') {
+        const fallbackMonth = getMonthRangeIso(yearVal, monthZeroBased);
+        return {
+            startDate: filterDraft.startDate || fallbackMonth.startDate,
+            endDate: filterDraft.endDate || fallbackMonth.endDate,
+            anchorDate: safeSeed
+        };
+    }
+    const mr = getMonthRangeIso(yearVal, monthZeroBased);
+    const clampedDay = Math.min(seedParts.d, new Date(yearVal, monthZeroBased + 1, 0).getDate());
+    return {
+        startDate: mr.startDate,
+        endDate: mr.endDate,
+        anchorDate: toIsoFromParts(yearVal, monthZeroBased, clampedDay)
+    };
+}
+
+function scrollActiveWheelOptionsIntoView() {
+    requestAnimationFrame(() => {
+        const panel = $('filterDatePickerPanel');
+        panel?.querySelectorAll('.filter-wheel-col').forEach(col => {
+            const activeOpt = col.querySelector('.filter-wheel-option.active');
+            if (activeOpt) {
+                activeOpt.scrollIntoView({ block: 'center', behavior: 'instant' });
+            }
+        });
+    });
+}
+
+function renderFilterDatePanel() {
+    const panel = $('filterDatePickerPanel');
+    if (!panel) return;
+
+    document.querySelectorAll('#filterDlg .filter-date-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.dateMode === filterDraft.dateMode);
+    });
+
+    if (!filterDraft.pickerOpen) {
+        panel.classList.add('is-hidden');
+        panel.innerHTML = '';
+        return;
+    }
+
+    panel.classList.remove('is-hidden');
+
+    if (filterDraft.dateMode === 'day' || filterDraft.dateMode === 'week') {
+        const { calYear, calMonth, anchorDate, startDate, endDate } = filterDraft;
+        const firstOfMonth = new Date(calYear, calMonth, 1);
+        const startOffset = (firstOfMonth.getDay() + 6) % 7; // 0 = Lunes
+        const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+        const prevMonthDays = new Date(calYear, calMonth, 0).getDate();
+        const todayIso = toIsoDateLocal(today);
+
+        const cells = [];
+        for (let i = startOffset - 1; i >= 0; i--) {
+            const dNum = prevMonthDays - i;
+            const prevM = calMonth === 0 ? 11 : calMonth - 1;
+            const prevY = calMonth === 0 ? calYear - 1 : calYear;
+            cells.push({ iso: toIsoFromParts(prevY, prevM, dNum), label: dNum, outside: true });
+        }
+        for (let dNum = 1; dNum <= daysInMonth; dNum++) {
+            cells.push({ iso: toIsoFromParts(calYear, calMonth, dNum), label: dNum, outside: false });
+        }
+        const remainder = cells.length % 7;
+        if (remainder !== 0) {
+            const nextCount = 7 - remainder;
+            const nextM = calMonth === 11 ? 0 : calMonth + 1;
+            const nextY = calMonth === 11 ? calYear + 1 : calYear;
+            for (let dNum = 1; dNum <= nextCount; dNum++) {
+                cells.push({ iso: toIsoFromParts(nextY, nextM, dNum), label: dNum, outside: true });
+            }
+        }
+
+        const daysHtml = cells.map((c, idx) => {
+            const isSelected = filterDraft.dateMode === 'day' && c.iso === anchorDate;
+            const isInWeek = filterDraft.dateMode === 'week' && startDate && endDate && c.iso >= startDate && c.iso <= endDate;
+            const isWeekStart = isInWeek && (idx % 7 === 0 || c.iso === startDate);
+            const isWeekEnd = isInWeek && (idx % 7 === 6 || c.iso === endDate);
+            const isToday = c.iso === todayIso;
+
+            const classes = [
+                'filter-cal-day',
+                c.outside ? 'is-outside' : '',
+                isToday ? 'is-today' : '',
+                isInWeek ? 'is-in-week' : '',
+                isWeekStart ? 'is-week-start' : '',
+                isWeekEnd ? 'is-week-end' : '',
+                isSelected ? 'is-selected' : ''
+            ].filter(Boolean).join(' ');
+
+            return `<button type="button" class="${classes}" data-cal-iso="${c.iso}">${c.label}</button>`;
+        }).join('');
+
+        panel.innerHTML = `
+            <div class="filter-cal-header">
+                <span class="filter-cal-title">${SPANISH_MONTH_NAMES[calMonth]} ${calYear}</span>
+                <div class="filter-cal-nav">
+                    <button type="button" class="filter-cal-nav-btn" data-cal-nav="prev" aria-label="Mes anterior">‹</button>
+                    <button type="button" class="filter-cal-nav-btn" data-cal-nav="next" aria-label="Mes siguiente">›</button>
+                </div>
+            </div>
+            <div class="filter-cal-weekdays">
+                ${WEEKDAY_LABELS_MON.map(w => `<span class="filter-cal-weekday">${w}</span>`).join('')}
+            </div>
+            <div class="filter-cal-grid">${daysHtml}</div>
+        `;
+    } else if (filterDraft.dateMode === 'month') {
+        const years = getAvailableFilterYears();
+        const monthsHtml = SPANISH_MONTH_NAMES.map((name, idx) => `
+            <button type="button" class="filter-wheel-option ${idx === filterDraft.pickerMonth ? 'active' : ''}" data-pick-month="${idx}">${name}</button>
+        `).join('');
+
+        const yearsHtml = years.map(y => `
+            <button type="button" class="filter-wheel-option ${y === filterDraft.pickerYear ? 'active' : ''}" data-pick-year="${y}">${y}</button>
+        `).join('');
+
+        panel.innerHTML = `
+            <div class="filter-picker-cols">
+                <div class="filter-wheel-col" id="filterMonthCol">${monthsHtml}</div>
+                <div class="filter-wheel-col" id="filterYearCol">${yearsHtml}</div>
+            </div>
+        `;
+        scrollActiveWheelOptionsIntoView();
+    } else if (filterDraft.dateMode === 'year') {
+        const years = getAvailableFilterYears();
+        const yearsHtml = years.map(y => `
+            <button type="button" class="filter-wheel-option ${y === filterDraft.pickerYear ? 'active' : ''}" data-pick-year="${y}">${y}</button>
+        `).join('');
+
+        panel.innerHTML = `
+            <div class="filter-picker-cols single-col">
+                <div class="filter-wheel-col" id="filterYearCol">${yearsHtml}</div>
+            </div>
+        `;
+        scrollActiveWheelOptionsIntoView();
+    } else if (filterDraft.dateMode === 'custom') {
+        panel.innerHTML = `
+            <div class="filter-two-cols">
+                <div class="field">
+                    <label for="filterStartDate">Desde</label>
+                    <input type="date" id="filterStartDate" value="${escapeHtml(filterDraft.startDate || '')}">
+                </div>
+                <div class="field">
+                    <label for="filterEndDate">Hasta</label>
+                    <input type="date" id="filterEndDate" value="${escapeHtml(filterDraft.endDate || '')}">
+                </div>
+            </div>
+        `;
+    }
+}
+
+function handleFilterDateTabClick(newMode) {
+    filterDraft.dateMode = newMode;
+    filterDraft.pickerOpen = true;
+
+    if (newMode === 'day' || newMode === 'week') {
+        const curYear = today.getFullYear();
+        const curMonth = today.getMonth();
+        const curDay = today.getDate();
+        const seedIso = toIsoFromParts(curYear, curMonth, curDay);
+
+        filterDraft.calYear = curYear;
+        filterDraft.calMonth = curMonth;
+        filterDraft.pickerYear = curYear;
+        filterDraft.pickerMonth = curMonth;
+
+        const computed = computeRangeForMode(newMode, seedIso, curYear, curMonth);
+        filterDraft.startDate = computed.startDate;
+        filterDraft.endDate = computed.endDate;
+        filterDraft.anchorDate = computed.anchorDate;
+    } else {
+        const refParts = parseIsoParts(filterDraft.startDate || filterDraft.anchorDate) || {
+            y: today.getFullYear(),
+            m: today.getMonth() + 1,
+            d: today.getDate()
+        };
+        filterDraft.calYear = refParts.y;
+        filterDraft.calMonth = refParts.m - 1;
+        filterDraft.pickerYear = refParts.y;
+        filterDraft.pickerMonth = refParts.m - 1;
+
+        const computed = computeRangeForMode(
+            newMode,
+            filterDraft.anchorDate || toIsoDateLocal(today),
+            filterDraft.pickerYear,
+            filterDraft.pickerMonth
+        );
+        filterDraft.startDate = computed.startDate;
+        filterDraft.endDate = computed.endDate;
+        filterDraft.anchorDate = computed.anchorDate;
+    }
+
+    renderFilterDatePanel();
+}
+
+function populateFilterCategorySelect(kind, selectedCat = 'all') {
+    const box = $('filterCategoryBox');
+    const label = $('filterCategoryLabel');
+    const select = $('filterCategorySelect');
+    if (!box || !label || !select) return;
+
+    if (kind === 'all') {
+        box.classList.add('is-hidden');
+        select.innerHTML = '<option value="all">Todas las categorías</option>';
+        select.value = 'all';
+        return;
+    }
+
+    const cats = getSortedCategories(kind);
+    label.textContent = kind === 'income' ? 'Categoría de ingresos' : 'Categoría de gastos';
+    select.innerHTML = [
+        `<option value="all">${kind === 'income' ? 'Todos los ingresos' : 'Todos los gastos'}</option>`,
+        ...cats.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`)
+    ].join('');
+
+    const exists = Array.from(select.options).some(o => o.value === selectedCat);
+    select.value = exists ? selectedCat : 'all';
+    box.classList.remove('is-hidden');
+}
+
+function syncFilterUIState(kind) {
+    document.querySelectorAll('#filterDlg .filter-seg-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filterKind === kind);
+    });
+}
+
+function updateFilterButtonIndicator() {
+    const btn = $('openFilterBtn');
+    if (!btn) return;
+
+    const bounds = getMonthBounds(currentMonth);
+    const isDefaultMonth =
+        (movementFilters.dateMode === 'month' && movementFilters.startDate === bounds.start && movementFilters.endDate === bounds.end) ||
+        (!movementFilters.startDate && !movementFilters.endDate && movementFilters.dateMode === 'month');
+
+    const isCustom =
+        Boolean(movementFilters.query.trim()) ||
+        movementFilters.kind !== 'all' ||
+        movementFilters.category !== 'all' ||
+        !isDefaultMonth ||
+        movementFilters.minAmount !== null ||
+        movementFilters.maxAmount !== null;
+
+    btn.classList.toggle('has-active-filters', isCustom);
+}
+
+function openFilterDialog() {
+    const symbol = getCurrencySymbol(appConfig.currency);
+    if ($('filterCurrMin')) $('filterCurrMin').textContent = symbol;
+    if ($('filterCurrMax')) $('filterCurrMax').textContent = symbol;
+
+    if ($('filterSearchInput')) $('filterSearchInput').value = movementFilters.query || '';
+
+    const bounds = getMonthBounds(currentMonth);
+    const activeStart = movementFilters.startDate || bounds.start;
+    const activeEnd = movementFilters.endDate || bounds.end;
+    const refParts = parseIsoParts(activeStart) || {
+        y: today.getFullYear(),
+        m: today.getMonth() + 1,
+        d: today.getDate()
+    };
+
+    filterDraft = {
+        kind: movementFilters.kind || 'all',
+        dateMode: movementFilters.dateMode || 'month',
+        pickerOpen: false,
+        startDate: activeStart,
+        endDate: activeEnd,
+        anchorDate: activeStart,
+        calYear: refParts.y,
+        calMonth: refParts.m - 1,
+        pickerYear: refParts.y,
+        pickerMonth: refParts.m - 1
+    };
+
+    syncFilterUIState(filterDraft.kind);
+    populateFilterCategorySelect(filterDraft.kind, movementFilters.category);
+    renderFilterDatePanel();
+
+    if ($('filterMinAmount')) {
+        $('filterMinAmount').value = movementFilters.minAmount !== null
+            ? String(movementFilters.minAmount).replace('.', ',')
+            : '';
+    }
+    if ($('filterMaxAmount')) {
+        $('filterMaxAmount').value = movementFilters.maxAmount !== null
+            ? String(movementFilters.maxAmount).replace('.', ',')
+            : '';
+    }
+
+    openModal($('filterDlg'));
+}
+
+function resetFilterDialogToDefault() {
+    const bounds = getMonthBounds(currentMonth);
+    movementFilters = {
+        query: '',
+        kind: 'all',
+        category: 'all',
+        dateMode: 'month',
+        startDate: bounds.start,
+        endDate: bounds.end,
+        minAmount: null,
+        maxAmount: null
+    };
+    updateFilterButtonIndicator();
+    closeModal($('filterDlg'));
+    render();
+}
+
+function getFilteredMovements() {
+    const query = (movementFilters.query || '').trim().toLowerCase();
+    const bounds = getMonthBounds(currentMonth);
+    const startRange = movementFilters.startDate || bounds.start;
+    const endRange = movementFilters.endDate || bounds.end;
+
+    return movements
+        .filter(item => {
+            if (startRange && item.date < startRange) return false;
+            if (endRange && item.date > endRange) return false;
+
+            if (movementFilters.kind !== 'all' && item.kind !== movementFilters.kind) return false;
+            if (movementFilters.kind !== 'all' && movementFilters.category !== 'all' && item.category !== movementFilters.category) {
+                return false;
+            }
+
+            if (movementFilters.minAmount !== null && item.amount < movementFilters.minAmount) return false;
+            if (movementFilters.maxAmount !== null && item.amount > movementFilters.maxAmount) return false;
+
+            if (query && !`${item.desc} ${item.category} ${item.notes || ''}`.toLowerCase().includes(query)) return false;
+
+            return true;
+        })
+        .sort((a, b) => b.date.localeCompare(a.date) || (b.timestamp || 0) - (a.timestamp || 0));
+}
+
 function updateCashflowUsageBar(totalIncome, totalExpenses) {
     const incomeFillEl = $('cashflowIncomeFill');
     const expenseFillEl = $('cashflowExpenseFill');
@@ -841,12 +1293,11 @@ function getCategoryMeta(kind, name) {
     return { color, accentColor: color, iconSvg };
 }
 
-function renderCategoriesRedesign() {
-    const month = $('month').value;
-    const activeMonthMovements = movements.filter(item => item.date.startsWith(month) && item.kind === currentCatKind);
+function renderCategoriesRedesign(sourceMovements = getFilteredMovements()) {
+    const activeMovements = sourceMovements.filter(item => item.kind === currentCatKind);
 
     const categoryTotals = {};
-    activeMonthMovements.forEach(item => {
+    activeMovements.forEach(item => {
         categoryTotals[item.category] = (categoryTotals[item.category] || 0) + item.amount;
     });
 
@@ -869,7 +1320,7 @@ function renderCategoriesRedesign() {
             `;
         }
         if (listContainer) {
-            listContainer.innerHTML = '<div class="empty">Añade movimientos para ver el desglose.</div>';
+            listContainer.innerHTML = `<div class="empty">No hay ${currentCatKind === 'expense' ? 'gastos' : 'ingresos'} en la selección actual.</div>`;
         }
         return;
     }
@@ -955,12 +1406,11 @@ function renderCategoriesRedesign() {
 }
 
 function render() {
-    const month = $('month').value;
-    const monthMovements = movements.filter(item => item.date.startsWith(month));
+    const visibleMovements = getFilteredMovements();
 
     let totalIncome = 0;
     let totalExpenses = 0;
-    monthMovements.forEach(item => {
+    visibleMovements.forEach(item => {
         if (item.kind === 'income') totalIncome += item.amount;
         else totalExpenses += item.amount;
     });
@@ -969,23 +1419,7 @@ function render() {
     $('expense').textContent = formatMoney(totalExpenses);
     $('balance').textContent = formatMoney(totalIncome - totalExpenses);
     updateCashflowUsageBar(totalIncome, totalExpenses);
-
-    const query = $('search').value.toLowerCase();
-    const filterVal = $('movementFilter')?.value || 'all';
-
-    const visibleMovements = monthMovements
-        .filter(item => {
-            if (query && !`${item.desc} ${item.category} ${item.notes || ''}`.toLowerCase().includes(query)) return false;
-            if (filterVal === 'all') return true;
-            if (filterVal === 'type:expense') return item.kind === 'expense';
-            if (filterVal === 'type:income') return item.kind === 'income';
-            if (filterVal.startsWith('cat:')) {
-                const [, kind, ...catParts] = filterVal.split(':');
-                return item.kind === kind && item.category === catParts.join(':');
-            }
-            return true;
-        })
-        .sort((a, b) => b.date.localeCompare(a.date) || (b.timestamp || 0) - (a.timestamp || 0));
+    updateFilterButtonIndicator();
 
     const formattedDates = visibleMovements.map(item =>
         new Date(item.date + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })
@@ -1012,7 +1446,7 @@ function render() {
             <tr class="movement-row ${borderClass}">
                 <td>
                     <div class="movement-name-wrapper">
-                        <span class="category-icon-wrapper" style="color: ${catColor}; width: 28px; height: 28px;">${iconSvg}</span>
+                        <span class="category-icon-wrapper" style="color: ${catColor};">${iconSvg}</span>
                         <span class="movement-title">${escapeHtml(item.desc)}</span>
                     </div>
                 </td>
@@ -1036,7 +1470,9 @@ function render() {
     $('rows').innerHTML = rowsHtml;
     $('empty').style.display = visibleMovements.length ? 'none' : 'block';
 
-    renderCategoriesRedesign();
+    if (activeFinanceViewMode === 'categories') {
+        renderCategoriesRedesign(visibleMovements);
+    }
 }
 
 /* ==========================================
@@ -1490,8 +1926,8 @@ function openNewMovement() {
     $('newForm')?.reset();
     if ($('newKind')) $('newKind').value = 'expense';
     updateCategoryOptions('new');
-    if ($('month') && $('newDate')) {
-        $('newDate').value = `${$('month').value}-${pad(today.getDate())}`;
+    if ($('newDate')) {
+        $('newDate').value = `${currentMonth}-${pad(today.getDate())}`;
     }
     clearValidationErrors($('newForm'));
     openModal($('newDlg'));
@@ -1628,11 +2064,121 @@ function selectCategoryIcon(iconKey, targetInputId, containerSelector) {
    10. REGISTRO DE LISTENERS E INICIALIZACIÓN
    ========================================== */
 function bindEvents() {
-    accordionConfig.forEach(item => {
-        setupMainAccordion(item.btnId, item.containerId, item.iconId, item.cardEl);
+    utilityAccordionConfig.forEach(item => {
+        setupUtilityAccordion(item.btnId, item.containerId, item.iconId, item.cardEl);
     });
 
     setupCategoryTabs();
+
+    $('switchModeMovements')?.addEventListener('click', () => setFinanceViewMode('movements'));
+    $('switchModeCategories')?.addEventListener('click', () => setFinanceViewMode('categories'));
+
+    /* --- Modal de Filtros --- */
+    $('openFilterBtn')?.addEventListener('click', openFilterDialog);
+    $('cancelFilterBtn')?.addEventListener('click', () => closeModal($('filterDlg')));
+    $('resetFiltersBtn')?.addEventListener('click', resetFilterDialogToDefault);
+
+    document.querySelectorAll('#filterDlg .filter-seg-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterDraft.kind = btn.dataset.filterKind;
+            syncFilterUIState(filterDraft.kind);
+            populateFilterCategorySelect(filterDraft.kind, 'all');
+        });
+    });
+
+    document.querySelectorAll('#filterDlg .filter-date-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            handleFilterDateTabClick(tab.dataset.dateMode);
+        });
+    });
+
+    $('filterDatePickerPanel')?.addEventListener('click', (e) => {
+        const navBtn = e.target.closest('[data-cal-nav]');
+        if (navBtn) {
+            const delta = navBtn.dataset.calNav === 'next' ? 1 : -1;
+            const nextDate = new Date(filterDraft.calYear, filterDraft.calMonth + delta, 1);
+            filterDraft.calYear = nextDate.getFullYear();
+            filterDraft.calMonth = nextDate.getMonth();
+            renderFilterDatePanel();
+            return;
+        }
+
+        const dayBtn = e.target.closest('[data-cal-iso]');
+        if (dayBtn) {
+            const iso = dayBtn.dataset.calIso;
+            const parts = parseIsoParts(iso);
+            if (parts) {
+                filterDraft.calYear = parts.y;
+                filterDraft.calMonth = parts.m - 1;
+                filterDraft.pickerYear = parts.y;
+                filterDraft.pickerMonth = parts.m - 1;
+            }
+            const computed = computeRangeForMode(filterDraft.dateMode, iso, filterDraft.pickerYear, filterDraft.pickerMonth);
+            filterDraft.startDate = computed.startDate;
+            filterDraft.endDate = computed.endDate;
+            filterDraft.anchorDate = computed.anchorDate;
+            renderFilterDatePanel();
+            return;
+        }
+
+        const monthBtn = e.target.closest('[data-pick-month]');
+        if (monthBtn) {
+            filterDraft.pickerMonth = Number(monthBtn.dataset.pickMonth);
+            const computed = computeRangeForMode('month', filterDraft.anchorDate, filterDraft.pickerYear, filterDraft.pickerMonth);
+            filterDraft.startDate = computed.startDate;
+            filterDraft.endDate = computed.endDate;
+            renderFilterDatePanel();
+            return;
+        }
+
+        const yearBtn = e.target.closest('[data-pick-year]');
+        if (yearBtn) {
+            filterDraft.pickerYear = Number(yearBtn.dataset.pickYear);
+            const computed = computeRangeForMode(filterDraft.dateMode, filterDraft.anchorDate, filterDraft.pickerYear, filterDraft.pickerMonth);
+            filterDraft.startDate = computed.startDate;
+            filterDraft.endDate = computed.endDate;
+            renderFilterDatePanel();
+        }
+    });
+
+    $('filterDatePickerPanel')?.addEventListener('change', (e) => {
+        if (e.target.id === 'filterStartDate') {
+            filterDraft.startDate = e.target.value;
+        } else if (e.target.id === 'filterEndDate') {
+            filterDraft.endDate = e.target.value;
+        }
+    });
+
+    $('filterForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const rawMin = $('filterMinAmount')?.value.trim() || '';
+        const rawMax = $('filterMaxAmount')?.value.trim() || '';
+
+        let finalStart = filterDraft.startDate;
+        let finalEnd = filterDraft.endDate;
+        if (filterDraft.dateMode === 'custom') {
+            finalStart = $('filterStartDate')?.value || '';
+            finalEnd = $('filterEndDate')?.value || '';
+            if (finalStart && finalEnd && finalStart > finalEnd) {
+                [finalStart, finalEnd] = [finalEnd, finalStart];
+            }
+        }
+
+        movementFilters = {
+            query: $('filterSearchInput')?.value.trim() || '',
+            kind: filterDraft.kind,
+            category: filterDraft.kind === 'all' ? 'all' : ($('filterCategorySelect')?.value || 'all'),
+            dateMode: filterDraft.dateMode,
+            startDate: finalStart,
+            endDate: finalEnd,
+            minAmount: rawMin ? parseInputNumber(rawMin) : null,
+            maxAmount: rawMax ? parseInputNumber(rawMax) : null
+        };
+
+        updateFilterButtonIndicator();
+        closeModal($('filterDlg'));
+        render();
+    });
 
     const usageBar = $('cashflowUsageBar');
     if (usageBar) {
@@ -1730,6 +2276,11 @@ function bindEvents() {
     $('editIconSelectorGrid')?.addEventListener('click', (e) => {
         const item = e.target.closest('.icon-option-item');
         if (item?.dataset.icon) selectCategoryIcon(item.dataset.icon, 'editCatIcon', '#editIconSelectorGrid');
+    });
+
+    $('iconSelectorGrid')?.addEventListener('click', (e) => {
+        const item = e.target.closest('.icon-option-item');
+        if (item?.dataset.icon) selectCategoryIcon(item.dataset.icon, 'newCatIcon', '#iconSelectorGrid');
     });
 
     $('categoryManagerList')?.addEventListener('click', (e) => {
@@ -2199,126 +2750,72 @@ function bindEvents() {
     $('newKind')?.addEventListener('change', () => updateCategoryOptions('new'));
     $('editKind')?.addEventListener('change', () => updateCategoryOptions('edit'));
 
-    $('month')?.addEventListener('change', render);
-    $('search')?.addEventListener('input', render);
-    $('movementFilter')?.addEventListener('change', render);
     $('closeDetailBtn')?.addEventListener('click', () => closeModal($('detailDlg')));
 
-    $('rows')?.addEventListener('click', event => {
-        const editBtn = event.target.closest('[data-edit]');
-        if (editBtn) return editMovement(editBtn.dataset.edit);
+    $('rows')?.addEventListener('click', (e) => {
+        const editBtn = e.target.closest('button[data-edit]');
+        if (editBtn) {
+            e.stopPropagation();
+            return editMovement(editBtn.dataset.edit);
+        }
 
-        const itemBtn = event.target.closest('.movement-row')?.querySelector('[data-edit]');
-        if (itemBtn) showMovementDetail(itemBtn.dataset.edit);
+        const row = e.target.closest('tr.movement-row');
+        const id = row?.querySelector('button[data-edit]')?.dataset.edit;
+        if (id) showMovementDetail(id);
     });
 
-    $('newForm')?.addEventListener('submit', event => {
-        event.preventDefault();
-        const descInput = $('newDesc');
-        const amountInput = $('newAmount');
-        const dateInput = $('newDate');
+    $('newForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!validateRequiredFields(e.target, [$('newDesc'), $('newAmount'), $('newDate')])) return;
 
-        if (!validateRequiredFields(event.target, [descInput, amountInput, dateInput])) return;
+        const desc = $('newDesc').value.trim();
+        const amount = Number($('newAmount').value);
+        const date = $('newDate').value;
+        if (!desc || !(amount > 0) || !date) return;
 
-        const item = {
+        movements.push({
             id: crypto.randomUUID(),
             timestamp: Date.now(),
-            desc: descInput.value.trim(),
+            desc,
             kind: $('newKind').value,
-            amount: Math.round(Number(amountInput.value) * 100) / 100,
-            date: dateInput.value,
+            amount: Math.round(amount * 100) / 100,
+            date,
             category: $('newCategory').value,
             notes: $('newNotes').value.trim()
-        };
+        });
 
-        movements.push(item);
         persist();
-        clearValidationErrors($('newForm'));
         closeModal($('newDlg'));
-        if ($('month')) $('month').value = item.date.slice(0, 7);
         render();
     });
 
-    $('editForm')?.addEventListener('submit', event => {
-        event.preventDefault();
-        if (!editingId) return;
+    $('editForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!validateRequiredFields(e.target, [$('editDesc'), $('editAmount'), $('editDate')])) return;
 
-        const descInput = $('editDesc');
-        const amountInput = $('editAmount');
-        const dateInput = $('editDate');
+        const desc = $('editDesc').value.trim();
+        const amount = Number($('editAmount').value);
+        const date = $('editDate').value;
+        if (!desc || !(amount > 0) || !date || !editingId) return;
 
-        if (!validateRequiredFields(event.target, [descInput, amountInput, dateInput])) return;
-
-        const existingItem = movements.find(m => m.id === editingId);
-        const item = {
-            id: editingId,
-            timestamp: existingItem?.timestamp || Date.now(),
-            desc: descInput.value.trim(),
+        movements = movements.map(item => item.id === editingId ? {
+            ...item,
+            desc,
             kind: $('editKind').value,
-            amount: Math.round(Number(amountInput.value) * 100) / 100,
-            date: dateInput.value,
+            amount: Math.round(amount * 100) / 100,
+            date,
             category: $('editCategory').value,
             notes: $('editNotes').value.trim()
-        };
+        } : item);
 
-        movements = movements.map(existing => existing.id === editingId ? item : existing);
         persist();
-        clearValidationErrors($('editForm'));
         closeModal($('editDlg'));
         render();
     });
 
-    $('configBtn')?.addEventListener('click', () => {
-        $('userNameInput').value = appConfig.userName;
-        $('currencySelect').value = appConfig.currency || 'EUR';
-        $('themeSelect').value = appConfig.theme || 'light';
-
-        const utils = appConfig.utilities || { financeManager: true, remittances: true, installments: true, dayCounter: true };
-        if ($('toggleUtilFinanceManager')) $('toggleUtilFinanceManager').checked = utils.financeManager !== false;
-        if ($('toggleUtilRemit')) $('toggleUtilRemit').checked = utils.remittances !== false;
-        if ($('toggleUtilInstallments')) $('toggleUtilInstallments').checked = utils.installments !== false;
-        if ($('toggleUtilDayCounter')) $('toggleUtilDayCounter').checked = utils.dayCounter !== false;
-
-        openModal($('configDlg'));
-    });
-
-    $('saveConfigBtn')?.addEventListener('click', () => {
-        const newName = $('userNameInput').value.trim();
-        if (newName) appConfig.userName = newName;
-        appConfig.currency = $('currencySelect').value;
-        appConfig.theme = $('themeSelect').value;
-
-        appConfig.utilities = {
-            financeManager: $('toggleUtilFinanceManager')?.checked ?? true,
-            remittances: $('toggleUtilRemit')?.checked ?? true,
-            installments: $('toggleUtilInstallments')?.checked ?? true,
-            dayCounter: $('toggleUtilDayCounter')?.checked ?? true
-        };
-
-        persistConfig();
-        refreshCategoryUI();
-        closeModal($('configDlg'));
-    });
-
-    $('cancelConfigBtn')?.addEventListener('click', () => closeModal($('configDlg')));
-
-    $('editCategoriesBtn')?.addEventListener('click', () => {
-        renderConfigCategories();
-        clearValidationErrors($('categoriesDlg'));
-        openModal($('categoriesDlg'));
-    });
-
-    $('closeCategoriesDlg')?.addEventListener('click', () => {
-        clearValidationErrors($('categoriesDlg'));
-        closeModal($('categoriesDlg'));
-    });
-
     $('addRemittanceBtn')?.addEventListener('click', () => {
         $('remitNewForm')?.reset();
-        if ($('newRemitName')) {
-            const monthName = today.toLocaleDateString('es-ES', { month: 'long' });
-            $('newRemitName').value = `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} ${today.getFullYear()}`;
-        }
+        $('newRemitName').value = `Remesa #${remittancesList.length + 1}`;
         clearValidationErrors($('remitNewForm'));
         openModal($('remitNewDlg'));
     });
@@ -2330,13 +2827,12 @@ function bindEvents() {
 
     $('remitNewForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        const remitNameInput = $('newRemitName');
-        if (!validateRequiredFields(e.target, [remitNameInput])) return;
+        if (!validateRequiredFields(e.target, [$('newRemitName')])) return;
 
-        const newRemId = crypto.randomUUID();
+        const newRemitId = crypto.randomUUID();
         remittancesList.push({
-            id: newRemId,
-            name: remitNameInput.value.trim(),
+            id: newRemitId,
+            name: $('newRemitName').value.trim(),
             sendCurr: $('newRemitSendCurr').value,
             recvCurr: $('newRemitRecvCurr').value,
             tc: 3.75,
@@ -2344,24 +2840,25 @@ function bindEvents() {
             expanded: true,
             items: []
         });
+
         persistRemittancesList();
-        clearValidationErrors($('remitNewForm'));
         closeModal($('remitNewDlg'));
         renderRemittancesList();
-        scrollCardIntoView($(`remit_box_${newRemId}`), true);
+        scrollCardIntoView($(`remit_box_${newRemitId}`), true);
     });
 
-    ['new', 'edit'].forEach(prefix => {
-        ['FinancedAmount', 'InterestAmount', 'TotalCount'].forEach(field => {
-            $(`${prefix}Inst${field}`)?.addEventListener('input', () => autoCalculateInstallment(prefix));
-        });
+    ['newInstFinancedAmount', 'newInstInterestAmount', 'newInstTotalCount'].forEach(id => {
+        $(id)?.addEventListener('input', () => autoCalculateInstallment('new'));
+    });
+
+    ['editInstFinancedAmount', 'editInstInterestAmount', 'editInstTotalCount'].forEach(id => {
+        $(id)?.addEventListener('input', () => autoCalculateInstallment('edit'));
     });
 
     $('addInstallmentPurchaseBtn')?.addEventListener('click', () => {
         $('installmentNewForm')?.reset();
-        if ($('newInstFirstDate')) {
-            $('newInstFirstDate').value = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
-        }
+        if ($('newInstCurrency')) $('newInstCurrency').value = appConfig.currency || 'EUR';
+        if ($('newInstFirstDate')) $('newInstFirstDate').value = `${currentMonth}-${pad(today.getDate())}`;
         clearValidationErrors($('installmentNewForm'));
         openModal($('installmentNewDlg'));
     });
@@ -2373,65 +2870,131 @@ function bindEvents() {
 
     $('installmentNewForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        const data = readInstallmentForm('new');
-        if (!data) return;
+        const formData = readInstallmentForm('new');
+        if (!formData) return;
 
+        const newPurchaseId = crypto.randomUUID();
         installmentsPurchases.push({
-            id: crypto.randomUUID(),
-            ...data,
-            expanded: false,
-            installments: buildInstallmentsArray(data.totalCount, data.regularAmount, data.finalAmount, data.firstDate)
+            id: newPurchaseId,
+            ...formData,
+            expanded: true,
+            installments: buildInstallmentsArray(formData.totalCount, formData.regularAmount, formData.finalAmount, formData.firstDate)
         });
 
         persistInstallments();
-        clearValidationErrors($('installmentNewForm'));
         closeModal($('installmentNewDlg'));
         renderInstallments();
+        scrollCardIntoView($(`purchase_box_${newPurchaseId}`), true);
     });
 
     $('installmentEditForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
         if (!editingInstallmentId) return;
 
-        const data = readInstallmentForm('edit');
-        if (!data) return;
-
-        const existing = installmentsPurchases.find(p => p.id === editingInstallmentId);
-        const updatedInstallments = buildInstallmentsArray(data.totalCount, data.regularAmount, data.finalAmount, data.firstDate, existing?.installments);
+        const formData = readInstallmentForm('edit');
+        if (!formData) return;
 
         installmentsPurchases = installmentsPurchases.map(p => p.id === editingInstallmentId ? {
             ...p,
-            ...data,
-            installments: updatedInstallments
+            ...formData,
+            installments: buildInstallmentsArray(formData.totalCount, formData.regularAmount, formData.finalAmount, formData.firstDate, p.installments)
         } : p);
 
         persistInstallments();
-        clearValidationErrors($('installmentEditForm'));
         closeModal($('installmentEditDlg'));
         renderInstallments();
     });
+
+    $('configBtn')?.addEventListener('click', () => {
+        $('userNameInput').value = appConfig.userName;
+        $('currencySelect').value = appConfig.currency;
+        $('themeSelect').value = appConfig.theme;
+
+        const utils = appConfig.utilities || { financeManager: true, remittances: true, installments: true, dayCounter: true };
+        if ($('toggleUtilFinanceManager')) $('toggleUtilFinanceManager').checked = utils.financeManager !== false;
+        if ($('toggleUtilRemit')) $('toggleUtilRemit').checked = utils.remittances !== false;
+        if ($('toggleUtilInstallments')) $('toggleUtilInstallments').checked = utils.installments !== false;
+        if ($('toggleUtilDayCounter')) $('toggleUtilDayCounter').checked = utils.dayCounter !== false;
+
+        openModal($('configDlg'));
+    });
+
+    $('cancelConfigBtn')?.addEventListener('click', () => closeModal($('configDlg')));
+
+    $('saveConfigBtn')?.addEventListener('click', () => {
+        appConfig.userName = $('userNameInput').value.trim() || 'Invitado';
+        appConfig.currency = $('currencySelect').value;
+        appConfig.theme = $('themeSelect').value;
+        appConfig.utilities = {
+            financeManager: $('toggleUtilFinanceManager') ? $('toggleUtilFinanceManager').checked : true,
+            remittances: $('toggleUtilRemit') ? $('toggleUtilRemit').checked : true,
+            installments: $('toggleUtilInstallments') ? $('toggleUtilInstallments').checked : true,
+            dayCounter: $('toggleUtilDayCounter') ? $('toggleUtilDayCounter').checked : true
+        };
+
+        persistConfig();
+        render();
+        closeModal($('configDlg'));
+    });
+
+    $('editCategoriesBtn')?.addEventListener('click', () => {
+        renderConfigCategories();
+        openModal($('categoriesDlg'));
+    });
+
+    $('closeCategoriesDlg')?.addEventListener('click', () => closeModal($('categoriesDlg')));
+
+    document.querySelectorAll('dialog').forEach(dlg => {
+        dlg.addEventListener('click', (e) => {
+            if (e.target === dlg) closeModal(dlg);
+        });
+        dlg.addEventListener('close', () => {
+            if (!document.querySelector('dialog[open]')) {
+                document.body.classList.remove('no-scroll');
+            }
+        });
+    });
+
+    document.addEventListener('input', (e) => e.target.classList?.remove('input-error'));
 }
 
+/* ==========================================
+   11. ARRANQUE DE LA APLICACIÓN
+   ========================================== */
 function init() {
-    if ($('month')) $('month').value = currentMonth;
-    if ($('newDate')) $('newDate').value = `${currentMonth}-${pad(today.getDate())}`;
+    if (!appConfig.utilities) {
+        appConfig.utilities = { financeManager: true, remittances: true, installments: true, dayCounter: true };
+    } else if (typeof appConfig.utilities.financeManager === 'undefined') {
+        appConfig.utilities.financeManager = true;
+    }
 
-    $('movementsCard')?.classList.add('expanded');
-    if ($('movementsContainer')) $('movementsContainer').style.display = 'block';
-    if ($('toggleMovementsIcon')) $('toggleMovementsIcon').innerHTML = '<polyline points="18 15 12 9 6 15"></polyline>';
+    ['expense', 'income'].forEach(kind => {
+        appConfig.categories[kind] = (appConfig.categories[kind] || []).map(c =>
+            typeof c === 'string' ? { name: c, color: '#03DAC6', icon: 'Compras' } : c
+        );
+    });
 
-    bindEvents();
+    updateUserDisplay();
     applyTheme();
     applyUtilitiesVisibility();
-    updateUserDisplay();
     updateCurrencyLabels();
     updateCategoryOptions('new');
     updateCategoryOptions('edit');
-    updateMovementFilterOptions();
+
+    bindEvents();
+    setFinanceViewMode('movements');
     renderRemittancesList();
     renderInstallments();
     renderDayCounter();
-    render();
+
+    document.querySelectorAll('.table-wrapper').forEach(wrapper => {
+        let scrollTimeout;
+        wrapper.addEventListener('scroll', () => {
+            wrapper.classList.add('is-scrolling');
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => wrapper.classList.remove('is-scrolling'), 800);
+        }, { passive: true });
+    });
 }
 
 init();
