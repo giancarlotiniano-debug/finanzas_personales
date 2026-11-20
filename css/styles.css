@@ -352,12 +352,12 @@ body.dark-mode .usage-bar-track {
 }
 
 .filter-pill-btn.has-active-filters {
-    background: var(--primario);
-    color: var(--blanco);
+    background-color: var(--primario);
+    color: #00ff6e;
 }
 
 .filter-pill-btn.has-active-filters svg {
-    stroke: var(--ingresos-font-card);
+    stroke: #00ff6e;
 }
 
 /* Switch segmentado Movimientos / Categorías */
