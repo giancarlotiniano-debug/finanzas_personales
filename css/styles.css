@@ -171,16 +171,6 @@ main {
     padding: 0 20px;
 }
 
-.top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-    color: var(--texto);
-}
-
 /* Contenedor único unificado de finanzas con espaciado simétrico */
 .finance-master-card {
     display: flex;
@@ -423,13 +413,20 @@ body.dark-mode .usage-bar-track {
     display: inline;
 }
 
-/* Fila 2: Título de la vista activa (izq) + Acción principal [+ Nuevo] o [Editar] (der) */
+/* Fila 2: Título + subtítulo de filtro activo (izq) + Acción principal [+ Nuevo] o [Editar] (der) */
 .finance-view-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
     padding: 0 6px;
+}
+
+.finance-view-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
 }
 
 .finance-view-title {
@@ -440,11 +437,42 @@ body.dark-mode .usage-bar-track {
     line-height: 1.25;
 }
 
+.finance-active-filter-caption {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--texto);
+    opacity: 0.72;
+    line-height: 1.3;
+    word-break: break-word;
+}
+
 .finance-view-actions {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     flex-shrink: 0;
+}
+
+.finance-active-filter-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--texto);
+    opacity: 0.72;
+}
+
+.finance-active-filter-icon {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    stroke: var(--primario);
+}
+
+.finance-active-filter-caption {
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.3;
+    word-break: break-word;
 }
 
 .edit-cats-pill-btn {
@@ -561,13 +589,6 @@ body.dark-mode .usage-bar-track {
 
 .summary-card.expanded .section-heading {
     margin-bottom: 15px;
-}
-
-footer {
-    text-align: center;
-    color: var(--texto);
-    font-size: 12px;
-    padding: 25px;
 }
 
 /* ==========================================
@@ -789,6 +810,7 @@ tr:last-child td {
 .movement-title {
     font-weight: 600;
     font-size: 15px;
+    line-height: 1.2;
     color: var(--texto);
 }
 
@@ -1537,7 +1559,7 @@ dialog::backdrop {
 
 .filter-date-tabs {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 4px;
     padding: 4px;
     border-radius: 14px;
@@ -1549,9 +1571,10 @@ dialog::backdrop {
     border-radius: 10px;
     background: transparent;
     color: var(--texto);
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 650;
     opacity: 0.72;
+    padding: 0 4px;
     transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
 }
 
@@ -2088,6 +2111,18 @@ body.no-scroll {
     padding-right: var(--scrollbar-width, 0px);
 }
 
+.movement-text-stack {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    min-width: 0;
+}
+
+.movement-mobile-category {
+    display: none;
+}
+
 /* ==========================================
    9. RESPONSIVE DESIGN
    ========================================== */
@@ -2120,6 +2155,16 @@ body.no-scroll {
 }
 
 @media (max-width: 760px) {
+
+    .movement-mobile-category {
+        display: block;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--texto);
+        opacity: 0.5;
+        line-height: 1.2;
+    }
+
     .header-content { padding: 0 13px; }
 
     .finance-master-card {
@@ -2162,6 +2207,14 @@ body.no-scroll {
 
     .finance-view-title {
         font-size: 17px;
+    }
+
+    .finance-active-filter-caption {
+        font-size: 12px;
+    }
+
+    .filter-date-tabs {
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .pill-new-btn,
@@ -2236,6 +2289,20 @@ body.no-scroll {
     .table-wrapper {
         max-height: 500px;
         overflow-y: auto;
+        -webkit-mask-image: linear-gradient(
+            to bottom,
+            transparent 0%,
+            #000 24px,
+            #000 calc(100% - 24px),
+            transparent 100%
+        );
+        mask-image: linear-gradient(
+            to bottom,
+            transparent 0%,
+            #000 24px,
+            #000 calc(100% - 24px),
+            transparent 100%
+        );
     }
 }
 

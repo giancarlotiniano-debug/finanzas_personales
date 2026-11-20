@@ -69,6 +69,49 @@ const DEFAULT_CONFIG = {
     }
 };
 
+const FILTER_STORAGE_KEY = 'finanzas_filtros_v1';
+
+const DEFAULT_MOVEMENT_FILTERS = {
+    query: '',
+    kind: 'all', // 'all' | 'expense' | 'income'
+    category: 'all', // 'all' o nombre de categoría
+    dateMode: 'all', // 'all' | 'day' | 'week' | 'month' | 'year' | 'custom'
+    startDate: '',
+    endDate: '',
+    minAmount: null,
+    maxAmount: null
+};
+
+const today = new Date();
+const pad = (number) => String(number).padStart(2, '0');
+const currentMonth = `${today.getFullYear()}-${pad(today.getMonth() + 1)}`;
+
+const SPANISH_MONTH_NAMES = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+];
+const WEEKDAY_LABELS_MON = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
+
+function loadSavedFilters() {
+    try {
+        const raw = localStorage.getItem(FILTER_STORAGE_KEY);
+        if (!raw) return { ...DEFAULT_MOVEMENT_FILTERS };
+        const parsed = JSON.parse(raw);
+        return {
+            query: typeof parsed.query === 'string' ? parsed.query : '',
+            kind: ['all', 'expense', 'income'].includes(parsed.kind) ? parsed.kind : 'all',
+            category: typeof parsed.category === 'string' && parsed.category ? parsed.category : 'all',
+            dateMode: ['all', 'day', 'week', 'month', 'year', 'custom'].includes(parsed.dateMode) ? parsed.dateMode : 'all',
+            startDate: typeof parsed.startDate === 'string' ? parsed.startDate : '',
+            endDate: typeof parsed.endDate === 'string' ? parsed.endDate : '',
+            minAmount: typeof parsed.minAmount === 'number' && !isNaN(parsed.minAmount) ? parsed.minAmount : null,
+            maxAmount: typeof parsed.maxAmount === 'number' && !isNaN(parsed.maxAmount) ? parsed.maxAmount : null
+        };
+    } catch {
+        return { ...DEFAULT_MOVEMENT_FILTERS };
+    }
+}
+
 let appConfig = JSON.parse(localStorage.getItem('finanzas_config_v1')) || DEFAULT_CONFIG;
 let movements = JSON.parse(localStorage.getItem('finanzas_movimientos_v1') || '[]');
 let remittancesList = JSON.parse(localStorage.getItem('finanzas_remesas_cards_v3') || '[]').map(r => ({ ...r, expanded: false }));
@@ -86,36 +129,21 @@ let activeFinanceViewMode = 'movements'; // 'movements' | 'categories'
 let currentCatKind = 'expense';
 let selectedDonutCategory = null;
 let lastAccordionToggleAt = 0;
-let currentUsageText = 'Sin movimientos en este mes';
+let currentUsageText = 'Sin movimientos registrados';
 
-const today = new Date();
-const pad = (number) => String(number).padStart(2, '0');
-const currentMonth = `${today.getFullYear()}-${pad(today.getMonth() + 1)}`;
-
-const SPANISH_MONTH_NAMES = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-];
-const WEEKDAY_LABELS_MON = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
-
-let movementFilters = {
-    query: '',
-    kind: 'all', // 'all' | 'expense' | 'income'
-    category: 'all', // 'all' o nombre de categoría
-    dateMode: 'month', // 'day' | 'week' | 'month' | 'year' | 'custom'
-    startDate: '',
-    endDate: '',
-    minAmount: null,
-    maxAmount: null
-};
+let movementFilters = loadSavedFilters();
 
 let filterDraft = {
+    query: '',
     kind: 'all',
-    dateMode: 'month',
+    category: 'all',
+    dateMode: 'all',
     pickerOpen: false,
     startDate: '',
     endDate: '',
     anchorDate: '',
+    minAmount: null,
+    maxAmount: null,
     calYear: today.getFullYear(),
     calMonth: today.getMonth(), // 0-11
     pickerYear: today.getFullYear(),
@@ -129,35 +157,37 @@ const utilityAccordionConfig = [
 ];
 
 function setFinanceViewMode(mode) {
-    activeFinanceViewMode = mode === 'categories' ? 'categories' : 'movements'; //[cite: 11]
-    selectedDonutCategory = null; //[cite: 11]
+    activeFinanceViewMode = mode === 'categories' ? 'categories' : 'movements';
+    selectedDonutCategory = null;
 
-    const btnMov = $('switchModeMovements'); //[cite: 11]
-    const btnCat = $('switchModeCategories'); //[cite: 11]
-    const titleEl = $('activeViewTitle'); //[cite: 11]
-    const movContainer = $('movementsContainer'); //[cite: 11]
-    const catContainer = $('categoriesContainer'); //[cite: 11]
-    const editCatsBtn = $('editCategoriesBtn'); //[cite: 11]
-    const addBtn = $('addBtn'); //[cite: 11]
+    const btnMov = $('switchModeMovements');
+    const btnCat = $('switchModeCategories');
+    const titleEl = $('activeViewTitle');
+    const movContainer = $('movementsContainer');
+    const catContainer = $('categoriesContainer');
+    const editCatsBtn = $('editCategoriesBtn');
+    const addBtn = $('addBtn');
 
-    const isCategories = activeFinanceViewMode === 'categories'; //[cite: 11]
+    const isCategories = activeFinanceViewMode === 'categories';
 
-    btnMov?.classList.toggle('active', !isCategories); //[cite: 11]
-    btnMov?.setAttribute('aria-selected', String(!isCategories)); //[cite: 11]
+    btnMov?.classList.toggle('active', !isCategories);
+    btnMov?.setAttribute('aria-selected', String(!isCategories));
 
-    btnCat?.classList.toggle('active', isCategories); //[cite: 11]
-    btnCat?.setAttribute('aria-selected', String(isCategories)); //[cite: 11]
+    btnCat?.classList.toggle('active', isCategories);
+    btnCat?.setAttribute('aria-selected', String(isCategories));
 
     if (titleEl) {
-        titleEl.textContent = isCategories ? 'Categorías' : 'Movimientos'; //[cite: 11]
+        titleEl.textContent = isCategories ? 'Categorías' : 'Movimientos';
     }
 
-    movContainer?.classList.toggle('is-hidden', isCategories); //[cite: 11]
-    catContainer?.classList.toggle('is-hidden', !isCategories); //[cite: 11]
-    editCatsBtn?.classList.toggle('is-hidden', !isCategories); //[cite: 11]
-    addBtn?.classList.toggle('is-hidden', isCategories); //[cite: 11]
+    updateActiveFilterCaption();
 
-    render(); //[cite: 11]
+    movContainer?.classList.toggle('is-hidden', isCategories);
+    catContainer?.classList.toggle('is-hidden', !isCategories);
+    editCatsBtn?.classList.toggle('is-hidden', !isCategories);
+    addBtn?.classList.toggle('is-hidden', isCategories);
+
+    render();
 }
 
 /* ==========================================
@@ -275,6 +305,7 @@ function closeModal(dialogEl) {
    3. PERSISTENCIA Y CONFIGURACIÓN UI
    ========================================== */
 const persist = () => localStorage.setItem('finanzas_movimientos_v1', JSON.stringify(movements));
+const persistFilters = () => localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(movementFilters));
 const persistRemittancesList = () => localStorage.setItem('finanzas_remesas_cards_v3', JSON.stringify(remittancesList));
 const persistInstallments = () => localStorage.setItem('finanzas_cuotas_v1', JSON.stringify(installmentsPurchases));
 const persistDayCounter = () => localStorage.setItem('finanzas_day_counter_v1', JSON.stringify(dayCounterMonths));
@@ -339,9 +370,13 @@ function refreshCategoryUI() {
     updateCategoryOptions('edit');
     if (movementFilters.kind !== 'all' && movementFilters.category !== 'all') {
         const stillExists = getSortedCategories(movementFilters.kind).some(c => c.name === movementFilters.category);
-        if (!stillExists) movementFilters.category = 'all';
+        if (!stillExists) {
+            movementFilters.category = 'all';
+            persistFilters();
+        }
     }
     updateFilterButtonIndicator();
+    updateActiveFilterCaption();
     render();
 }
 
@@ -779,16 +814,8 @@ function applyImportSelection(selection) {
 }
 
 /* ==========================================
-   5. MOVIMIENTOS, FILTROS (DÍA/SEMANA/MES/AÑO/RANGO), BARRA DE USO Y CATEGORÍAS
+   5. MOVIMIENTOS, FILTROS (TODO/DÍA/SEMANA/MES/AÑO/RANGO), BARRA DE USO Y CATEGORÍAS
    ========================================== */
-function getMonthBounds(monthStr) {
-    const [y, m] = (monthStr || currentMonth).split('-').map(Number);
-    const firstDay = `${y}-${pad(m)}-01`;
-    const lastDayNum = new Date(y, m, 0).getDate();
-    const lastDay = `${y}-${pad(m)}-${pad(lastDayNum)}`;
-    return { start: firstDay, end: lastDay };
-}
-
 function toIsoDateLocal(dateObj) {
     return `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}`;
 }
@@ -850,6 +877,10 @@ function getAvailableFilterYears() {
 }
 
 function computeRangeForMode(mode, seedDateStr, yearVal, monthZeroBased) {
+    if (mode === 'all') {
+        return { startDate: '', endDate: '', anchorDate: seedDateStr || toIsoDateLocal(today) };
+    }
+
     const safeSeed = seedDateStr || toIsoDateLocal(today);
     const seedParts = parseIsoParts(safeSeed) || {
         y: today.getFullYear(),
@@ -905,7 +936,7 @@ function renderFilterDatePanel() {
         tab.classList.toggle('active', tab.dataset.dateMode === filterDraft.dateMode);
     });
 
-    if (!filterDraft.pickerOpen) {
+    if (!filterDraft.pickerOpen || filterDraft.dateMode === 'all') {
         panel.classList.add('is-hidden');
         panel.innerHTML = '';
         return;
@@ -1021,20 +1052,31 @@ function renderFilterDatePanel() {
 
 function handleFilterDateTabClick(newMode) {
     filterDraft.dateMode = newMode;
+
+    if (newMode === 'all') {
+        filterDraft.pickerOpen = false;
+        filterDraft.startDate = '';
+        filterDraft.endDate = '';
+        renderFilterDatePanel();
+        return;
+    }
+
     filterDraft.pickerOpen = true;
 
     if (newMode === 'day' || newMode === 'week') {
-        const curYear = today.getFullYear();
-        const curMonth = today.getMonth();
-        const curDay = today.getDate();
-        const seedIso = toIsoFromParts(curYear, curMonth, curDay);
+        const refParts = parseIsoParts(filterDraft.anchorDate || filterDraft.startDate) || {
+            y: today.getFullYear(),
+            m: today.getMonth() + 1,
+            d: today.getDate()
+        };
+        const seedIso = toIsoFromParts(refParts.y, refParts.m - 1, refParts.d);
 
-        filterDraft.calYear = curYear;
-        filterDraft.calMonth = curMonth;
-        filterDraft.pickerYear = curYear;
-        filterDraft.pickerMonth = curMonth;
+        filterDraft.calYear = refParts.y;
+        filterDraft.calMonth = refParts.m - 1;
+        filterDraft.pickerYear = refParts.y;
+        filterDraft.pickerMonth = refParts.m - 1;
 
-        const computed = computeRangeForMode(newMode, seedIso, curYear, curMonth);
+        const computed = computeRangeForMode(newMode, seedIso, refParts.y, refParts.m - 1);
         filterDraft.startDate = computed.startDate;
         filterDraft.endDate = computed.endDate;
         filterDraft.anchorDate = computed.anchorDate;
@@ -1094,24 +1136,74 @@ function syncFilterUIState(kind) {
     });
 }
 
+function hasActiveFilters(filters = movementFilters) {
+    return Boolean(
+        (filters.query && filters.query.trim()) ||
+        (filters.kind && filters.kind !== 'all') ||
+        (filters.category && filters.category !== 'all') ||
+        (filters.dateMode && filters.dateMode !== 'all') ||
+        filters.minAmount !== null ||
+        filters.maxAmount !== null
+    );
+}
+
+function formatActiveFilterLabel(filters = movementFilters) {
+    const parts = [];
+
+    const q = (filters.query || '').trim();
+    if (q) {
+        parts.push(`Buscando: ${q}`);
+    }
+
+    const mode = filters.dateMode || 'all';
+    if (mode === 'day' && filters.startDate) {
+        parts.push(`Día ${formatDateEs(filters.startDate)}`);
+    } else if (mode === 'week' && filters.startDate && filters.endDate) {
+        parts.push(`Semana: ${formatDateEs(filters.startDate)} al ${formatDateEs(filters.endDate)}`);
+    } else if (mode === 'month' && filters.startDate) {
+        const p = parseIsoParts(filters.startDate);
+        if (p) {
+            const monthName = SPANISH_MONTH_NAMES[p.m - 1] || '';
+            parts.push(`Mes: ${monthName} ${p.y}`);
+        }
+    } else if (mode === 'year' && filters.startDate) {
+        const yearStr = String(filters.startDate).slice(0, 4);
+        if (yearStr) {
+            parts.push(`Año: ${yearStr}`);
+        }
+    } else if (mode === 'custom' && (filters.startDate || filters.endDate)) {
+        const fromStr = filters.startDate ? formatDateEs(filters.startDate) : '...';
+        const toStr = filters.endDate ? formatDateEs(filters.endDate) : '...';
+        parts.push(`Rango ${fromStr} al ${toStr}`);
+    }
+
+    if (filters.kind === 'expense') {
+        parts.push(filters.category && filters.category !== 'all' ? `Gastos: ${filters.category}` : 'Gastos');
+    } else if (filters.kind === 'income') {
+        parts.push(filters.category && filters.category !== 'all' ? `Ingresos: ${filters.category}` : 'Ingresos');
+    }
+
+    if (filters.minAmount !== null && filters.maxAmount !== null) {
+        parts.push(`Importe: ${formatMoney(filters.minAmount)} a ${formatMoney(filters.maxAmount)}`);
+    } else if (filters.minAmount !== null) {
+        parts.push(`Importe desde ${formatMoney(filters.minAmount)}`);
+    } else if (filters.maxAmount !== null) {
+        parts.push(`Importe hasta ${formatMoney(filters.maxAmount)}`);
+    }
+
+    return parts.length ? parts.join(' · ') : 'Sin filtros';
+}
+
+function updateActiveFilterCaption() {
+    const captionEl = $('activeFilterCaption');
+    if (!captionEl) return;
+    captionEl.textContent = formatActiveFilterLabel(movementFilters);
+}
+
 function updateFilterButtonIndicator() {
     const btn = $('openFilterBtn');
     if (!btn) return;
-
-    const bounds = getMonthBounds(currentMonth);
-    const isDefaultMonth =
-        (movementFilters.dateMode === 'month' && movementFilters.startDate === bounds.start && movementFilters.endDate === bounds.end) ||
-        (!movementFilters.startDate && !movementFilters.endDate && movementFilters.dateMode === 'month');
-
-    const isCustom =
-        Boolean(movementFilters.query.trim()) ||
-        movementFilters.kind !== 'all' ||
-        movementFilters.category !== 'all' ||
-        !isDefaultMonth ||
-        movementFilters.minAmount !== null ||
-        movementFilters.maxAmount !== null;
-
-    btn.classList.toggle('has-active-filters', isCustom);
+    btn.classList.toggle('has-active-filters', hasActiveFilters(movementFilters));
 }
 
 function openFilterDialog() {
@@ -1119,11 +1211,8 @@ function openFilterDialog() {
     if ($('filterCurrMin')) $('filterCurrMin').textContent = symbol;
     if ($('filterCurrMax')) $('filterCurrMax').textContent = symbol;
 
-    if ($('filterSearchInput')) $('filterSearchInput').value = movementFilters.query || '';
-
-    const bounds = getMonthBounds(currentMonth);
-    const activeStart = movementFilters.startDate || bounds.start;
-    const activeEnd = movementFilters.endDate || bounds.end;
+    const activeStart = movementFilters.startDate || toIsoDateLocal(today);
+    const activeEnd = movementFilters.endDate || '';
     const refParts = parseIsoParts(activeStart) || {
         y: today.getFullYear(),
         m: today.getMonth() + 1,
@@ -1131,58 +1220,72 @@ function openFilterDialog() {
     };
 
     filterDraft = {
+        query: movementFilters.query || '',
         kind: movementFilters.kind || 'all',
-        dateMode: movementFilters.dateMode || 'month',
+        category: movementFilters.category || 'all',
+        dateMode: movementFilters.dateMode || 'all',
         pickerOpen: false,
-        startDate: activeStart,
+        startDate: movementFilters.startDate || '',
         endDate: activeEnd,
         anchorDate: activeStart,
+        minAmount: movementFilters.minAmount,
+        maxAmount: movementFilters.maxAmount,
         calYear: refParts.y,
         calMonth: refParts.m - 1,
         pickerYear: refParts.y,
         pickerMonth: refParts.m - 1
     };
 
+    if ($('filterSearchInput')) $('filterSearchInput').value = filterDraft.query;
     syncFilterUIState(filterDraft.kind);
-    populateFilterCategorySelect(filterDraft.kind, movementFilters.category);
+    populateFilterCategorySelect(filterDraft.kind, filterDraft.category);
     renderFilterDatePanel();
 
     if ($('filterMinAmount')) {
-        $('filterMinAmount').value = movementFilters.minAmount !== null
-            ? String(movementFilters.minAmount).replace('.', ',')
+        $('filterMinAmount').value = filterDraft.minAmount !== null
+            ? String(filterDraft.minAmount).replace('.', ',')
             : '';
     }
     if ($('filterMaxAmount')) {
-        $('filterMaxAmount').value = movementFilters.maxAmount !== null
-            ? String(movementFilters.maxAmount).replace('.', ',')
+        $('filterMaxAmount').value = filterDraft.maxAmount !== null
+            ? String(filterDraft.maxAmount).replace('.', ',')
             : '';
     }
 
     openModal($('filterDlg'));
 }
 
-function resetFilterDialogToDefault() {
-    const bounds = getMonthBounds(currentMonth);
-    movementFilters = {
+function clearFilterDialogDraft() {
+    filterDraft = {
         query: '',
         kind: 'all',
         category: 'all',
-        dateMode: 'month',
-        startDate: bounds.start,
-        endDate: bounds.end,
+        dateMode: 'all',
+        pickerOpen: false,
+        startDate: '',
+        endDate: '',
+        anchorDate: toIsoDateLocal(today),
         minAmount: null,
-        maxAmount: null
+        maxAmount: null,
+        calYear: today.getFullYear(),
+        calMonth: today.getMonth(),
+        pickerYear: today.getFullYear(),
+        pickerMonth: today.getMonth()
     };
-    updateFilterButtonIndicator();
-    closeModal($('filterDlg'));
-    render();
+
+    if ($('filterSearchInput')) $('filterSearchInput').value = '';
+    if ($('filterMinAmount')) $('filterMinAmount').value = '';
+    if ($('filterMaxAmount')) $('filterMaxAmount').value = '';
+
+    syncFilterUIState('all');
+    populateFilterCategorySelect('all', 'all');
+    renderFilterDatePanel();
 }
 
 function getFilteredMovements() {
     const query = (movementFilters.query || '').trim().toLowerCase();
-    const bounds = getMonthBounds(currentMonth);
-    const startRange = movementFilters.startDate || bounds.start;
-    const endRange = movementFilters.endDate || bounds.end;
+    const startRange = movementFilters.startDate || '';
+    const endRange = movementFilters.endDate || '';
 
     return movements
         .filter(item => {
@@ -1420,6 +1523,7 @@ function render() {
     $('balance').textContent = formatMoney(totalIncome - totalExpenses);
     updateCashflowUsageBar(totalIncome, totalExpenses);
     updateFilterButtonIndicator();
+    updateActiveFilterCaption();
 
     const formattedDates = visibleMovements.map(item =>
         new Date(item.date + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })
@@ -1447,7 +1551,10 @@ function render() {
                 <td>
                     <div class="movement-name-wrapper">
                         <span class="category-icon-wrapper" style="color: ${catColor};">${iconSvg}</span>
-                        <span class="movement-title">${escapeHtml(item.desc)}</span>
+                        <div class="movement-text-stack">
+                            <span class="movement-title">${escapeHtml(item.desc)}</span>
+                            <span class="movement-mobile-category">${escapeHtml(item.category)}</span>
+                        </div>
                     </div>
                 </td>
                 <td class="text-right">
@@ -2076,7 +2183,7 @@ function bindEvents() {
     /* --- Modal de Filtros --- */
     $('openFilterBtn')?.addEventListener('click', openFilterDialog);
     $('cancelFilterBtn')?.addEventListener('click', () => closeModal($('filterDlg')));
-    $('resetFiltersBtn')?.addEventListener('click', resetFilterDialogToDefault);
+    $('resetFiltersBtn')?.addEventListener('click', clearFilterDialogDraft);
 
     document.querySelectorAll('#filterDlg .filter-seg-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -2154,8 +2261,8 @@ function bindEvents() {
         const rawMin = $('filterMinAmount')?.value.trim() || '';
         const rawMax = $('filterMaxAmount')?.value.trim() || '';
 
-        let finalStart = filterDraft.startDate;
-        let finalEnd = filterDraft.endDate;
+        let finalStart = filterDraft.dateMode === 'all' ? '' : filterDraft.startDate;
+        let finalEnd = filterDraft.dateMode === 'all' ? '' : filterDraft.endDate;
         if (filterDraft.dateMode === 'custom') {
             finalStart = $('filterStartDate')?.value || '';
             finalEnd = $('filterEndDate')?.value || '';
@@ -2175,7 +2282,9 @@ function bindEvents() {
             maxAmount: rawMax ? parseInputNumber(rawMax) : null
         };
 
+        persistFilters();
         updateFilterButtonIndicator();
+        updateActiveFilterCaption();
         closeModal($('filterDlg'));
         render();
     });
