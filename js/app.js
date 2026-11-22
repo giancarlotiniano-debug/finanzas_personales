@@ -2174,8 +2174,8 @@ function renderDayCounter() {
         const worked = month.days.length;
         const target = month.targetDays || 15;
         const statusText = worked > target
-            ? `${worked} / ${target} días trabajados (+${worked - target} extra)`
-            : `${worked} / ${target} días trabajados`;
+            ? `Trabajados: ${worked} de ${target} • Extras: ${worked - target}`
+            : `Trabajados: ${worked} de ${target}`;
 
         const daysHtml = month.days.map((day, idx) => `
             <div class="dc-day-row">
@@ -2184,8 +2184,8 @@ function renderDayCounter() {
                     <span class="dc-day-date">${formatDateEs(day.date)}</span>
                 </div>
                 <div class="dc-day-middle">
-                    <span class="dc-day-time">${escapeHtml(day.entryTime)} - ${escapeHtml(day.exitTime)}</span>
                     <span class="dc-day-loc">${escapeHtml(day.location)}</span>
+                    <span class="dc-day-time">${escapeHtml(day.entryTime)} a ${escapeHtml(day.exitTime)}</span>                 
                 </div>
                 <div class="dc-day-right">
                     <button type="button" class="editdaysbutton-xs" data-action="edit-day" data-month-id="${month.id}" data-day-index="${idx}" title="Editar día" aria-label="Editar día">

@@ -1730,7 +1730,7 @@ body.dark-mode .installment-purchase-header.all-paid {
 
 .dc-day-name {
     font-weight: 700;
-    color: var(--texto);
+    color: var(--primario);
 }
 
 .dc-day-date {
@@ -1746,13 +1746,14 @@ body.dark-mode .installment-purchase-header.all-paid {
 }
 
 .dc-day-time {
-    font-weight: 700;
-    color: var(--primario);
+    font-size: 13px;
+    color: var(--texto);
 }
 
 .dc-day-loc {
-    font-size: 13px;
-    color: var(--texto);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primario);
 }
 
 .dc-day-right {
