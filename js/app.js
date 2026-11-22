@@ -3,7 +3,7 @@
 const $ = (id) => document.getElementById(id);
 
 /* ==========================================
-   0. MAPA MAESTRO DE ICONOS SVG PARA CATEGORÍAS
+   1. MAPA MAESTRO DE ICONOS SVG
    ========================================== */
 const categoryIconsMap = {
     "Ingresos": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M7.5 5h-1.5a1 1 0 0 0 0 2h1a1 1 0 0 1 0 2H5.5"/><path d="M6.5 4v.5M6.5 8.5V9"/><path d="M14 3h3a2 2 0 0 1 2 2v4"/><path d="M16.5 6.5L19 9l2.5-2.5"/><path d="M14 9v3M12.5 10.5h3"/><path d="M2 21v-4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1H8"/><path d="M14 16l4-3.5a1.5 1.5 0 0 1 2.2 2L16 19.5c-1 .8-2.2 1.5-3.5 1.5H2"/></svg>`,
@@ -30,16 +30,15 @@ const categoryIconsMap = {
     "Teléfono": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" transform="matrix(-1 0 0 1 24 0)"/></svg>`,
     "Foco": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M9 18a3 3 0 0 0 6 0M9 18c-.2-1.7-1.1-3.3-2.4-4.4a7.5 7.5 0 1 1 10.8 0c-1.3 1.1-2.2 2.7-2.4 4.4M12 18v-6.5m-2-2a2 2 0 0 0 4 0"/></svg>`,
     "Bolsa de compras": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10V7a4 4 0 0 1 8 0v3"/><rect x="3" y="8" width="18" height="13" rx="3.5"/></svg>`,
-    "Bolsa de dinero": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6.5C8 5.2 7.5 4 7.5 3.2A1.2 1.2 0 0 1 8.7 2h6.6a1.2 1.2 0 0 1 1.2 1.2c0 .8-.5 2-2 3.3M9.5 6.5h5M9.5 6.5C5.5 8.5 3.5 13 3.5 17a5 5 0 0 0 5 5h7a5 5 0 0 0 5-5c0-4-2-8.5-6-10.5M14.2 11.2a2.2 2.2 0 0 0-2-.7h-.7a2 2 0 0 0 0 4h1a2 2 0 0 1 0 4h-1a2.2 2.2 0 0 1-2-.8M12 9v1.5m0 8V20"/></svg>`,
+    "Bolsa de dinero": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6.5C8 5.2 7.5 4 7.5 3.2A1.2 1.2 0 0 1 8.7 2h6.6a1.2 1.2 0 0 1 1.2 1.2c0 .8-.5 2-2 3.3M9.5 6.5h5M9.5 6.5C5.5 8.5 3.5 13 3.5 17a5 5 0 0 0 5 5h7a5 5 0 0 0 5-5c0-4-2-8.5-6-10.5M14.2 11.2a2.2 2.2 0 0 0-2-.7h-.7a2 2 0 0 0 0 4h1a2 2 0 0 1 0 4h-1a2.2 2.2 0 0 1-2-.8M12 9v1.5m0 8V20"/></svg>`
 };
 
 const warningIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></svg>`;
 
 /* ==========================================
-   1. ESTADO Y CONFIGURACIÓN GLOBAL
+   2. ESTADO GLOBAL Y CONSTANTES
    ========================================== */
 const DEFAULT_CONFIG = {
-    userName: 'Invitado',
     currency: 'EUR',
     theme: 'light',
     colorCounter: 0,
@@ -59,7 +58,7 @@ const DEFAULT_CONFIG = {
             { name: 'Transporte', color: '#10b981', icon: 'Transporte' },
             { name: 'Manutención', color: '#f59e0b', icon: 'Familia' },
             { name: 'Servicios', color: '#6366f1', icon: 'Grifo' },
-            { name: 'Suscripciones', color: '#b87114', icon: 'Pantalla' },
+            { name: 'Suscripciones', color: '#b87114', icon: 'Pantalla' }
         ],
         income: [
             { name: 'Salario', color: '#22c55e', icon: 'Billetera' },
@@ -73,7 +72,7 @@ const FILTER_STORAGE_KEY = 'finanzas_filtros_v1';
 
 const DEFAULT_MOVEMENT_FILTERS = {
     query: '',
-    kind: 'all', // 'all' | 'expense' | 'income'
+    kind: 'all',     // 'all' | 'expense' | 'income'
     category: 'all', // 'all' o nombre de categoría
     dateMode: 'all', // 'all' | 'day' | 'week' | 'month' | 'year' | 'custom'
     startDate: '',
@@ -82,15 +81,22 @@ const DEFAULT_MOVEMENT_FILTERS = {
     maxAmount: null
 };
 
-const today = new Date();
-const pad = (number) => String(number).padStart(2, '0');
-const currentMonth = `${today.getFullYear()}-${pad(today.getMonth() + 1)}`;
+const SECTION_LABELS = {
+    financeManager: 'Gestor financiero',
+    remittances: 'Calcular remesas',
+    installments: 'Compras en cuotas',
+    dayCounter: 'Días trabajados'
+};
 
 const SPANISH_MONTH_NAMES = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
 ];
 const WEEKDAY_LABELS_MON = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
+
+const today = new Date();
+const pad = (number) => String(number).padStart(2, '0');
+const currentMonth = `${today.getFullYear()}-${pad(today.getMonth() + 1)}`;
 
 function loadSavedFilters() {
     try {
@@ -125,11 +131,13 @@ let editingCategoryData = null;
 let editingMonthId = null;
 let editingDayMonthId = null;
 let editingDayIndex = null;
+
 let activeFinanceViewMode = 'movements'; // 'movements' | 'categories'
+let activeAppSection = 'financeManager'; // 'financeManager' | 'remittances' | 'installments' | 'dayCounter'
 let currentCatKind = 'expense';
 let selectedDonutCategory = null;
-let lastAccordionToggleAt = 0;
 let currentUsageText = 'Sin movimientos registrados';
+let pendingParsedSections = null;
 
 let movementFilters = loadSavedFilters();
 
@@ -145,53 +153,13 @@ let filterDraft = {
     minAmount: null,
     maxAmount: null,
     calYear: today.getFullYear(),
-    calMonth: today.getMonth(), // 0-11
+    calMonth: today.getMonth(),
     pickerYear: today.getFullYear(),
-    pickerMonth: today.getMonth() // 0-11
+    pickerMonth: today.getMonth()
 };
 
-const utilityAccordionConfig = [
-    { btnId: 'toggleRemitBtn', containerId: 'remitContainer', iconId: 'toggleRemitIcon', cardEl: 'remittancesCard' },
-    { btnId: 'toggleInstallmentsBtn', containerId: 'installmentsContainer', iconId: 'toggleInstallmentsIcon', cardEl: 'installmentsCard' },
-    { btnId: 'toggleDayCounterBtn', containerId: 'dayCounterContainer', iconId: 'toggleDayCounterIcon', cardEl: 'dayCounterCard' }
-];
-
-function setFinanceViewMode(mode) {
-    activeFinanceViewMode = mode === 'categories' ? 'categories' : 'movements';
-    selectedDonutCategory = null;
-
-    const btnMov = $('switchModeMovements');
-    const btnCat = $('switchModeCategories');
-    const titleEl = $('activeViewTitle');
-    const movContainer = $('movementsContainer');
-    const catContainer = $('categoriesContainer');
-    const editCatsBtn = $('editCategoriesBtn');
-    const addBtn = $('addBtn');
-
-    const isCategories = activeFinanceViewMode === 'categories';
-
-    btnMov?.classList.toggle('active', !isCategories);
-    btnMov?.setAttribute('aria-selected', String(!isCategories));
-
-    btnCat?.classList.toggle('active', isCategories);
-    btnCat?.setAttribute('aria-selected', String(isCategories));
-
-    if (titleEl) {
-        titleEl.textContent = isCategories ? 'Categorías' : 'Movimientos';
-    }
-
-    updateActiveFilterCaption();
-
-    movContainer?.classList.toggle('is-hidden', isCategories);
-    catContainer?.classList.toggle('is-hidden', !isCategories);
-    editCatsBtn?.classList.toggle('is-hidden', !isCategories);
-    addBtn?.classList.toggle('is-hidden', isCategories);
-
-    render();
-}
-
 /* ==========================================
-   2. UTILIDADES DE FORMATO, FECHAS Y MODALES
+   3. UTILIDADES DE FORMATO, FECHAS Y MODALES
    ========================================== */
 const CURRENCY_SYMBOLS = { EUR: '€', USD: '$', PEN: 'S/.' };
 const getCurrencySymbol = (code) => CURRENCY_SYMBOLS[code] || '€';
@@ -287,22 +255,28 @@ function scrollCardIntoView(cardEl, shouldScroll = true) {
     });
 }
 
-function openModal(dialogEl) {
-    if (!dialogEl) return;
+function lockBodyScroll() {
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
     document.body.classList.add('no-scroll');
+}
+
+function openModal(dialogEl) {
+    if (!dialogEl) return;
+    lockBodyScroll();
     dialogEl.showModal();
 }
 
 function closeModal(dialogEl) {
     if (!dialogEl) return;
     dialogEl.close();
-    document.body.classList.remove('no-scroll');
+    if (!$('navDrawer')?.classList.contains('is-open')) {
+        document.body.classList.remove('no-scroll');
+    }
 }
 
 /* ==========================================
-   3. PERSISTENCIA Y CONFIGURACIÓN UI
+   4. PERSISTENCIA Y CONFIGURACIÓN UI
    ========================================== */
 const persist = () => localStorage.setItem('finanzas_movimientos_v1', JSON.stringify(movements));
 const persistFilters = () => localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(movementFilters));
@@ -318,30 +292,15 @@ const persistConfig = () => {
     updateCurrencyLabels();
 };
 
-const applyTheme = () => document.body.classList.toggle('dark-mode', appConfig.theme === 'dark');
+const applyTheme = () => {
+    const isDark = appConfig.theme === 'dark';
+    document.body.classList.toggle('dark-mode', isDark);
 
-function applyUtilitiesVisibility() {
-    const utils = appConfig.utilities || { financeManager: true, remittances: true, installments: true, dayCounter: true };
-    const showFinance = utils.financeManager !== false;
-    const showRemit = utils.remittances !== false;
-    const showInst = utils.installments !== false;
-    const showDays = utils.dayCounter !== false;
-
-    const financeLayout = $('financeManagerLayout');
-    if (financeLayout) {
-        financeLayout.style.display = showFinance ? '' : 'none';
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+        metaTheme.setAttribute('content', isDark ? '#121212' : '#FFFFFF');
     }
-
-    if ($('remittancesCard')) $('remittancesCard').style.display = showRemit ? '' : 'none';
-    if ($('installmentsCard')) $('installmentsCard').style.display = showInst ? '' : 'none';
-    if ($('dayCounterCard')) $('dayCounterCard').style.display = showDays ? '' : 'none';
-    if ($('utilitiesSection')) $('utilitiesSection').style.display = (showRemit || showInst || showDays) ? '' : 'none';
-}
-
-function updateUserDisplay() {
-    if ($('welcomeText')) $('welcomeText').textContent = `Bienvenido, ${appConfig.userName}.`;
-    if ($('userInitial')) $('userInitial').textContent = appConfig.userName.charAt(0) || 'I';
-}
+};
 
 function updateCurrencyLabels() {
     const symbol = getCurrencySymbol(appConfig.currency);
@@ -351,117 +310,216 @@ function updateCurrencyLabels() {
     if ($('filterCurrMax')) $('filterCurrMax').textContent = symbol;
 }
 
-const getSortedCategories = (kind) =>
-    [...(appConfig.categories[kind] || [])].sort((a, b) =>
-        a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
-    );
-
-function updateCategoryOptions(prefix) {
-    const kind = $(`${prefix}Kind`).value;
-    $(`${prefix}Category`).innerHTML = getSortedCategories(kind)
-        .map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`)
-        .join('');
+/* ==========================================
+   5. NAVEGACIÓN, MENÚ LATERAL Y SECCIONES
+   ========================================== */
+function normalizeActiveSection(section) {
+    return Object.prototype.hasOwnProperty.call(SECTION_LABELS, section) ? section : 'financeManager';
 }
 
-function refreshCategoryUI() {
-    renderConfigCategories();
-    updateCategoryOptions('new');
-    updateCategoryOptions('edit');
-    if (movementFilters.kind !== 'all' && movementFilters.category !== 'all') {
-        const stillExists = getSortedCategories(movementFilters.kind).some(c => c.name === movementFilters.category);
-        if (!stillExists) {
-            movementFilters.category = 'all';
-            persistFilters();
+function getInitialSectionFromConfig() {
+    const utils = appConfig.utilities || {};
+    if (utils.financeManager !== false) return 'financeManager';
+    if (utils.remittances) return 'remittances';
+    if (utils.installments) return 'installments';
+    if (utils.dayCounter) return 'dayCounter';
+    return 'financeManager';
+}
+
+function syncSectionUtilitiesFlag(section) {
+    appConfig.utilities = {
+        financeManager: section === 'financeManager',
+        remittances: section === 'remittances',
+        installments: section === 'installments',
+        dayCounter: section === 'dayCounter'
+    };
+    localStorage.setItem('finanzas_config_v1', JSON.stringify(appConfig));
+}
+
+function openNavDrawer() {
+    const drawer = $('navDrawer');
+    const backdrop = $('navDrawerBackdrop');
+    if (!drawer) return;
+    drawer.classList.add('is-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    if (backdrop) {
+        backdrop.classList.remove('is-hidden');
+        backdrop.setAttribute('aria-hidden', 'false');
+    }
+    syncDrawerControlsState();
+    lockBodyScroll();
+}
+
+function closeNavDrawer() {
+    const drawer = $('navDrawer');
+    const backdrop = $('navDrawerBackdrop');
+    const moreBtn = $('navMoreBackupBtn');
+    toggleBackupPopover(false);
+    if (drawer) {
+        drawer.classList.remove('is-open');
+        drawer.setAttribute('aria-hidden', 'true');
+    }
+    if (backdrop) {
+        backdrop.classList.add('is-hidden');
+        backdrop.setAttribute('aria-hidden', 'true');
+    }
+    if (moreBtn) {
+        moreBtn.classList.remove('is-active');
+        moreBtn.setAttribute('aria-expanded', 'false');
+    }
+    if (!document.querySelector('dialog[open]')) {
+        document.body.classList.remove('no-scroll');
+    }
+}
+
+function toggleBackupPopover(forceState) {
+    const popover = $('navBackupPopover');
+    const backdrop = $('navBackupBackdrop');
+    const moreBtn = $('navMoreBackupBtn');
+    if (!popover) return;
+    const shouldOpen = typeof forceState === 'boolean'
+        ? forceState
+        : popover.classList.contains('is-hidden');
+    popover.classList.toggle('is-hidden', !shouldOpen);
+    popover.setAttribute('aria-hidden', String(!shouldOpen));
+    if (backdrop) {
+        backdrop.classList.toggle('is-hidden', !shouldOpen);
+        backdrop.setAttribute('aria-hidden', String(!shouldOpen));
+    }
+    if (moreBtn) {
+        moreBtn.classList.toggle('is-active', shouldOpen);
+        moreBtn.setAttribute('aria-expanded', String(shouldOpen));
+    }
+}
+
+function syncDrawerControlsState() {
+    document.querySelectorAll('[data-nav-section]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.navSection === activeAppSection);
+    });
+    if ($('currencySelect')) {
+        $('currencySelect').value = appConfig.currency || 'EUR';
+    }
+    const isDark = appConfig.theme === 'dark';
+    $('themeLightBtn')?.classList.toggle('active', !isDark);
+    $('themeDarkBtn')?.classList.toggle('active', isDark);
+}
+
+function syncHeaderSectionActionButton() {
+    const btn = $('headerSectionNewBtn');
+    if (!btn) return;
+
+    const showForSection = ['remittances', 'installments', 'dayCounter'].includes(activeAppSection);
+    btn.classList.toggle('is-hidden', !showForSection);
+
+    const ariaMap = {
+        remittances: 'Nueva remesa',
+        installments: 'Nueva compra en cuotas',
+        dayCounter: 'Nuevo mes de trabajo'
+    };
+    btn.setAttribute('aria-label', ariaMap[activeAppSection] || 'Nuevo');
+}
+
+function updateUserDisplay() {
+    const headerTitle = $('sectionHeaderTitle');
+    if (headerTitle) {
+        headerTitle.textContent = SECTION_LABELS[normalizeActiveSection(activeAppSection)] || 'Gestor financiero';
+    }
+    syncDrawerControlsState();
+    syncHeaderSectionActionButton();
+}
+
+function applyUtilitiesVisibility() {
+    const section = normalizeActiveSection(activeAppSection);
+    activeAppSection = section;
+
+    const showFinance = section === 'financeManager';
+    const showRemit = section === 'remittances';
+    const showInst = section === 'installments';
+    const showDays = section === 'dayCounter';
+
+    if ($('financeManagerLayout')) $('financeManagerLayout').style.display = showFinance ? '' : 'none';
+    if ($('remittancesCard')) $('remittancesCard').style.display = showRemit ? '' : 'none';
+    if ($('installmentsCard')) $('installmentsCard').style.display = showInst ? '' : 'none';
+    if ($('dayCounterCard')) $('dayCounterCard').style.display = showDays ? '' : 'none';
+
+    const utilSection = $('utilitiesSection');
+    if (utilSection) {
+        utilSection.style.display = (showRemit || showInst || showDays) ? '' : 'none';
+        utilSection.classList.toggle('single-utility-view', showRemit || showInst || showDays);
+    }
+
+    updateUserDisplay();
+}
+
+function selectAppSection(section, options = {}) {
+    const normalized = normalizeActiveSection(section);
+    activeAppSection = normalized;
+    syncSectionUtilitiesFlag(normalized);
+    applyUtilitiesVisibility();
+    syncDrawerControlsState();
+
+    if (options.expandActiveUtility) {
+        if (normalized === 'remittances') {
+            remittancesList = remittancesList.map(r => ({ ...r, expanded: false }));
+            renderRemittancesList();
+        } else if (normalized === 'installments') {
+            installmentsPurchases = installmentsPurchases.map(p => ({ ...p, expanded: false }));
+            renderInstallments();
+        } else if (normalized === 'dayCounter') {
+            dayCounterMonths = dayCounterMonths.map(m => ({ ...m, expanded: false }));
+            renderDayCounter();
         }
     }
-    updateFilterButtonIndicator();
-    updateActiveFilterCaption();
-    render();
-}
 
-function collapseAllInternalCards() {
-    if (remittancesList.some(r => r.expanded)) {
-        remittancesList.forEach(r => { r.expanded = false; });
-        persistRemittancesList();
-        renderRemittancesList();
+    if (options.closeDrawer) {
+        closeNavDrawer();
     }
-
-    if (installmentsPurchases.some(p => p.expanded)) {
-        installmentsPurchases.forEach(p => { p.expanded = false; });
-        persistInstallments();
-        renderInstallments();
-    }
-
-    if (dayCounterMonths.some(m => m.expanded)) {
-        dayCounterMonths.forEach(m => { m.expanded = false; });
-        persistDayCounter();
-        renderDayCounter();
-    }
-}
-
-function toggleUtilityAccordionById(containerId, iconId, cardId) {
-    const now = Date.now();
-    if (now - lastAccordionToggleAt < 180) return;
-    lastAccordionToggleAt = now;
-
-    const container = $(containerId);
-    const icon = $(iconId);
-    const card = $(cardId);
-    if (!container) return;
-
-    const willBeExpanded = container.style.display !== 'block';
-
-    utilityAccordionConfig.forEach(item => {
-        const c = $(item.containerId);
-        const ic = $(item.iconId);
-        const cr = $(item.cardEl);
-        if (c && c !== container) {
-            c.style.display = 'none';
-            cr?.classList.remove('expanded');
-            if (ic) ic.innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
-        }
-    });
-
-    container.style.display = willBeExpanded ? 'block' : 'none';
-    card?.classList.toggle('expanded', willBeExpanded);
-    if (icon) {
-        icon.innerHTML = willBeExpanded
-            ? '<polyline points="18 15 12 9 6 15"></polyline>'
-            : '<polyline points="6 9 12 15 18 9"></polyline>';
-    }
-
-    collapseAllInternalCards();
-
-    if (willBeExpanded && card && window.innerWidth <= 760) {
-        requestAnimationFrame(() => {
-            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-    }
-}
-
-function setupUtilityAccordion(btnId, containerId, iconId, cardId) {
-    const btn = $(btnId);
-    const card = $(cardId);
-    const container = $(containerId);
-    const heading = card?.querySelector('.section-heading');
-
-    btn?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleUtilityAccordionById(containerId, iconId, cardId);
-    });
-
-    heading?.addEventListener('click', (e) => {
-        if (e.target.closest('button, input, select, textarea, a, label')) return;
-        toggleUtilityAccordionById(containerId, iconId, cardId);
-    });
-
-    container?.addEventListener('click', (e) => e.stopPropagation());
 }
 
 /* ==========================================
-   4. EXPORTAR E IMPORTAR CSV MULTI-SECCIÓN
+   6. EXPORTAR E IMPORTAR CSV MULTI-SECCIÓN
    ========================================== */
 const csvQuote = (str) => `"${String(str || '').replace(/"/g, '""')}"`;
+const unquoteCsv = (val) => String(val || '').replace(/^"|"$/g, '').replace(/""/g, '"');
+
+function parseCsvLine(line) {
+    const row = [];
+    let inQuotes = false;
+    let currentVal = '';
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+                currentVal += '"';
+                i++;
+            } else {
+                inQuotes = !inQuotes;
+            }
+        } else if (char === ',' && !inQuotes) {
+            row.push(currentVal.trim());
+            currentVal = '';
+        } else {
+            currentVal += char;
+        }
+    }
+    row.push(currentVal.trim());
+    return row;
+}
+
+function normalizeDateToIso(dateStr) {
+    if (!dateStr) return '';
+    const clean = dateStr.replace(/^"|"$/g, '').trim();
+    if (clean.includes('/')) {
+        const parts = clean.split('/');
+        if (parts.length === 3) {
+            const day = parts[0].padStart(2, '0');
+            const month = parts[1].padStart(2, '0');
+            const year = parts[2].length === 2 ? '20' + parts[2] : parts[2];
+            return `${year}-${month}-${day}`;
+        }
+    }
+    return clean;
+}
 
 function executeCustomExport() {
     const includeMovs = $('expMovements')?.checked;
@@ -543,49 +601,6 @@ function executeCustomExport() {
     closeModal($('exportDlg'));
 }
 
-function parseCsvLine(line) {
-    const row = [];
-    let inQuotes = false;
-    let currentVal = '';
-    for (let i = 0; i < line.length; i++) {
-        const char = line[i];
-        if (char === '"') {
-            if (inQuotes && line[i + 1] === '"') {
-                currentVal += '"';
-                i++;
-            } else {
-                inQuotes = !inQuotes;
-            }
-        } else if (char === ',' && !inQuotes) {
-            row.push(currentVal.trim());
-            currentVal = '';
-        } else {
-            currentVal += char;
-        }
-    }
-    row.push(currentVal.trim());
-    return row;
-}
-
-const unquoteCsv = (val) => String(val || '').replace(/^"|"$/g, '').replace(/""/g, '"');
-
-function normalizeDateToIso(dateStr) {
-    if (!dateStr) return '';
-    const clean = dateStr.replace(/^"|"$/g, '').trim();
-    if (clean.includes('/')) {
-        const parts = clean.split('/');
-        if (parts.length === 3) {
-            const day = parts[0].padStart(2, '0');
-            const month = parts[1].padStart(2, '0');
-            const year = parts[2].length === 2 ? '20' + parts[2] : parts[2];
-            return `${year}-${month}-${day}`;
-        }
-    }
-    return clean;
-}
-
-let pendingParsedSections = null;
-
 function importMovementsCsv(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -593,7 +608,7 @@ function importMovementsCsv(event) {
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
-            const lines = e.target.result.split(/\r\n|\n/);
+            const lines = e.target.result.split(/\r?\n/);
             if (lines.length < 2) {
                 alert('El archivo CSV está vacío o no tiene el formato correcto.');
                 return;
@@ -804,8 +819,8 @@ function applyImportSelection(selection) {
     renderDayCounter();
 
     alert(importedSummary.length
-        ? `¡Restauración exitosa!\n${importedSummary.join('\n')}`
-        : 'No se encontraron registros válidos para importar en el archivo seleccionado.'
+    ? `¡Restauración exitosa!\n${importedSummary.join('\n')}`
+    : 'No se encontraron registros válidos para importar en el archivo seleccionado.'
     );
 
     pendingParsedSections = null;
@@ -813,8 +828,67 @@ function applyImportSelection(selection) {
 }
 
 /* ==========================================
-   5. MOVIMIENTOS, FILTROS (TODO/DÍA/SEMANA/MES/AÑO/RANGO), BARRA DE USO Y CATEGORÍAS
+   7. GESTOR FINANCIERO: FILTROS, MOVIMIENTOS Y CATEGORÍAS
    ========================================== */
+function setFinanceViewMode(mode) {
+    activeFinanceViewMode = mode === 'categories' ? 'categories' : 'movements';
+    selectedDonutCategory = null;
+
+    const btnMov = $('switchModeMovements');
+    const btnCat = $('switchModeCategories');
+    const titleEl = $('activeViewTitle');
+    const isCategories = activeFinanceViewMode === 'categories';
+
+    btnMov?.classList.toggle('active', !isCategories);
+    btnMov?.setAttribute('aria-selected', String(!isCategories));
+
+    btnCat?.classList.toggle('active', isCategories);
+    btnCat?.setAttribute('aria-selected', String(isCategories));
+
+    if (titleEl) {
+        titleEl.textContent = isCategories ? 'Categorías' : 'Movimientos';
+    }
+
+    updateActiveFilterCaption();
+
+    $('movementsContainer')?.classList.toggle('is-hidden', isCategories);
+    $('categoriesContainer')?.classList.toggle('is-hidden', !isCategories);
+    $('catTopTypeSwitch')?.classList.toggle('is-hidden', !isCategories);
+    $('editCategoriesBtn')?.classList.toggle('is-hidden', !isCategories);
+    $('addBtn')?.classList.toggle('is-hidden', isCategories);
+
+    render();
+}
+
+const getSortedCategories = (kind) =>
+    [...(appConfig.categories[kind] || [])].sort((a, b) =>
+        a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })
+    );
+
+function updateCategoryOptions(prefix) {
+    const kind = $(`${prefix}Kind`).value;
+    $(`${prefix}Category`).innerHTML = getSortedCategories(kind)
+        .map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`)
+        .join('');
+}
+
+function refreshCategoryUI() {
+    renderConfigCategories();
+    updateCategoryOptions('new');
+    updateCategoryOptions('edit');
+    if (movementFilters.kind !== 'all' && movementFilters.category !== 'all') {
+        const stillExists = getSortedCategories(movementFilters.kind).some(c => c.name === movementFilters.category);
+        if (!stillExists) {
+            movementFilters.category = 'all';
+            persistFilters();
+        }
+    }
+    updateFilterButtonIndicator();
+    updateActiveFilterCaption();
+    render();
+}
+
+/* --- Helpers de fechas para filtros --- */
 function toIsoDateLocal(dateObj) {
     return `${dateObj.getFullYear()}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}`;
 }
@@ -837,10 +911,7 @@ function getMonthRangeIso(year, monthZeroBased) {
 }
 
 function getYearRangeIso(year) {
-    return {
-        startDate: `${year}-01-01`,
-        endDate: `${year}-12-31`
-    };
+    return { startDate: `${year}-01-01`, endDate: `${year}-12-31` };
 }
 
 function getMondayToSundayWeekRange(isoDateStr) {
@@ -849,7 +920,7 @@ function getMondayToSundayWeekRange(isoDateStr) {
         m: today.getMonth() + 1,
         d: today.getDate()
     };
-    const jsDay = new Date(parts.y, parts.m - 1, parts.d).getDay(); // 0=Dom, 1=Lun ... 6=Sáb
+    const jsDay = new Date(parts.y, parts.m - 1, parts.d).getDay();
     const diffFromMonday = (jsDay + 6) % 7;
 
     const monday = new Date(parts.y, parts.m - 1, parts.d - diffFromMonday);
@@ -863,9 +934,7 @@ function getMondayToSundayWeekRange(isoDateStr) {
 
 function getAvailableFilterYears() {
     const years = new Set();
-    for (let y = 1990; y <= 2050; y++) {
-        years.add(y);
-    }
+    for (let y = 1990; y <= 2050; y++) years.add(y);
     movements.forEach(m => {
         const y = Number(String(m.date || '').slice(0, 4));
         if (y) years.add(y);
@@ -887,9 +956,7 @@ function computeRangeForMode(mode, seedDateStr, yearVal, monthZeroBased) {
         d: today.getDate()
     };
 
-    if (mode === 'day') {
-        return { startDate: safeSeed, endDate: safeSeed, anchorDate: safeSeed };
-    }
+    if (mode === 'day') return { startDate: safeSeed, endDate: safeSeed, anchorDate: safeSeed };
     if (mode === 'week') {
         const wk = getMondayToSundayWeekRange(safeSeed);
         return { startDate: wk.startDate, endDate: wk.endDate, anchorDate: safeSeed };
@@ -906,6 +973,7 @@ function computeRangeForMode(mode, seedDateStr, yearVal, monthZeroBased) {
             anchorDate: safeSeed
         };
     }
+
     const mr = getMonthRangeIso(yearVal, monthZeroBased);
     const clampedDay = Math.min(seedParts.d, new Date(yearVal, monthZeroBased + 1, 0).getDate());
     return {
@@ -920,9 +988,7 @@ function scrollActiveWheelOptionsIntoView() {
         const panel = $('filterDatePickerPanel');
         panel?.querySelectorAll('.filter-wheel-col').forEach(col => {
             const activeOpt = col.querySelector('.filter-wheel-option.active');
-            if (activeOpt) {
-                activeOpt.scrollIntoView({ block: 'center', behavior: 'instant' });
-            }
+            if (activeOpt) activeOpt.scrollIntoView({ block: 'center', behavior: 'instant' });
         });
     });
 }
@@ -946,7 +1012,7 @@ function renderFilterDatePanel() {
     if (filterDraft.dateMode === 'day' || filterDraft.dateMode === 'week') {
         const { calYear, calMonth, anchorDate, startDate, endDate } = filterDraft;
         const firstOfMonth = new Date(calYear, calMonth, 1);
-        const startOffset = (firstOfMonth.getDay() + 6) % 7; // 0 = Lunes
+        const startOffset = (firstOfMonth.getDay() + 6) % 7;
         const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
         const prevMonthDays = new Date(calYear, calMonth, 0).getDate();
         const todayIso = toIsoDateLocal(today);
@@ -1062,44 +1128,29 @@ function handleFilterDateTabClick(newMode) {
 
     filterDraft.pickerOpen = true;
 
-    if (newMode === 'day' || newMode === 'week') {
-        const refParts = parseIsoParts(filterDraft.anchorDate || filterDraft.startDate) || {
-            y: today.getFullYear(),
-            m: today.getMonth() + 1,
-            d: today.getDate()
-        };
-        const seedIso = toIsoFromParts(refParts.y, refParts.m - 1, refParts.d);
+    const refParts = parseIsoParts(
+        (newMode === 'day' || newMode === 'week')
+            ? (filterDraft.anchorDate || filterDraft.startDate)
+            : (filterDraft.startDate || filterDraft.anchorDate)
+    ) || {
+        y: today.getFullYear(),
+        m: today.getMonth() + 1,
+        d: today.getDate()
+    };
 
-        filterDraft.calYear = refParts.y;
-        filterDraft.calMonth = refParts.m - 1;
-        filterDraft.pickerYear = refParts.y;
-        filterDraft.pickerMonth = refParts.m - 1;
+    filterDraft.calYear = refParts.y;
+    filterDraft.calMonth = refParts.m - 1;
+    filterDraft.pickerYear = refParts.y;
+    filterDraft.pickerMonth = refParts.m - 1;
 
-        const computed = computeRangeForMode(newMode, seedIso, refParts.y, refParts.m - 1);
-        filterDraft.startDate = computed.startDate;
-        filterDraft.endDate = computed.endDate;
-        filterDraft.anchorDate = computed.anchorDate;
-    } else {
-        const refParts = parseIsoParts(filterDraft.startDate || filterDraft.anchorDate) || {
-            y: today.getFullYear(),
-            m: today.getMonth() + 1,
-            d: today.getDate()
-        };
-        filterDraft.calYear = refParts.y;
-        filterDraft.calMonth = refParts.m - 1;
-        filterDraft.pickerYear = refParts.y;
-        filterDraft.pickerMonth = refParts.m - 1;
+    const seedIso = (newMode === 'day' || newMode === 'week')
+        ? toIsoFromParts(refParts.y, refParts.m - 1, refParts.d)
+        : (filterDraft.anchorDate || toIsoDateLocal(today));
 
-        const computed = computeRangeForMode(
-            newMode,
-            filterDraft.anchorDate || toIsoDateLocal(today),
-            filterDraft.pickerYear,
-            filterDraft.pickerMonth
-        );
-        filterDraft.startDate = computed.startDate;
-        filterDraft.endDate = computed.endDate;
-        filterDraft.anchorDate = computed.anchorDate;
-    }
+    const computed = computeRangeForMode(newMode, seedIso, filterDraft.pickerYear, filterDraft.pickerMonth);
+    filterDraft.startDate = computed.startDate;
+    filterDraft.endDate = computed.endDate;
+    filterDraft.anchorDate = computed.anchorDate;
 
     renderFilterDatePanel();
 }
@@ -1150,9 +1201,7 @@ function formatActiveFilterLabel(filters = movementFilters) {
     const parts = [];
 
     const q = (filters.query || '').trim();
-    if (q) {
-        parts.push(`Buscando: ${q}`);
-    }
+    if (q) parts.push(`Buscando: ${q}`);
 
     const mode = filters.dateMode || 'all';
     if (mode === 'day' && filters.startDate) {
@@ -1161,15 +1210,10 @@ function formatActiveFilterLabel(filters = movementFilters) {
         parts.push(`Semana: ${formatDateEs(filters.startDate)} al ${formatDateEs(filters.endDate)}`);
     } else if (mode === 'month' && filters.startDate) {
         const p = parseIsoParts(filters.startDate);
-        if (p) {
-            const monthName = SPANISH_MONTH_NAMES[p.m - 1] || '';
-            parts.push(`Mes: ${monthName} ${p.y}`);
-        }
+        if (p) parts.push(`Mes: ${SPANISH_MONTH_NAMES[p.m - 1] || ''} ${p.y}`);
     } else if (mode === 'year' && filters.startDate) {
         const yearStr = String(filters.startDate).slice(0, 4);
-        if (yearStr) {
-            parts.push(`Año: ${yearStr}`);
-        }
+        if (yearStr) parts.push(`Año: ${yearStr}`);
     } else if (mode === 'custom' && (filters.startDate || filters.endDate)) {
         const fromStr = filters.startDate ? formatDateEs(filters.startDate) : '...';
         const toStr = filters.endDate ? formatDateEs(filters.endDate) : '...';
@@ -1195,20 +1239,15 @@ function formatActiveFilterLabel(filters = movementFilters) {
 
 function updateActiveFilterCaption() {
     const captionEl = $('activeFilterCaption');
-    if (!captionEl) return;
-    captionEl.textContent = formatActiveFilterLabel(movementFilters);
+    if (captionEl) captionEl.textContent = formatActiveFilterLabel(movementFilters);
 }
 
 function updateFilterButtonIndicator() {
-    const btn = $('openFilterBtn');
-    if (!btn) return;
-    btn.classList.toggle('has-active-filters', hasActiveFilters(movementFilters));
+    $('openFilterBtn')?.classList.toggle('has-active-filters', hasActiveFilters(movementFilters));
 }
 
 function openFilterDialog() {
-    const symbol = getCurrencySymbol(appConfig.currency);
-    if ($('filterCurrMin')) $('filterCurrMin').textContent = symbol;
-    if ($('filterCurrMax')) $('filterCurrMax').textContent = symbol;
+    updateCurrencyLabels();
 
     const activeStart = movementFilters.startDate || toIsoDateLocal(today);
     const activeEnd = movementFilters.endDate || '';
@@ -1339,9 +1378,6 @@ function updateCashflowUsageBar(totalIncome, totalExpenses) {
     }
 
     tooltipEl.textContent = currentUsageText;
-    if (barEl.classList.contains('show-percentage')) {
-        tooltipEl.textContent = currentUsageText;
-    }
 }
 
 function toggleCashflowUsageTooltip(forceState) {
@@ -1358,6 +1394,156 @@ function toggleCashflowUsageTooltip(forceState) {
     tooltipEl.textContent = currentUsageText;
 }
 
+/* --- Renderizado de Movimientos --- */
+function render() {
+    const visibleMovements = getFilteredMovements();
+
+    let totalIncome = 0;
+    let totalExpenses = 0;
+    visibleMovements.forEach(item => {
+        if (item.kind === 'income') totalIncome += item.amount;
+        else totalExpenses += item.amount;
+    });
+
+    $('income').textContent = formatMoney(totalIncome);
+    $('expense').textContent = formatMoney(totalExpenses);
+    $('balance').textContent = formatMoney(totalIncome - totalExpenses);
+    updateCashflowUsageBar(totalIncome, totalExpenses);
+    updateFilterButtonIndicator();
+    updateActiveFilterCaption();
+
+    const chronologicalMovements = [...movements].sort((a, b) => {
+        const dateCmp = String(a.date || '').localeCompare(String(b.date || ''));
+        if (dateCmp !== 0) return dateCmp;
+        return (a.timestamp || 0) - (b.timestamp || 0);
+    });
+
+    let runningBalance = 0;
+    const runningBalanceById = new Map();
+    chronologicalMovements.forEach(item => {
+        const amt = Number(item.amount) || 0;
+        runningBalance += item.kind === 'income' ? amt : -amt;
+        runningBalanceById.set(item.id, Math.round(runningBalance * 100) / 100);
+    });
+
+    const formattedDates = visibleMovements.map(item =>
+        new Date(item.date + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })
+    );
+
+    let rowsHtml = '';
+    visibleMovements.forEach((item, index) => {
+        const dateFormatted = formattedDates[index];
+        const prevDate = formattedDates[index - 1] || null;
+        const nextDate = formattedDates[index + 1] || null;
+
+        if (dateFormatted !== prevDate) {
+            rowsHtml += `
+                <tr class="date-header-row">
+                    <td colspan="4"><span>${dateFormatted}</span></td>
+                </tr>
+            `;
+        }
+
+        const borderClass = dateFormatted !== nextDate ? 'no-border' : '';
+        const { accentColor: catColor, iconSvg } = getCategoryMeta(item.kind, item.category);
+        const remainingAfterMove = runningBalanceById.get(item.id) ?? 0;
+
+        rowsHtml += `
+            <tr class="movement-row ${borderClass}">
+                <td>
+                    <div class="movement-name-wrapper">
+                        <span class="category-icon-wrapper" style="color: ${catColor};">${iconSvg}</span>
+                        <div class="movement-text-stack">
+                            <span class="movement-title">${escapeHtml(item.desc)}</span>
+                            <span class="movement-mobile-category">${escapeHtml(item.category)}</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <span class="category-text">${escapeHtml(item.category)}</span>
+                </td>
+                <td class="amount ${item.kind === 'income' ? 'income' : 'expense'}">
+                    <div class="movement-amount-stack">
+                        <span>${item.kind === 'income' ? '+' : '−'}${formatMoney(item.amount)}</span>
+                        <span class="movement-balance-sub">${formatMoney(remainingAfterMove)}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="actions">
+                        <button class="editar-movimiento" data-edit="${item.id}" title="Editar" aria-label="Editar">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+
+    $('rows').innerHTML = rowsHtml;
+    $('empty').style.display = visibleMovements.length ? 'none' : 'block';
+
+    if (activeFinanceViewMode === 'categories') {
+        renderCategoriesRedesign(visibleMovements);
+    }
+}
+
+/* --- Modales de Movimientos (Crear, Editar, Detalle) --- */
+function openNewMovement() {
+    editingId = null;
+    $('newForm')?.reset();
+    if ($('newKind')) $('newKind').value = 'expense';
+    updateCategoryOptions('new');
+    if ($('newDate')) $('newDate').value = `${currentMonth}-${pad(today.getDate())}`;
+    clearValidationErrors($('newForm'));
+    openModal($('newDlg'));
+}
+
+function editMovement(id) {
+    const item = movements.find(m => m.id === id);
+    if (!item) return;
+
+    editingId = id;
+    $('editDesc').value = item.desc;
+    $('editKind').value = item.kind;
+    updateCategoryOptions('edit');
+    $('editAmount').value = item.amount;
+    $('editDate').value = item.date;
+    $('editCategory').value = item.category;
+    $('editNotes').value = item.notes || '';
+
+    if ($('deleteMovementModalBtn')) {
+        $('deleteMovementModalBtn').onclick = () => {
+            if (!confirm('¿Eliminar este movimiento?')) return;
+            movements = movements.filter(m => m.id !== editingId);
+            persist();
+            closeModal($('editDlg'));
+            render();
+        };
+    }
+
+    clearValidationErrors($('editForm'));
+    openModal($('editDlg'));
+}
+
+function showMovementDetail(id) {
+    const item = movements.find(m => m.id === id);
+    if (!item) return;
+
+    if ($('detailConcept')) $('detailConcept').textContent = item.desc || 'Sin concepto';
+    if ($('detailContent')) {
+        $('detailContent').innerHTML = `
+            <table class="detail-table">
+                <tr><th>Categoría</th><td>${escapeHtml(item.category)}</td></tr>
+                <tr><th>Importe</th><td>${formatMoney(item.amount)}</td></tr>
+                <tr><th>Fecha</th><td>${formatDateEs(item.date)}</td></tr>
+                <tr><th>Notas</th><td>${escapeHtml(item.notes || '')}</td></tr>
+            </table>
+        `;
+    }
+    openModal($('detailDlg'));
+}
+
+/* --- Vista y Gestión de Categorías --- */
 function setupCategoryTabs() {
     const btnExpense = $('catTabExpense');
     const btnIncome = $('catTabIncome');
@@ -1367,7 +1553,9 @@ function setupCategoryTabs() {
         currentCatKind = kind;
         selectedDonutCategory = null;
         btnExpense.classList.toggle('active', kind === 'expense');
+        btnExpense.setAttribute('aria-pressed', String(kind === 'expense'));
         btnIncome.classList.toggle('active', kind === 'income');
+        btnIncome.setAttribute('aria-pressed', String(kind === 'income'));
         renderCategoriesRedesign();
     };
 
@@ -1507,101 +1695,100 @@ function renderCategoriesRedesign(sourceMovements = getFilteredMovements()) {
     }
 }
 
-function render() {
-    const visibleMovements = getFilteredMovements();
+function renderConfigCategories() {
+    const list = $('categoryManagerList');
+    if (!list) return;
 
-    let totalIncome = 0;
-    let totalExpenses = 0;
-    visibleMovements.forEach(item => {
-        if (item.kind === 'income') totalIncome += item.amount;
-        else totalExpenses += item.amount;
-    });
+    list.innerHTML = ['expense', 'income'].map((kind, idx) => {
+        const title = kind === 'expense' ? 'Gastos' : 'Ingresos';
+        const sectionClass = idx > 0 ? 'category-section-title category-section-divider' : 'category-section-title';
 
-    $('income').textContent = formatMoney(totalIncome);
-    $('expense').textContent = formatMoney(totalExpenses);
-    $('balance').textContent = formatMoney(totalIncome - totalExpenses);
-    updateCashflowUsageBar(totalIncome, totalExpenses);
-    updateFilterButtonIndicator();
-    updateActiveFilterCaption();
+        const itemsHtml = getSortedCategories(kind).map((cat) => {
+            const originalIndex = appConfig.categories[kind].findIndex(c => c.name === cat.name);
+            const iconSvg = categoryIconsMap[cat.icon || 'Compras'] || categoryIconsMap['Compras'];
 
-    const chronologicalMovements = [...movements].sort((a, b) => {
-        const dateCmp = String(a.date || '').localeCompare(String(b.date || ''));
-        if (dateCmp !== 0) return dateCmp;
-        return (a.timestamp || 0) - (b.timestamp || 0);
-    });
-
-    let runningBalance = 0;
-    const runningBalanceById = new Map();
-    chronologicalMovements.forEach(item => {
-        const amt = Number(item.amount) || 0;
-        runningBalance += item.kind === 'income' ? amt : -amt;
-        runningBalanceById.set(item.id, Math.round(runningBalance * 100) / 100);
-    });
-
-    const formattedDates = visibleMovements.map(item =>
-        new Date(item.date + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })
-    );
-
-    let rowsHtml = '';
-    visibleMovements.forEach((item, index) => {
-        const dateFormatted = formattedDates[index];
-        const prevDate = formattedDates[index - 1] || null;
-        const nextDate = formattedDates[index + 1] || null;
-
-        if (dateFormatted !== prevDate) {
-            rowsHtml += `
-                <tr class="date-header-row">
-                    <td colspan="4"><span>${dateFormatted}</span></td>
-                </tr>
-            `;
-        }
-
-        const borderClass = dateFormatted !== nextDate ? 'no-border' : '';
-        const { accentColor: catColor, iconSvg } = getCategoryMeta(item.kind, item.category);
-        const remainingAfterMove = runningBalanceById.get(item.id) ?? 0;
-
-        rowsHtml += `
-            <tr class="movement-row ${borderClass}">
-                <td>
-                    <div class="movement-name-wrapper">
-                        <span class="category-icon-wrapper" style="color: ${catColor};">${iconSvg}</span>
-                        <div class="movement-text-stack">
-                            <span class="movement-title">${escapeHtml(item.desc)}</span>
-                            <span class="movement-mobile-category">${escapeHtml(item.category)}</span>
-                        </div>
+            return `
+                <div class="category-item-row">
+                    <div class="flex-center-gap">
+                        <span class="editcategory-icon-wrapper" style="color: ${cat.color}; width: 28px; height: 28px;">${iconSvg}</span>
+                        <span class="category-item-name">${escapeHtml(cat.name)}</span>
                     </div>
-                </td>
-                <td class="text-right">
-                    <span class="category-text">${escapeHtml(item.category)}</span>
-                </td>
-                <td class="amount ${item.kind === 'income' ? 'income' : 'expense'}">
-                    <div class="movement-amount-stack">
-                        <span>${item.kind === 'income' ? '+' : '−'}${formatMoney(item.amount)}</span>
-                        <span class="movement-balance-sub">${formatMoney(remainingAfterMove)}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="actions">
-                        <button class="editar-movimiento" data-edit="${item.id}" title="Editar" aria-label="Editar">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    <div class="category-item-controls">
+                        <button type="button" class="edit-category-button" data-action="open-edit-category" data-kind="${kind}" data-index="${originalIndex}" title="Editar categoría" aria-label="Editar categoría">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         </button>
                     </div>
-                </td>
-            </tr>
-        `;
+                </div>
+            `;
+        }).join('');
+
+        return `<strong class="${sectionClass}">${title}</strong>${itemsHtml}`;
+    }).join('');
+}
+
+function removeCategory(kind, index) {
+    const cat = appConfig.categories[kind]?.[index];
+    if (!cat) return;
+
+    const usageCount = movements.filter(m => m.kind === kind && m.category === cat.name).length;
+    const message = usageCount > 0
+        ? `Hay ${usageCount} movimiento${usageCount === 1 ? '' : 's'} que usa${usageCount === 1 ? '' : 'n'} la categoría "${cat.name}". ¿Eliminarla de todos modos?`
+        : `¿Estás seguro de eliminar la categoría "${cat.name}"?`;
+
+    if (!confirm(message)) return;
+
+    appConfig.categories[kind].splice(index, 1);
+    persistConfig();
+    refreshCategoryUI();
+}
+
+function renderIconGrid(containerId, hiddenInputId, selectedIcon) {
+    const gridContainer = $(containerId);
+    const hiddenInput = $(hiddenInputId);
+    if (!gridContainer || !hiddenInput) return;
+
+    hiddenInput.value = selectedIcon || '';
+    gridContainer.innerHTML = Object.keys(categoryIconsMap).map(iconKey => `
+        <div class="icon-option-item ${iconKey === selectedIcon ? 'selected' : ''}" data-icon="${iconKey}" title="${iconKey}">
+            ${categoryIconsMap[iconKey]}
+        </div>
+    `).join('');
+}
+
+function openEditCategoryModal(kind, index) {
+    const cat = appConfig.categories[kind][index];
+    if (!cat) return;
+
+    editingCategoryData = { kind, index };
+    if ($('editCatName')) $('editCatName').value = cat.name;
+    if ($('editCatKind')) $('editCatKind').value = kind;
+
+    renderIconGrid('editIconSelectorGrid', 'editCatIcon', cat.icon || 'Compras');
+    clearValidationErrors($('categoryEditForm'));
+    openModal($('categoryEditDlg'));
+}
+
+function selectCategoryIcon(iconKey, targetInputId, containerSelector) {
+    const hiddenInput = $(targetInputId);
+    if (hiddenInput) hiddenInput.value = iconKey;
+
+    document.querySelectorAll(`${containerSelector} .icon-option-item`).forEach(el => {
+        el.classList.toggle('selected', el.dataset.icon === iconKey);
     });
-
-    $('rows').innerHTML = rowsHtml;
-    $('empty').style.display = visibleMovements.length ? 'none' : 'block';
-
-    if (activeFinanceViewMode === 'categories') {
-        renderCategoriesRedesign(visibleMovements);
-    }
 }
 
 /* ==========================================
-   6. GESTOR DE REMESAS
+   8. UTILIDAD 1: GESTOR DE REMESAS
    ========================================== */
+function openNewRemittanceModal() {
+    $('remitNewForm')?.reset();
+    if ($('newRemitName')) {
+        $('newRemitName').value = `${SPANISH_MONTH_NAMES[today.getMonth()]} ${today.getFullYear()}`;
+    }
+    clearValidationErrors($('remitNewForm'));
+    openModal($('remitNewDlg'));
+}
+
 function updateRemitDOMTotals(rem) {
     const tc = rem.tc || 1;
     let totalRecv = 0;
@@ -1695,7 +1882,7 @@ function renderRemittancesList() {
                     </div>
                 </div>
 
-                <div id="remit_details_${rem.id}" class="installment-installments-list remit-details-body" style="display: ${rem.expanded ? 'flex' : 'none'};">
+                <div id="remit_details_${rem.id}" class="installment-installments-list-remesas remit-details-body" style="display: ${rem.expanded ? 'flex' : 'none'};">
                     <div class="remit-tc-row">
                         <span class="remit-tc-label">Tipo de cambio:</span>
                         <input type="text" class="remit-tc-input remit-input-num" data-remit-id="${rem.id}" value="${formattedTc}" placeholder="0,00" inputmode="decimal" enterkeyhint="done">
@@ -1706,13 +1893,13 @@ function renderRemittancesList() {
                     </div>
 
                     <div class="remit-new-row">
-                        <input type="text" id="new_concept_input_${rem.id}" placeholder="Nuevo concepto" class="remit-new-input remit-concept-field" data-remit-id="${rem.id}" enterkeyhint="done">
+                        <input type="text" id="new_concept_input_${rem.id}" placeholder=" Nuevo concepto" class="remit-new-input remit-concept-field" data-remit-id="${rem.id}" enterkeyhint="done">
                         <button type="button" class="remit-add-btn" data-action="add-remit-item" data-remit-id="${rem.id}">Añadir</button>
                     </div>
 
                     <div class="remit-totals-box">
                         <div class="remit-total-line">
-                            <span class="remit-total-label">Total a enviar:</span>
+                            <span class="remit-total-label">A enviar:</span>
                             <div>
                                 <span id="total_send_${rem.id}" class="remit-total-send">${formatCurrencyCustom(totalSend, rem.sendCurr)}</span>
                                 <span id="total_recv_${rem.id}" class="remit-total-recv">${formatCurrencyCustom(totalRecv, rem.recvCurr)}</span>
@@ -1798,8 +1985,16 @@ function addRemitItem(remId) {
 }
 
 /* ==========================================
-   7. GESTOR DE CUOTAS
+   9. UTILIDAD 2: GESTOR DE COMPRAS EN CUOTAS
    ========================================== */
+function openNewInstallmentPurchaseModal() {
+    $('installmentNewForm')?.reset();
+    if ($('newInstCurrency')) $('newInstCurrency').value = appConfig.currency || 'EUR';
+    if ($('newInstFirstDate')) $('newInstFirstDate').value = `${currentMonth}-${pad(today.getDate())}`;
+    clearValidationErrors($('installmentNewForm'));
+    openModal($('installmentNewDlg'));
+}
+
 function autoCalculateInstallment(prefix) {
     const financed = parseFloat($(`${prefix}InstFinancedAmount`).value.replace(',', '.')) || 0;
     const interest = parseFloat($(`${prefix}InstInterestAmount`).value.replace(',', '.')) || 0;
@@ -1897,7 +2092,7 @@ function renderInstallments() {
                         <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
                 </div>
-                <div id="inst_details_${purchase.id}" class="installment-installments-list" style="display: ${purchase.expanded ? 'flex' : 'none'};">
+                <div id="inst_details_${purchase.id}" class="installment-installments-list-compras" style="display: ${purchase.expanded ? 'flex' : 'none'};">
                     ${installmentsHtml}
                 </div>
             </div>
@@ -1923,17 +2118,6 @@ function toggleInstallmentPaid(purchaseId, instNumber) {
 
     inst.paid = !inst.paid;
     persistInstallments();
-    const currentScrollTop = $(`inst_details_${purchaseId}`)?.scrollTop || 0;
-    renderInstallments();
-    const updatedListEl = $(`inst_details_${purchaseId}`);
-    if (updatedListEl) updatedListEl.scrollTop = currentScrollTop;
-}
-
-function deleteInstallmentPurchase(purchaseId) {
-    if (!confirm('¿Eliminar esta compra en cuotas y todo su historial?')) return;
-    installmentsPurchases = installmentsPurchases.filter(p => p.id !== purchaseId);
-    persistInstallments();
-    closeModal($('installmentEditDlg'));
     renderInstallments();
 }
 
@@ -1944,30 +2128,42 @@ function editInstallmentPurchase(purchaseId) {
     editingInstallmentId = purchaseId;
     $('editInstName').value = purchase.name;
     $('editInstCurrency').value = purchase.currency || 'EUR';
-    $('editInstFinancedAmount').value = purchase.financedAmount || purchase.totalAmount;
-    $('editInstInterestAmount').value = purchase.interestAmount || '';
-    $('editInstTotalAmount').value = purchase.totalAmount;
+    $('editInstFinancedAmount').value = purchase.financedAmount != null ? String(purchase.financedAmount).replace('.', ',') : '';
+    $('editInstInterestAmount').value = purchase.interestAmount != null ? String(purchase.interestAmount).replace('.', ',') : '';
+    $('editInstTotalAmount').value = purchase.totalAmount != null ? Number(purchase.totalAmount).toFixed(2).replace('.', ',') : '';
     $('editInstTotalCount').value = purchase.totalCount;
-    $('editInstRegularAmount').value = purchase.regularAmount;
-    $('editInstFinalAmount').value = purchase.finalAmount || '';
+    $('editInstRegularAmount').value = String(purchase.regularAmount).replace('.', ',');
+    $('editInstFinalAmount').value = purchase.finalAmount !== purchase.regularAmount ? String(purchase.finalAmount).replace('.', ',') : '';
     $('editInstFirstDate').value = purchase.firstDate;
 
-    if ($('deleteInstallmentBtn')) $('deleteInstallmentBtn').onclick = () => deleteInstallmentPurchase(editingInstallmentId);
+    $('deleteInstallmentBtn').onclick = () => {
+        if (!confirm('¿Estás seguro de eliminar esta compra y todas sus cuotas?')) return;
+        installmentsPurchases = installmentsPurchases.filter(p => p.id !== editingInstallmentId);
+        persistInstallments();
+        closeModal($('installmentEditDlg'));
+        renderInstallments();
+    };
+
     clearValidationErrors($('installmentEditForm'));
     openModal($('installmentEditDlg'));
 }
 
 /* ==========================================
-   8. CONTADOR DE DÍAS
+   10. UTILIDAD 3: CONTADOR DE DÍAS TRABAJADOS
    ========================================== */
+function openNewDayCounterMonthModal() {
+    $('dayCounterMonthNewForm')?.reset();
+    if ($('newMonthName')) {
+        $('newMonthName').value = `${SPANISH_MONTH_NAMES[today.getMonth()]} ${today.getFullYear()}`;
+    }
+    if ($('newMonthTarget')) $('newMonthTarget').value = 15;
+    clearValidationErrors($('dayCounterMonthNewForm'));
+    openModal($('dayCounterMonthNewDlg'));
+}
+
 function renderDayCounter() {
     const listContainer = $('dayCounterMonthsList');
     if (!listContainer) return;
-
-    const addMonthBtn = $('addDayCounterMonthBtn');
-    if (addMonthBtn?.parentElement) {
-        addMonthBtn.parentElement.style.display = dayCounterMonths.some(m => m.expanded) ? 'none' : 'flex';
-    }
 
     if (!dayCounterMonths.length) {
         listContainer.innerHTML = '<div class="empty empty-compact">Aún no hay meses registrados.</div>';
@@ -1975,47 +2171,50 @@ function renderDayCounter() {
     }
 
     listContainer.innerHTML = dayCounterMonths.map((month) => {
-        const totalWorked = (month.days || []).length;
-        const extras = Math.max(0, totalWorked - (month.targetDays || 0));
+        const worked = month.days.length;
+        const target = month.targetDays || 15;
+        const statusText = worked > target
+            ? `${worked} / ${target} días trabajados (+${worked - target} extra)`
+            : `${worked} / ${target} días trabajados`;
 
-        const daysHtml = (month.days || []).map((day, idx) => `
+        const daysHtml = month.days.map((day, idx) => `
             <div class="dc-day-row">
                 <div class="dc-day-left">
                     <span class="dc-day-name">${escapeHtml(day.dayName)}</span>
                     <span class="dc-day-date">${formatDateEs(day.date)}</span>
                 </div>
                 <div class="dc-day-middle">
-                    <span class="dc-day-time">${escapeHtml(day.entryTime)} — ${escapeHtml(day.exitTime)}</span>
+                    <span class="dc-day-time">${escapeHtml(day.entryTime)} - ${escapeHtml(day.exitTime)}</span>
                     <span class="dc-day-loc">${escapeHtml(day.location)}</span>
                 </div>
                 <div class="dc-day-right">
-                    <button type="button" class="editbutton-xs" data-action="edit-dc-day" data-month-id="${month.id}" data-index="${idx}" title="Editar día" aria-label="Editar día">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    <button type="button" class="editdaysbutton-xs" data-action="edit-day" data-month-id="${month.id}" data-day-index="${idx}" title="Editar día" aria-label="Editar día">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     </button>
                 </div>
             </div>
         `).join('');
 
         return `
-            <div class="installment-purchase-card ${month.expanded ? 'is-open' : ''}" id="dc_month_box_${month.id}">
-                <div class="installment-purchase-header" data-action="toggle-dc-month" data-month-id="${month.id}">
+            <div class="installment-purchase-card ${month.expanded ? 'is-open' : ''}" id="dc_month_${month.id}">
+                <div class="installment-purchase-header" data-action="toggle-month" data-month-id="${month.id}">
                     <div class="flex-col">
                         <span class="installment-card-title">${escapeHtml(month.name)}</span>
-                        <span class="installment-card-subtitle">Días trabajados: ${totalWorked} • Días extras: ${extras}</span>
+                        <span class="installment-card-subtitle">${statusText}</span>
                     </div>
                     <div class="flex-center-gap">
-                        <button type="button" class="editbutton-xs" data-action="edit-dc-month" data-month-id="${month.id}" title="Editar mes" aria-label="Editar mes">
+                        <button type="button" class="editbutton-xs" data-action="edit-month" data-month-id="${month.id}" title="Editar mes" aria-label="Editar mes">
                             <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
                         </button>
                         <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
                 </div>
-                <div id="dc_month_details_${month.id}" class="installment-installments-list" style="display: ${month.expanded ? 'flex' : 'none'};">
+                <div id="dc_details_${month.id}" class="installment-installments-list-dias" style="display: ${month.expanded ? 'flex' : 'none'};">
                     <div class="dc-days-wrapper">
-                        ${daysHtml || '<div class="empty empty-mini">Sin días registrados en este mes.</div>'}
+                        ${daysHtml || '<div class="empty empty-compact">No hay días registrados aún.</div>'}
                     </div>
-                    <div class="utility-footer-action" style="margin-top: 0;">
-                        <button type="button" class="day-newbutton" data-action="open-add-dc-day" data-month-id="${month.id}">
+                    <div class="utility-footer-action">
+                        <button type="button" class="day-newbutton" data-action="add-day" data-month-id="${month.id}">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             Nuevo día
                         </button>
@@ -2026,203 +2225,244 @@ function renderDayCounter() {
     }).join('');
 }
 
-function toggleDayCounterMonthAccordion(monthId) {
-    const month = dayCounterMonths.find(x => x.id === monthId);
+function toggleMonthAccordion(monthId) {
+    const month = dayCounterMonths.find(m => m.id === monthId);
     if (!month) return;
 
     const willBeExpanded = !month.expanded;
     dayCounterMonths.forEach(m => { m.expanded = m.id === monthId ? willBeExpanded : false; });
     persistDayCounter();
     renderDayCounter();
+    scrollCardIntoView($(`dc_month_${monthId}`), willBeExpanded);
+}
 
-    if (willBeExpanded) {
-        const daysWrapper = document.querySelector(`#dc_month_details_${monthId} .dc-days-wrapper`);
-        if (daysWrapper) daysWrapper.scrollTop = daysWrapper.scrollHeight;
-        scrollCardIntoView($(`dc_month_box_${monthId}`), true);
-    }
+function editMonthModal(monthId) {
+    const month = dayCounterMonths.find(m => m.id === monthId);
+    if (!month) return;
+
+    editingMonthId = monthId;
+    $('editMonthName').value = month.name;
+    $('editMonthTarget').value = month.targetDays;
+
+    $('deleteMonthModalBtn').onclick = () => {
+        if (!confirm('¿Estás seguro de eliminar este mes y todos sus días registrados?')) return;
+        dayCounterMonths = dayCounterMonths.filter(m => m.id !== editingMonthId);
+        persistDayCounter();
+        closeModal($('dayCounterMonthEditDlg'));
+        renderDayCounter();
+    };
+
+    clearValidationErrors($('dayCounterMonthEditForm'));
+    openModal($('dayCounterMonthEditDlg'));
+}
+
+function openAddDayModal(monthId) {
+    const month = dayCounterMonths.find(m => m.id === monthId);
+    if (!month) return;
+
+    editingDayMonthId = monthId;
+    editingDayIndex = null;
+
+    $('dayDlgTitle').textContent = 'Registrar día';
+    $('dayModalActionsSplit').style.display = 'none';
+    $('dayModalActionsNormal').style.display = 'flex';
+    $('copyPreviousDayWrapper').style.display = month.days.length > 0 ? 'block' : 'none';
+
+    const todayStr = `${currentMonth}-${pad(today.getDate())}`;
+    $('dayDate').value = todayStr;
+    $('dayNameDisplay').value = getDayNameFromDate(todayStr);
+    $('dayEntryTime').value = '18:00';
+    $('dayExitTime').value = '06:00';
+    $('dayLocation').value = '';
+
+    clearValidationErrors($('dayCounterDayForm'));
+    openModal($('dayCounterDayDlg'));
+}
+
+function openEditDayModal(monthId, dayIndex) {
+    const month = dayCounterMonths.find(m => m.id === monthId);
+    const day = month?.days[dayIndex];
+    if (!day) return;
+
+    editingDayMonthId = monthId;
+    editingDayIndex = dayIndex;
+
+    $('dayDlgTitle').textContent = 'Editar día';
+    $('dayModalActionsSplit').style.display = 'flex';
+    $('dayModalActionsNormal').style.display = 'none';
+    $('copyPreviousDayWrapper').style.display = 'none';
+
+    $('dayDate').value = day.date;
+    $('dayNameDisplay').value = day.dayName;
+    $('dayEntryTime').value = day.entryTime;
+    $('dayExitTime').value = day.exitTime;
+    $('dayLocation').value = day.location;
+
+    $('deleteDayModalBtn').onclick = () => {
+        if (!confirm('¿Eliminar este día trabajado?')) return;
+        month.days.splice(editingDayIndex, 1);
+        persistDayCounter();
+        closeModal($('dayCounterDayDlg'));
+        renderDayCounter();
+    };
+
+    clearValidationErrors($('dayCounterDayForm'));
+    openModal($('dayCounterDayDlg'));
 }
 
 /* ==========================================
-   9. MODALES Y CATEGORÍAS
+   11. EVENT LISTENERS GLOBALES E INICIALIZACIÓN
    ========================================== */
-function openNewMovement() {
-    editingId = null;
-    $('newForm')?.reset();
-    if ($('newKind')) $('newKind').value = 'expense';
-    updateCategoryOptions('new');
-    if ($('newDate')) {
-        $('newDate').value = `${currentMonth}-${pad(today.getDate())}`;
-    }
-    clearValidationErrors($('newForm'));
-    openModal($('newDlg'));
-}
+function setupEventListeners() {
+    // --- Menú lateral y cabecera ---
+    $('openNavDrawerBtn')?.addEventListener('click', openNavDrawer);
+    $('closeNavDrawerBtn')?.addEventListener('click', closeNavDrawer);
+    $('navDrawerBackdrop')?.addEventListener('click', closeNavDrawer);
 
-function editMovement(id) {
-    const item = movements.find(m => m.id === id);
-    if (!item) return;
+    $('navMoreBackupBtn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleBackupPopover();
+    });
+    $('navBackupBackdrop')?.addEventListener('click', () => toggleBackupPopover(false));
 
-    editingId = id;
-    $('editDesc').value = item.desc;
-    $('editKind').value = item.kind;
-    updateCategoryOptions('edit');
-    $('editAmount').value = item.amount;
-    $('editDate').value = item.date;
-    $('editCategory').value = item.category;
-    $('editNotes').value = item.notes || '';
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (!$('navBackupPopover')?.classList.contains('is-hidden')) {
+                toggleBackupPopover(false);
+                return;
+            }
+            if ($('navDrawer')?.classList.contains('is-open')) {
+                closeNavDrawer();
+            }
+        }
+    });
 
-    if ($('deleteMovementModalBtn')) {
-        $('deleteMovementModalBtn').onclick = () => {
-            if (!confirm('¿Eliminar este movimiento?')) return;
-            movements = movements.filter(m => m.id !== editingId);
-            persist();
-            closeModal($('editDlg'));
+    document.querySelectorAll('[data-nav-section]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectAppSection(btn.dataset.navSection, { expandActiveUtility: true, closeDrawer: true });
+        });
+    });
+
+    $('headerSectionNewBtn')?.addEventListener('click', () => {
+        if (activeAppSection === 'remittances') {
+            openNewRemittanceModal();
+        } else if (activeAppSection === 'installments') {
+            openNewInstallmentPurchaseModal();
+        } else if (activeAppSection === 'dayCounter') {
+            openNewDayCounterMonthModal();
+        }
+    });
+
+    $('currencySelect')?.addEventListener('change', (e) => {
+        appConfig.currency = e.target.value;
+        persistConfig();
+        render();
+        renderRemittancesList();
+        renderInstallments();
+    });
+
+    document.querySelectorAll('[data-theme-value]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            appConfig.theme = btn.dataset.themeValue === 'dark' ? 'dark' : 'light';
+            persistConfig();
             render();
-        };
-    }
-
-    clearValidationErrors($('editForm'));
-    openModal($('editDlg'));
-}
-
-function showMovementDetail(id) {
-    const item = movements.find(m => m.id === id);
-    if (!item) return;
-
-    if ($('detailConcept')) $('detailConcept').textContent = item.desc || 'Sin concepto';
-    if ($('detailContent')) {
-        $('detailContent').innerHTML = `
-            <table class="detail-table">
-                <tr><th>Categoría</th><td>${escapeHtml(item.category)}</td></tr>
-                <tr><th>Importe</th><td>${formatMoney(item.amount)}</td></tr>
-                <tr><th>Fecha</th><td>${formatDateEs(item.date)}</td></tr>
-                <tr><th>Notas</th><td>${escapeHtml(item.notes || '')}</td></tr>
-            </table>
-        `;
-    }
-    openModal($('detailDlg'));
-}
-
-function renderConfigCategories() {
-    const list = $('categoryManagerList');
-    if (!list) return;
-
-    list.innerHTML = ['expense', 'income'].map((kind, idx) => {
-        const title = kind === 'expense' ? 'Gastos' : 'Ingresos';
-        const sectionClass = idx > 0 ? 'category-section-title category-section-divider' : 'category-section-title';
-
-        const itemsHtml = getSortedCategories(kind).map((cat) => {
-            const originalIndex = appConfig.categories[kind].findIndex(c => c.name === cat.name);
-            const iconSvg = categoryIconsMap[cat.icon || 'Compras'] || categoryIconsMap['Compras'];
-
-            return `
-                <div class="category-item-row">
-                    <div class="flex-center-gap">
-                        <span class="category-icon-wrapper" style="color: ${cat.color}; width: 28px; height: 28px;">${iconSvg}</span>
-                        <span class="category-item-name">${escapeHtml(cat.name)}</span>
-                    </div>
-                    <div class="category-item-controls">
-                        <button type="button" class="edit-category-button" data-action="open-edit-category" data-kind="${kind}" data-index="${originalIndex}" title="Editar categoría" aria-label="Editar categoría">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        </button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        return `<strong class="${sectionClass}">${title}</strong>${itemsHtml}`;
-    }).join('');
-}
-
-function removeCategory(kind, index) {
-    const cat = appConfig.categories[kind]?.[index];
-    if (!cat) return;
-
-    const usageCount = movements.filter(m => m.kind === kind && m.category === cat.name).length;
-    const message = usageCount > 0
-        ? `Hay ${usageCount} movimiento${usageCount === 1 ? '' : 's'} que usa${usageCount === 1 ? '' : 'n'} la categoría "${cat.name}". ¿Eliminarla de todos modos?`
-        : `¿Estás seguro de eliminar la categoría "${cat.name}"?`;
-
-    if (!confirm(message)) return;
-
-    appConfig.categories[kind].splice(index, 1);
-    persistConfig();
-    refreshCategoryUI();
-}
-
-function renderIconGrid(containerId, hiddenInputId, selectedIcon) {
-    const gridContainer = $(containerId);
-    const hiddenInput = $(hiddenInputId);
-    if (!gridContainer || !hiddenInput) return;
-
-    hiddenInput.value = selectedIcon || '';
-    gridContainer.innerHTML = Object.keys(categoryIconsMap).map(iconKey => `
-        <div class="icon-option-item ${iconKey === selectedIcon ? 'selected' : ''}" data-icon="${iconKey}" title="${iconKey}">
-            ${categoryIconsMap[iconKey]}
-        </div>
-    `).join('');
-}
-
-function openEditCategoryModal(kind, index) {
-    const cat = appConfig.categories[kind][index];
-    if (!cat) return;
-
-    editingCategoryData = { kind, index };
-    if ($('editCatName')) $('editCatName').value = cat.name;
-    if ($('editCatKind')) $('editCatKind').value = kind;
-
-    renderIconGrid('editIconSelectorGrid', 'editCatIcon', cat.icon || 'Compras');
-    clearValidationErrors($('categoryEditForm'));
-    openModal($('categoryEditDlg'));
-}
-
-function selectCategoryIcon(iconKey, targetInputId, containerSelector) {
-    const hiddenInput = $(targetInputId);
-    if (hiddenInput) hiddenInput.value = iconKey;
-
-    document.querySelectorAll(`${containerSelector} .icon-option-item`).forEach(el => {
-        el.classList.toggle('selected', el.dataset.icon === iconKey);
-    });
-}
-
-/* ==========================================
-   10. REGISTRO DE LISTENERS E INICIALIZACIÓN
-   ========================================== */
-function bindEvents() {
-    utilityAccordionConfig.forEach(item => {
-        setupUtilityAccordion(item.btnId, item.containerId, item.iconId, item.cardEl);
+        });
     });
 
-    setupCategoryTabs();
+    // --- Exportar / Importar CSV ---
+    $('openExportDlgBtn')?.addEventListener('click', () => {
+        closeNavDrawer();
+        ['expMovements', 'expRemittances', 'expInstallments', 'expDayCounter'].forEach(id => {
+            if ($(id)) $(id).checked = false;
+        });
+        openModal($('exportDlg'));
+    });
+    $('cancelExportBtn')?.addEventListener('click', () => closeModal($('exportDlg')));
+    $('exportForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        executeCustomExport();
+    });
+
+    $('importCsvBtn')?.addEventListener('click', () => {
+        closeNavDrawer();
+        $('csvFileInput')?.click();
+    });
+    $('csvFileInput')?.addEventListener('change', importMovementsCsv);
+    $('cancelImportSelect')?.addEventListener('click', () => closeModal($('importSelectDlg')));
+    $('importSelectForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        applyImportSelection({
+            movements: $('impSelectMovs')?.checked ?? true,
+            remittances: $('impSelectRemit')?.checked ?? true,
+            installments: $('impSelectInst')?.checked ?? true,
+            dayCounter: $('impSelectDays')?.checked ?? true
+        });
+    });
+
+    // --- Barra de uso de ingresos y cambio de vista (Movimientos / Categorías) ---
+    const usageBarEl = $('cashflowUsageBar');
+    if (usageBarEl) {
+        usageBarEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleCashflowUsageTooltip();
+        });
+        usageBarEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleCashflowUsageTooltip();
+            }
+        });
+        document.addEventListener('click', (e) => {
+            if (!usageBarEl.contains(e.target)) {
+                toggleCashflowUsageTooltip(false);
+            }
+        });
+    }
 
     $('switchModeMovements')?.addEventListener('click', () => setFinanceViewMode('movements'));
     $('switchModeCategories')?.addEventListener('click', () => setFinanceViewMode('categories'));
 
-    /* --- Modal de Filtros --- */
+    // --- Filtros de movimientos ---
     $('openFilterBtn')?.addEventListener('click', openFilterDialog);
     $('cancelFilterBtn')?.addEventListener('click', () => closeModal($('filterDlg')));
     $('resetFiltersBtn')?.addEventListener('click', clearFilterDialogDraft);
 
     document.querySelectorAll('#filterDlg .filter-seg-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            filterDraft.kind = btn.dataset.filterKind;
-            syncFilterUIState(filterDraft.kind);
-            populateFilterCategorySelect(filterDraft.kind, 'all');
+            const newKind = btn.dataset.filterKind || 'all';
+            filterDraft.kind = newKind;
+            filterDraft.category = 'all';
+            syncFilterUIState(newKind);
+            populateFilterCategorySelect(newKind, 'all');
         });
+    });
+
+    $('filterCategorySelect')?.addEventListener('change', (e) => {
+        filterDraft.category = e.target.value || 'all';
     });
 
     document.querySelectorAll('#filterDlg .filter-date-tab').forEach(tab => {
         tab.addEventListener('click', () => {
-            handleFilterDateTabClick(tab.dataset.dateMode);
+            const mode = tab.dataset.dateMode || 'all';
+            if (filterDraft.dateMode === mode) {
+                filterDraft.pickerOpen = !filterDraft.pickerOpen;
+                renderFilterDatePanel();
+            } else {
+                handleFilterDateTabClick(mode);
+            }
         });
     });
 
     $('filterDatePickerPanel')?.addEventListener('click', (e) => {
         const navBtn = e.target.closest('[data-cal-nav]');
         if (navBtn) {
-            const delta = navBtn.dataset.calNav === 'next' ? 1 : -1;
-            const nextDate = new Date(filterDraft.calYear, filterDraft.calMonth + delta, 1);
-            filterDraft.calYear = nextDate.getFullYear();
-            filterDraft.calMonth = nextDate.getMonth();
+            const dir = navBtn.dataset.calNav === 'prev' ? -1 : 1;
+            let nextMonth = filterDraft.calMonth + dir;
+            let nextYear = filterDraft.calYear;
+            if (nextMonth < 0) { nextMonth = 11; nextYear -= 1; }
+            else if (nextMonth > 11) { nextMonth = 0; nextYear += 1; }
+            filterDraft.calMonth = nextMonth;
+            filterDraft.calYear = nextYear;
             renderFilterDatePanel();
             return;
         }
@@ -2245,667 +2485,102 @@ function bindEvents() {
             return;
         }
 
-        const monthBtn = e.target.closest('[data-pick-month]');
-        if (monthBtn) {
-            filterDraft.pickerMonth = Number(monthBtn.dataset.pickMonth);
+        const monthOpt = e.target.closest('[data-pick-month]');
+        if (monthOpt) {
+            filterDraft.pickerMonth = Number(monthOpt.dataset.pickMonth);
             const computed = computeRangeForMode('month', filterDraft.anchorDate, filterDraft.pickerYear, filterDraft.pickerMonth);
             filterDraft.startDate = computed.startDate;
             filterDraft.endDate = computed.endDate;
+            filterDraft.anchorDate = computed.anchorDate;
             renderFilterDatePanel();
             return;
         }
 
-        const yearBtn = e.target.closest('[data-pick-year]');
-        if (yearBtn) {
-            filterDraft.pickerYear = Number(yearBtn.dataset.pickYear);
+        const yearOpt = e.target.closest('[data-pick-year]');
+        if (yearOpt) {
+            filterDraft.pickerYear = Number(yearOpt.dataset.pickYear);
             const computed = computeRangeForMode(filterDraft.dateMode, filterDraft.anchorDate, filterDraft.pickerYear, filterDraft.pickerMonth);
             filterDraft.startDate = computed.startDate;
             filterDraft.endDate = computed.endDate;
+            filterDraft.anchorDate = computed.anchorDate;
             renderFilterDatePanel();
         }
     });
 
     $('filterDatePickerPanel')?.addEventListener('change', (e) => {
-        if (e.target.id === 'filterStartDate') {
-            filterDraft.startDate = e.target.value;
-        } else if (e.target.id === 'filterEndDate') {
-            filterDraft.endDate = e.target.value;
-        }
+        if (e.target.id === 'filterStartDate') filterDraft.startDate = e.target.value || '';
+        else if (e.target.id === 'filterEndDate') filterDraft.endDate = e.target.value || '';
     });
 
     $('filterForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        const rawMin = $('filterMinAmount')?.value.trim() || '';
-        const rawMax = $('filterMaxAmount')?.value.trim() || '';
 
-        let finalStart = filterDraft.dateMode === 'all' ? '' : filterDraft.startDate;
-        let finalEnd = filterDraft.dateMode === 'all' ? '' : filterDraft.endDate;
-        if (filterDraft.dateMode === 'custom') {
-            finalStart = $('filterStartDate')?.value || '';
-            finalEnd = $('filterEndDate')?.value || '';
-            if (finalStart && finalEnd && finalStart > finalEnd) {
-                [finalStart, finalEnd] = [finalEnd, finalStart];
+        const rawQuery = $('filterSearchInput')?.value || '';
+        const selectedCat = filterDraft.kind === 'all' ? 'all' : ($('filterCategorySelect')?.value || 'all');
+
+        const minStr = ($('filterMinAmount')?.value || '').trim();
+        const maxStr = ($('filterMaxAmount')?.value || '').trim();
+        let minAmount = minStr ? parseInputNumber(minStr) : null;
+        let maxAmount = maxStr ? parseInputNumber(maxStr) : null;
+        if (minAmount !== null && maxAmount !== null && minAmount > maxAmount) {
+            [minAmount, maxAmount] = [maxAmount, minAmount];
+        }
+
+        let startDate = '';
+        let endDate = '';
+        const mode = filterDraft.dateMode || 'all';
+
+        if (mode === 'custom') {
+            startDate = $('filterStartDate')?.value || filterDraft.startDate || '';
+            endDate = $('filterEndDate')?.value || filterDraft.endDate || '';
+            if (startDate && endDate && startDate > endDate) {
+                [startDate, endDate] = [endDate, startDate];
             }
+        } else if (mode !== 'all') {
+            const computed = computeRangeForMode(mode, filterDraft.anchorDate, filterDraft.pickerYear, filterDraft.pickerMonth);
+            startDate = computed.startDate;
+            endDate = computed.endDate;
         }
 
         movementFilters = {
-            query: $('filterSearchInput')?.value.trim() || '',
+            query: rawQuery,
             kind: filterDraft.kind,
-            category: filterDraft.kind === 'all' ? 'all' : ($('filterCategorySelect')?.value || 'all'),
-            dateMode: filterDraft.dateMode,
-            startDate: finalStart,
-            endDate: finalEnd,
-            minAmount: rawMin ? parseInputNumber(rawMin) : null,
-            maxAmount: rawMax ? parseInputNumber(rawMax) : null
+            category: selectedCat,
+            dateMode: mode,
+            startDate,
+            endDate,
+            minAmount,
+            maxAmount
         };
 
         persistFilters();
-        updateFilterButtonIndicator();
-        updateActiveFilterCaption();
         closeModal($('filterDlg'));
         render();
     });
 
-    const usageBar = $('cashflowUsageBar');
-    if (usageBar) {
-        usageBar.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleCashflowUsageTooltip();
-        });
-        usageBar.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                toggleCashflowUsageTooltip();
-            }
-        });
-    }
-
-    document.addEventListener('click', (e) => {
-        const barEl = $('cashflowUsageBar');
-        if (barEl?.classList.contains('show-percentage') && !e.target.closest('#cashflowUsageBar')) {
-            toggleCashflowUsageTooltip(false);
-        }
-    });
-
-    $('openExportDlgBtn')?.addEventListener('click', () => {
-        ['expMovements', 'expRemittances', 'expInstallments', 'expDayCounter'].forEach(id => {
-            if ($(id)) $(id).checked = false;
-        });
-        openModal($('exportDlg'));
-    });
-
-    $('cancelExportBtn')?.addEventListener('click', () => closeModal($('exportDlg')));
-
-    $('exportForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        executeCustomExport();
-    });
-
-    $('importCsvBtn')?.addEventListener('click', () => $('csvFileInput')?.click());
-    $('csvFileInput')?.addEventListener('change', importMovementsCsv);
-
-    $('importSelectForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        applyImportSelection({
-            movements: $('impSelectMovs')?.checked || false,
-            remittances: $('impSelectRemit')?.checked || false,
-            installments: $('impSelectInst')?.checked || false,
-            dayCounter: $('impSelectDays')?.checked || false
-        });
-    });
-
-    $('cancelImportSelect')?.addEventListener('click', () => {
-        pendingParsedSections = null;
-        closeModal($('importSelectDlg'));
-    });
-
-    $('catChartWrapper')?.addEventListener('click', (e) => {
-        const segment = e.target.closest('[data-donut-category]');
-        if (segment) toggleDonutSegment(segment.dataset.donutCategory);
-    });
-
-    if ($('categories')) {
-        $('categories').addEventListener('click', (e) => {
-            const item = e.target.closest('[data-list-category]');
-            if (item) {
-                toggleDonutSegment(item.dataset.listCategory);
-                setTimeout(() => {
-                    if (document.activeElement && document.activeElement.closest('#categories')) {
-                        document.activeElement.blur();
-                    }
-                }, 0);
-            }
-        });
-
-        $('categories').addEventListener('keydown', (e) => {
-            const item = e.target.closest('[data-list-category]');
-            if (item && (e.key === 'Enter' || e.key === ' ')) {
-                e.preventDefault();
-                toggleDonutSegment(item.dataset.listCategory);
-            }
-        });
-    }
-
-    $('categoriesContainer')?.addEventListener('click', (e) => {
-        if (!selectedDonutCategory) return;
-
-        const clickedSegment = e.target.closest('[data-donut-category]');
-        const clickedListItem = e.target.closest('[data-list-category]');
-        const clickedBadge = e.target.closest('.cat-floating-badge');
-
-        if (!clickedSegment && !clickedListItem && !clickedBadge) {
-            selectedDonutCategory = null;
-            renderCategoriesRedesign();
-        }
-    });
-
-    $('editIconSelectorGrid')?.addEventListener('click', (e) => {
-        const item = e.target.closest('.icon-option-item');
-        if (item?.dataset.icon) selectCategoryIcon(item.dataset.icon, 'editCatIcon', '#editIconSelectorGrid');
-    });
-
-    $('iconSelectorGrid')?.addEventListener('click', (e) => {
-        const item = e.target.closest('.icon-option-item');
-        if (item?.dataset.icon) selectCategoryIcon(item.dataset.icon, 'newCatIcon', '#iconSelectorGrid');
-    });
-
-    $('categoryManagerList')?.addEventListener('click', (e) => {
-        const btn = e.target.closest('[data-action="open-edit-category"]');
-        if (btn) openEditCategoryModal(btn.dataset.kind, Number(btn.dataset.index));
-    });
-
-    $('openCreateCategoryBtn')?.addEventListener('click', () => {
-        if ($('newCatName')) $('newCatName').value = '';
-        if ($('newCatKind')) $('newCatKind').value = 'expense';
-        renderIconGrid('iconSelectorGrid', 'newCatIcon', null);
-        clearValidationErrors($('categoryCreateForm'));
-        openModal($('categoryCreateDlg'));
-    });
-
-    $('cancelCreateCategoryBtn')?.addEventListener('click', () => {
-        clearValidationErrors($('categoryCreateForm'));
-        closeModal($('categoryCreateDlg'));
-    });
-
-    $('categoryCreateForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const nameInput = $('newCatName');
-        const kindSelect = $('newCatKind');
-        const iconSelect = $('newCatIcon');
-
-        if (!validateRequiredFields(e.target, [nameInput])) return;
-
-        if (!iconSelect?.value) {
-            alert('Selecciona un icono.');
-            return;
-        }
-
-        const name = nameInput.value.trim();
-        const kind = kindSelect ? kindSelect.value : 'expense';
-        const icon = iconSelect.value;
-
-        appConfig.colorCounter = (appConfig.colorCounter || 0) + 1;
-        const hue = (appConfig.colorCounter * 137.5) % 360;
-        const color = `hsl(${Math.round(hue)}, 70%, 50%)`;
-
-        if (!appConfig.categories[kind].some(c => c.name.toLowerCase() === name.toLowerCase())) {
-            appConfig.categories[kind].push({ name, color, icon });
-            appConfig.categories[kind].sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
-
-            persistConfig();
-            closeModal($('categoryCreateDlg'));
-            refreshCategoryUI();
-        } else {
-            alert('Esta categoría ya existe.');
-            nameInput.focus();
-        }
-    });
-
-    $('cancelEditCategoryBtn')?.addEventListener('click', () => closeModal($('categoryEditDlg')));
-
-    $('deleteCategoryBtn')?.addEventListener('click', () => {
-        if (!editingCategoryData) return;
-        const { kind, index } = editingCategoryData;
-        closeModal($('categoryEditDlg'));
-        removeCategory(kind, index);
-    });
-
-    $('categoryEditForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (!editingCategoryData) return;
-
-        const nameInput = $('editCatName');
-        if (!validateRequiredFields(e.target, [nameInput])) return;
-
-        const newName = nameInput.value.trim();
-        const newKind = $('editCatKind').value;
-        const newIcon = $('editCatIcon').value;
-
-        const { kind: oldKind, index: oldIndex } = editingCategoryData;
-        const targetCat = appConfig.categories[oldKind][oldIndex];
-
-        const exists = appConfig.categories[newKind].some((c, idx) =>
-            c.name.toLowerCase() === newName.toLowerCase() && !(oldKind === newKind && idx === oldIndex)
-        );
-        if (exists) {
-            alert('Ya existe una categoría con ese nombre.');
-            nameInput.focus();
-            return;
-        }
-
-        targetCat.name = newName;
-        targetCat.icon = newIcon;
-
-        if (oldKind !== newKind) {
-            appConfig.categories[oldKind].splice(oldIndex, 1);
-            appConfig.categories[newKind].push(targetCat);
-        }
-
-        ['expense', 'income'].forEach(k => {
-            appConfig.categories[k].sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
-        });
-
-        persistConfig();
-        closeModal($('categoryEditDlg'));
-        refreshCategoryUI();
-    });
-
-    if ($('remittancesList')) {
-        const listContainer = $('remittancesList');
-
-        listContainer.addEventListener('click', (e) => {
-            const editRemitBtn = e.target.closest('[data-action="edit-remit"]');
-            if (editRemitBtn) {
-                e.stopPropagation();
-                return editRemittance(editRemitBtn.dataset.remitId);
-            }
-
-            const removeItemBtn = e.target.closest('[data-action="remove-remit-item"]');
-            if (removeItemBtn) {
-                e.stopPropagation();
-                return removeRemitItem(removeItemBtn.dataset.remitId, Number(removeItemBtn.dataset.index));
-            }
-
-            const addItemBtn = e.target.closest('[data-action="add-remit-item"]');
-            if (addItemBtn) {
-                e.stopPropagation();
-                return addRemitItem(addItemBtn.dataset.remitId);
-            }
-
-            const header = e.target.closest('[data-action="toggle-remit"]');
-            if (header) {
-                e.stopPropagation();
-                toggleRemitAccordion(header.dataset.remitId);
-            }
-        });
-
-        listContainer.addEventListener('keydown', (e) => {
-            const remId = e.target.dataset.remitId;
-            if (!remId || e.key !== 'Enter') return;
-            e.preventDefault();
-            e.target.blur();
-            if (e.target.classList.contains('remit-concept-field')) addRemitItem(remId);
-        });
-
-        listContainer.addEventListener('input', (e) => {
-            const remId = e.target.dataset.remitId;
-            const rem = remId ? remittancesList.find(r => r.id === remId) : null;
-            if (!rem) return;
-
-            if (e.target.classList.contains('remit-recv-input')) {
-                rem.items[Number(e.target.dataset.index)].recvAmount = parseInputNumber(e.target.value);
-            } else if (e.target.classList.contains('remit-tc-input')) {
-                rem.tc = parseInputNumber(e.target.value) || 1;
-            } else if (e.target.classList.contains('remit-comm-input')) {
-                rem.commission = parseInputNumber(e.target.value);
-            } else {
-                return;
-            }
-
-            persistRemittancesList();
-            updateRemitDOMTotals(rem);
-        });
-
-        listContainer.addEventListener('focusin', (e) => {
-            const remId = e.target.dataset.remitId;
-            const rem = remId ? remittancesList.find(r => r.id === remId) : null;
-            if (!rem) return;
-
-            let val = 0;
-            if (e.target.classList.contains('remit-recv-input')) {
-                val = rem.items[Number(e.target.dataset.index)]?.recvAmount || 0;
-            } else if (e.target.classList.contains('remit-tc-input')) {
-                val = rem.tc || 0;
-            } else if (e.target.classList.contains('remit-comm-input')) {
-                val = rem.commission || 0;
-            } else {
-                return;
-            }
-
-            e.target.value = val > 0 ? (rem.sendCurr === 'EUR' ? String(val).replace('.', ',') : String(val)) : '';
-        });
-
-        listContainer.addEventListener('focusout', (e) => {
-            const remId = e.target.dataset.remitId;
-            const rem = remId ? remittancesList.find(r => r.id === remId) : null;
-            if (!rem) return;
-
-            const isRecv = e.target.classList.contains('remit-recv-input');
-            const isTc = e.target.classList.contains('remit-tc-input');
-            const isComm = e.target.classList.contains('remit-comm-input');
-            if (!isRecv && !isTc && !isComm) return;
-
-            const parsed = parseInputNumber(e.target.value);
-            if (isRecv) rem.items[Number(e.target.dataset.index)].recvAmount = parsed;
-            else if (isTc) rem.tc = parsed > 0 ? parsed : 1;
-            else if (isComm) rem.commission = parsed;
-
-            persistRemittancesList();
-            renderRemittancesList();
-        });
-    }
-
-    $('remitEditForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (!editingRemittanceId) return;
-
-        const nameInput = $('editRemitName');
-        if (!validateRequiredFields(e.target, [nameInput])) return;
-
-        remittancesList = remittancesList.map(r => r.id === editingRemittanceId ? {
-            ...r,
-            name: nameInput.value.trim(),
-            sendCurr: $('editRemitSendCurr').value,
-            recvCurr: $('editRemitRecvCurr').value
-        } : r);
-
-        persistRemittancesList();
-        closeModal($('remitEditDlg'));
-        renderRemittancesList();
-    });
-
-    $('cancelEditRemitBtn')?.addEventListener('click', () => closeModal($('remitEditDlg')));
-
-    $('installmentsList')?.addEventListener('click', (e) => {
-        const editBtn = e.target.closest('[data-action="edit-inst-purchase"]');
-        if (editBtn) {
-            e.stopPropagation();
-            return editInstallmentPurchase(editBtn.dataset.purchaseId);
-        }
-
-        const paidTarget = e.target.closest('[data-action="toggle-inst-paid"]');
-        if (paidTarget) {
-            e.stopPropagation();
-            return toggleInstallmentPaid(paidTarget.dataset.purchaseId, Number(paidTarget.dataset.instNumber));
-        }
-
-        const header = e.target.closest('[data-action="toggle-inst-accordion"]');
-        if (header) {
-            e.stopPropagation();
-            toggleInstallmentAccordion(header.dataset.purchaseId);
-        }
-    });
-
-    $('addDayCounterMonthBtn')?.addEventListener('click', () => {
-        const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-        $('newMonthName').value = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
-        $('newMonthTarget').value = '15';
-        clearValidationErrors($('dayCounterMonthNewForm'));
-        openModal($('dayCounterMonthNewDlg'));
-    });
-
-    $('cancelNewDayCounterMonth')?.addEventListener('click', () => closeModal($('dayCounterMonthNewDlg')));
-
-    $('dayCounterMonthNewForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const nameInput = $('newMonthName');
-        const targetInput = $('newMonthTarget');
-        if (!nameInput.value.trim() || !targetInput.value) return;
-
-        const newMonthId = crypto.randomUUID();
-        dayCounterMonths.push({
-            id: newMonthId,
-            name: nameInput.value.trim(),
-            targetDays: parseInt(targetInput.value) || 15,
-            expanded: true,
-            days: []
-        });
-        persistDayCounter();
-        closeModal($('dayCounterMonthNewDlg'));
-        renderDayCounter();
-        scrollCardIntoView($(`dc_month_box_${newMonthId}`), true);
-    });
-
-    $('cancelEditDayCounterMonth')?.addEventListener('click', () => closeModal($('dayCounterMonthEditDlg')));
-
-    $('deleteMonthModalBtn')?.addEventListener('click', () => {
-        if (!editingMonthId) return;
-        if (confirm('¿Eliminar este mes y todos sus días registrados?')) {
-            dayCounterMonths = dayCounterMonths.filter(x => x.id !== editingMonthId);
-            persistDayCounter();
-            closeModal($('dayCounterMonthEditDlg'));
-            renderDayCounter();
-        }
-    });
-
-    $('dayCounterMonthEditForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (!editingMonthId) return;
-
-        const nameInput = $('editMonthName');
-        const targetInput = $('editMonthTarget');
-        if (!nameInput.value.trim() || !targetInput.value) return;
-
-        dayCounterMonths = dayCounterMonths.map(m => m.id === editingMonthId ? {
-            ...m,
-            name: nameInput.value.trim(),
-            targetDays: parseInt(targetInput.value) || 15
-        } : m);
-
-        persistDayCounter();
-        closeModal($('dayCounterMonthEditDlg'));
-        renderDayCounter();
-    });
-
-    $('dayCounterMonthsList')?.addEventListener('click', (e) => {
-        const editMonthBtn = e.target.closest('[data-action="edit-dc-month"]');
-        if (editMonthBtn) {
-            e.stopPropagation();
-            editingMonthId = editMonthBtn.dataset.monthId;
-            const month = dayCounterMonths.find(x => x.id === editingMonthId);
-            if (month) {
-                $('editMonthName').value = month.name;
-                $('editMonthTarget').value = month.targetDays;
-                clearValidationErrors($('dayCounterMonthEditForm'));
-                openModal($('dayCounterMonthEditDlg'));
-            }
-            return;
-        }
-
-        const toggleHeader = e.target.closest('[data-action="toggle-dc-month"]');
-        if (toggleHeader) {
-            e.stopPropagation();
-            toggleDayCounterMonthAccordion(toggleHeader.dataset.monthId);
-            return;
-        }
-
-        const openAddDayBtn = e.target.closest('[data-action="open-add-dc-day"]');
-        if (openAddDayBtn) {
-            e.stopPropagation();
-            editingDayMonthId = openAddDayBtn.dataset.monthId;
-            editingDayIndex = null;
-            $('dayDlgTitle').textContent = 'Registrar día de trabajo';
-            $('dayDate').value = `${currentMonth}-${pad(today.getDate())}`;
-            $('dayNameDisplay').value = getDayNameFromDate($('dayDate').value);
-            $('dayEntryTime').value = '18:00';
-            $('dayExitTime').value = calculateExitTime('18:00');
-            $('dayLocation').value = '';
-
-            if ($('dayModalActionsSplit')) $('dayModalActionsSplit').style.display = 'none';
-            if ($('dayModalActionsNormal')) $('dayModalActionsNormal').style.display = 'flex';
-
-            const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
-            if ($('copyPreviousDayWrapper')) {
-                $('copyPreviousDayWrapper').style.display = month?.days?.length > 0 ? 'block' : 'none';
-            }
-
-            clearValidationErrors($('dayCounterDayForm'));
-            openModal($('dayCounterDayDlg'));
-            return;
-        }
-
-        const editDayBtn = e.target.closest('[data-action="edit-dc-day"]');
-        if (editDayBtn) {
-            e.stopPropagation();
-            editingDayMonthId = editDayBtn.dataset.monthId;
-            editingDayIndex = Number(editDayBtn.dataset.index);
-            const day = dayCounterMonths.find(x => x.id === editingDayMonthId)?.days[editingDayIndex];
-            if (day) {
-                $('dayDlgTitle').textContent = 'Editar día de trabajo';
-                $('dayDate').value = day.date;
-                $('dayNameDisplay').value = day.dayName;
-                $('dayEntryTime').value = day.entryTime;
-                $('dayExitTime').value = day.exitTime;
-                $('dayLocation').value = day.location;
-                if ($('copyPreviousDayWrapper')) $('copyPreviousDayWrapper').style.display = 'none';
-
-                if ($('dayModalActionsSplit')) $('dayModalActionsSplit').style.display = 'flex';
-                if ($('dayModalActionsNormal')) $('dayModalActionsNormal').style.display = 'none';
-
-                clearValidationErrors($('dayCounterDayForm'));
-                openModal($('dayCounterDayDlg'));
-            }
-        }
-    });
-
-    if ($('deleteDayModalBtn')) {
-        $('deleteDayModalBtn').onclick = () => {
-            if (editingDayMonthId === null || editingDayIndex === null) return;
-            if (!confirm('¿Eliminar este día registrado?')) return;
-
-            const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
-            if (month?.days) {
-                const savedScrollTop = document.querySelector(`#dc_month_details_${editingDayMonthId} .dc-days-wrapper`)?.scrollTop || 0;
-
-                month.days.splice(editingDayIndex, 1);
-                persistDayCounter();
-                closeModal($('dayCounterDayDlg'));
-                renderDayCounter();
-
-                const updatedWrapper = document.querySelector(`#dc_month_details_${editingDayMonthId} .dc-days-wrapper`);
-                if (updatedWrapper) updatedWrapper.scrollTop = savedScrollTop;
-            }
-        };
-    }
-
-    $('dayDate')?.addEventListener('change', () => {
-        $('dayNameDisplay').value = getDayNameFromDate($('dayDate').value);
-    });
-
-    $('dayEntryTime')?.addEventListener('change', () => {
-        $('dayExitTime').value = calculateExitTime($('dayEntryTime').value);
-    });
-
-    $('copyPreviousDayBtn')?.addEventListener('click', () => {
-        const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
-        const lastDay = month?.days?.at(-1);
-        if (lastDay) {
-            $('dayEntryTime').value = lastDay.entryTime;
-            $('dayExitTime').value = lastDay.exitTime;
-            $('dayLocation').value = lastDay.location;
-        }
-    });
-
-    $('cancelDayCounterDay')?.addEventListener('click', () => closeModal($('dayCounterDayDlg')));
-    $('cancelDayCounterDayNormal')?.addEventListener('click', () => closeModal($('dayCounterDayDlg')));
-
-    $('dayCounterDayForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const month = dayCounterMonths.find(x => x.id === editingDayMonthId);
-        const dateStr = $('dayDate').value;
-        if (!month || !dateStr) return;
-
-        if (!month.days) month.days = [];
-        const duplicateIndex = month.days.findIndex((d, idx) => d.date === dateStr && (editingDayIndex === null || idx !== editingDayIndex));
-
-        if (duplicateIndex !== -1) {
-            alert('Este día ya ha sido registrado en este mes.');
-            $('dayDate').focus();
-            return;
-        }
-
-        const savedScrollTop = document.querySelector(`#dc_month_details_${month.id} .dc-days-wrapper`)?.scrollTop || 0;
-
-        const dayObj = {
-            date: dateStr,
-            dayName: getDayNameFromDate(dateStr),
-            entryTime: $('dayEntryTime').value,
-            exitTime: $('dayExitTime').value,
-            location: $('dayLocation').value.trim()
-        };
-
-        if (editingDayIndex !== null && editingDayIndex >= 0) {
-            month.days[editingDayIndex] = dayObj;
-        } else {
-            month.days.push(dayObj);
-            month.days.sort((a, b) => a.date.localeCompare(b.date));
-        }
-
-        persistDayCounter();
-        closeModal($('dayCounterDayDlg'));
-        renderDayCounter();
-
-        const daysWrapperAfter = document.querySelector(`#dc_month_details_${month.id} .dc-days-wrapper`);
-        if (daysWrapperAfter) {
-            daysWrapperAfter.scrollTop = editingDayIndex === null ? daysWrapperAfter.scrollHeight : savedScrollTop;
-        }
-    });
-
+    // --- Movimientos: Crear, Editar, Detalle ---
     $('addBtn')?.addEventListener('click', openNewMovement);
-
-    $('cancelNew')?.addEventListener('click', () => {
-        clearValidationErrors($('newForm'));
-        closeModal($('newDlg'));
-    });
-
-    $('cancelEdit')?.addEventListener('click', () => {
-        clearValidationErrors($('editForm'));
-        closeModal($('editDlg'));
-    });
-
+    $('cancelNew')?.addEventListener('click', () => closeModal($('newDlg')));
     $('newKind')?.addEventListener('change', () => updateCategoryOptions('new'));
-    $('editKind')?.addEventListener('change', () => updateCategoryOptions('edit'));
-
-    $('closeDetailBtn')?.addEventListener('click', () => closeModal($('detailDlg')));
-
-    $('rows')?.addEventListener('click', (e) => {
-        const editBtn = e.target.closest('button[data-edit]');
-        if (editBtn) {
-            e.stopPropagation();
-            return editMovement(editBtn.dataset.edit);
-        }
-
-        const row = e.target.closest('tr.movement-row');
-        const id = row?.querySelector('button[data-edit]')?.dataset.edit;
-        if (id) showMovementDetail(id);
-    });
 
     $('newForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!validateRequiredFields(e.target, [$('newDesc'), $('newAmount'), $('newDate')])) return;
+        if (!validateRequiredFields($('newForm'), [$('newDesc'), $('newAmount'), $('newDate')])) return;
 
-        const desc = $('newDesc').value.trim();
         const amount = Number($('newAmount').value);
-        const date = $('newDate').value;
-        if (!desc || !(amount > 0) || !date) return;
+        if (isNaN(amount) || amount <= 0) {
+            $('newAmount').classList.add('input-error');
+            $('newAmount').focus();
+            return;
+        }
 
         movements.push({
             id: crypto.randomUUID(),
             timestamp: Date.now(),
-            desc,
+            desc: $('newDesc').value.trim(),
             kind: $('newKind').value,
             amount: Math.round(amount * 100) / 100,
-            date,
+            date: $('newDate').value,
             category: $('newCategory').value,
             notes: $('newNotes').value.trim()
         });
@@ -2915,152 +2590,78 @@ function bindEvents() {
         render();
     });
 
+    $('cancelEdit')?.addEventListener('click', () => closeModal($('editDlg')));
+    $('editKind')?.addEventListener('change', () => updateCategoryOptions('edit'));
+
     $('editForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!validateRequiredFields(e.target, [$('editDesc'), $('editAmount'), $('editDate')])) return;
+        if (!validateRequiredFields($('editForm'), [$('editDesc'), $('editAmount'), $('editDate')])) return;
 
-        const desc = $('editDesc').value.trim();
         const amount = Number($('editAmount').value);
-        const date = $('editDate').value;
-        if (!desc || !(amount > 0) || !date || !editingId) return;
+        if (isNaN(amount) || amount <= 0) {
+            $('editAmount').classList.add('input-error');
+            $('editAmount').focus();
+            return;
+        }
 
-        movements = movements.map(item => item.id === editingId ? {
-            ...item,
-            desc,
-            kind: $('editKind').value,
-            amount: Math.round(amount * 100) / 100,
-            date,
-            category: $('editCategory').value,
-            notes: $('editNotes').value.trim()
-        } : item);
+        const item = movements.find(m => m.id === editingId);
+        if (item) {
+            item.desc = $('editDesc').value.trim();
+            item.kind = $('editKind').value;
+            item.amount = Math.round(amount * 100) / 100;
+            item.date = $('editDate').value;
+            item.category = $('editCategory').value;
+            item.notes = $('editNotes').value.trim();
+        }
 
         persist();
         closeModal($('editDlg'));
         render();
     });
 
-    $('addRemittanceBtn')?.addEventListener('click', () => {
-        $('remitNewForm')?.reset();
-        $('newRemitName').value = `${SPANISH_MONTH_NAMES[today.getMonth()]} ${today.getFullYear()}`;
-        clearValidationErrors($('remitNewForm'));
-        openModal($('remitNewDlg'));
+    $('closeDetailBtn')?.addEventListener('click', () => closeModal($('detailDlg')));
+
+    $('rows')?.addEventListener('click', (e) => {
+        const editBtn = e.target.closest('button[data-edit]');
+        if (editBtn) return editMovement(editBtn.dataset.edit);
+
+        const rowEl = e.target.closest('tr.movement-row');
+        const id = rowEl?.querySelector('button[data-edit]')?.dataset.edit;
+        if (id) showMovementDetail(id);
     });
 
-    $('cancelNewRemitBtn')?.addEventListener('click', () => {
-        clearValidationErrors($('remitNewForm'));
-        closeModal($('remitNewDlg'));
+    // --- Categorías y Gráfico Donut ---
+    $('catChartWrapper')?.addEventListener('click', (e) => {
+        const segment = e.target.closest('.cat-donut-segment');
+        if (segment) {
+            e.stopPropagation();
+            toggleDonutSegment(segment.dataset.donutCategory);
+        }
     });
 
-    $('remitNewForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (!validateRequiredFields(e.target, [$('newRemitName')])) return;
-
-        const newRemitId = crypto.randomUUID();
-        remittancesList.push({
-            id: newRemitId,
-            name: $('newRemitName').value.trim(),
-            sendCurr: $('newRemitSendCurr').value,
-            recvCurr: $('newRemitRecvCurr').value,
-            tc: 3.75,
-            commission: 0,
-            expanded: true,
-            items: []
-        });
-
-        persistRemittancesList();
-        closeModal($('remitNewDlg'));
-        renderRemittancesList();
-        scrollCardIntoView($(`remit_box_${newRemitId}`), true);
+    $('categories')?.addEventListener('click', (e) => {
+        const item = e.target.closest('.cat-breakdown-item');
+        if (item) {
+            e.stopPropagation();
+            toggleDonutSegment(item.dataset.listCategory);
+        }
     });
 
-    ['newInstFinancedAmount', 'newInstInterestAmount', 'newInstTotalCount'].forEach(id => {
-        $(id)?.addEventListener('input', () => autoCalculateInstallment('new'));
+    $('categories')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            const item = e.target.closest('.cat-breakdown-item');
+            if (item) {
+                e.preventDefault();
+                toggleDonutSegment(item.dataset.listCategory);
+            }
+        }
     });
 
-    ['editInstFinancedAmount', 'editInstInterestAmount', 'editInstTotalCount'].forEach(id => {
-        $(id)?.addEventListener('input', () => autoCalculateInstallment('edit'));
-    });
-
-    $('addInstallmentPurchaseBtn')?.addEventListener('click', () => {
-        $('installmentNewForm')?.reset();
-        if ($('newInstCurrency')) $('newInstCurrency').value = appConfig.currency || 'EUR';
-        if ($('newInstFirstDate')) $('newInstFirstDate').value = `${currentMonth}-${pad(today.getDate())}`;
-        clearValidationErrors($('installmentNewForm'));
-        openModal($('installmentNewDlg'));
-    });
-
-    $('cancelNewInstallmentBtn')?.addEventListener('click', () => {
-        clearValidationErrors($('installmentNewForm'));
-        closeModal($('installmentNewDlg'));
-    });
-
-    $('installmentNewForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const formData = readInstallmentForm('new');
-        if (!formData) return;
-
-        const newPurchaseId = crypto.randomUUID();
-        installmentsPurchases.push({
-            id: newPurchaseId,
-            ...formData,
-            expanded: true,
-            installments: buildInstallmentsArray(formData.totalCount, formData.regularAmount, formData.finalAmount, formData.firstDate)
-        });
-
-        persistInstallments();
-        closeModal($('installmentNewDlg'));
-        renderInstallments();
-        scrollCardIntoView($(`purchase_box_${newPurchaseId}`), true);
-    });
-
-    $('installmentEditForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (!editingInstallmentId) return;
-
-        const formData = readInstallmentForm('edit');
-        if (!formData) return;
-
-        installmentsPurchases = installmentsPurchases.map(p => p.id === editingInstallmentId ? {
-            ...p,
-            ...formData,
-            installments: buildInstallmentsArray(formData.totalCount, formData.regularAmount, formData.finalAmount, formData.firstDate, p.installments)
-        } : p);
-
-        persistInstallments();
-        closeModal($('installmentEditDlg'));
-        renderInstallments();
-    });
-
-    $('configBtn')?.addEventListener('click', () => {
-        $('userNameInput').value = appConfig.userName;
-        $('currencySelect').value = appConfig.currency;
-        $('themeSelect').value = appConfig.theme;
-
-        const utils = appConfig.utilities || { financeManager: true, remittances: true, installments: true, dayCounter: true };
-        if ($('toggleUtilFinanceManager')) $('toggleUtilFinanceManager').checked = utils.financeManager !== false;
-        if ($('toggleUtilRemit')) $('toggleUtilRemit').checked = utils.remittances !== false;
-        if ($('toggleUtilInstallments')) $('toggleUtilInstallments').checked = utils.installments !== false;
-        if ($('toggleUtilDayCounter')) $('toggleUtilDayCounter').checked = utils.dayCounter !== false;
-
-        openModal($('configDlg'));
-    });
-
-    $('cancelConfigBtn')?.addEventListener('click', () => closeModal($('configDlg')));
-
-    $('saveConfigBtn')?.addEventListener('click', () => {
-        appConfig.userName = $('userNameInput').value.trim() || 'Invitado';
-        appConfig.currency = $('currencySelect').value;
-        appConfig.theme = $('themeSelect').value;
-        appConfig.utilities = {
-            financeManager: $('toggleUtilFinanceManager') ? $('toggleUtilFinanceManager').checked : true,
-            remittances: $('toggleUtilRemit') ? $('toggleUtilRemit').checked : true,
-            installments: $('toggleUtilInstallments') ? $('toggleUtilInstallments').checked : true,
-            dayCounter: $('toggleUtilDayCounter') ? $('toggleUtilDayCounter').checked : true
-        };
-
-        persistConfig();
-        render();
-        closeModal($('configDlg'));
+    document.addEventListener('click', (e) => {
+        if (selectedDonutCategory && !e.target.closest('.cat-donut-segment') && !e.target.closest('.cat-breakdown-item')) {
+            selectedDonutCategory = null;
+            renderCategoriesRedesign();
+        }
     });
 
     $('editCategoriesBtn')?.addEventListener('click', () => {
@@ -3070,57 +2671,448 @@ function bindEvents() {
 
     $('closeCategoriesDlg')?.addEventListener('click', () => closeModal($('categoriesDlg')));
 
-    document.querySelectorAll('dialog').forEach(dlg => {
-        dlg.addEventListener('click', (e) => {
-            if (e.target === dlg) closeModal(dlg);
+    $('openCreateCategoryBtn')?.addEventListener('click', () => {
+        $('categoryCreateForm')?.reset();
+        $('newCatKind').value = 'expense';
+        renderIconGrid('iconSelectorGrid', 'newCatIcon', 'Compras');
+        clearValidationErrors($('categoryCreateForm'));
+        openModal($('categoryCreateDlg'));
+    });
+
+    $('cancelCreateCategoryBtn')?.addEventListener('click', () => closeModal($('categoryCreateDlg')));
+    $('cancelEditCategoryBtn')?.addEventListener('click', () => closeModal($('categoryEditDlg')));
+
+    $('deleteCategoryBtn')?.addEventListener('click', () => {
+        if (!editingCategoryData) return;
+        removeCategory(editingCategoryData.kind, editingCategoryData.index);
+        closeModal($('categoryEditDlg'));
+        editingCategoryData = null;
+    });
+
+    $('categoryManagerList')?.addEventListener('click', (e) => {
+        const editBtn = e.target.closest('[data-action="open-edit-category"]');
+        if (editBtn) openEditCategoryModal(editBtn.dataset.kind, Number(editBtn.dataset.index));
+    });
+
+    $('iconSelectorGrid')?.addEventListener('click', (e) => {
+        const opt = e.target.closest('.icon-option-item');
+        if (opt) selectCategoryIcon(opt.dataset.icon, 'newCatIcon', '#iconSelectorGrid');
+    });
+
+    $('editIconSelectorGrid')?.addEventListener('click', (e) => {
+        const opt = e.target.closest('.icon-option-item');
+        if (opt) selectCategoryIcon(opt.dataset.icon, 'editCatIcon', '#editIconSelectorGrid');
+    });
+
+    $('categoryCreateForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!validateRequiredFields($('categoryCreateForm'), [$('newCatName')])) return;
+
+        const name = $('newCatName').value.trim();
+        const kind = $('newCatKind').value;
+        const icon = $('newCatIcon').value || 'Compras';
+
+        if (appConfig.categories[kind].some(c => c.name.toLowerCase() === name.toLowerCase())) {
+            alert('Ya existe una categoría con ese nombre.');
+            $('newCatName').classList.add('input-error');
+            $('newCatName').focus();
+            return;
+        }
+
+        const hue = Math.round(((appConfig.colorCounter || 0) * 137.508) % 360);
+        appConfig.colorCounter = (appConfig.colorCounter || 0) + 1;
+
+        appConfig.categories[kind].push({ name, color: `hsl(${hue}, 65%, 52%)`, icon });
+        persistConfig();
+        refreshCategoryUI();
+        closeModal($('categoryCreateDlg'));
+    });
+
+    $('categoryEditForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!editingCategoryData || !validateRequiredFields($('categoryEditForm'), [$('editCatName')])) return;
+
+        const { kind: oldKind, index } = editingCategoryData;
+        const newName = $('editCatName').value.trim();
+        const newKind = $('editCatKind').value;
+        const newIcon = $('editCatIcon').value || 'Compras';
+        const oldCat = appConfig.categories[oldKind][index];
+        const oldName = oldCat.name;
+
+        const isDuplicate = appConfig.categories[newKind].some((c, idx) =>
+            c.name.toLowerCase() === newName.toLowerCase() && !(oldKind === newKind && idx === index)
+        );
+        if (isDuplicate) {
+            alert('Ya existe una categoría con ese nombre en esta sección.');
+            $('editCatName').classList.add('input-error');
+            $('editCatName').focus();
+            return;
+        }
+
+        if (oldKind === newKind) {
+            oldCat.name = newName;
+            oldCat.icon = newIcon;
+        } else {
+            appConfig.categories[oldKind].splice(index, 1);
+            appConfig.categories[newKind].push({ name: newName, color: oldCat.color, icon: newIcon });
+        }
+
+        if (oldName !== newName || oldKind !== newKind) {
+            movements.forEach(m => {
+                if (m.category === oldName && m.kind === oldKind) {
+                    m.category = newName;
+                    m.kind = newKind;
+                }
+            });
+            persist();
+        }
+
+        if (movementFilters.category === oldName && movementFilters.kind === oldKind) {
+            movementFilters.category = newName;
+            movementFilters.kind = newKind;
+            persistFilters();
+        }
+
+        persistConfig();
+        refreshCategoryUI();
+        closeModal($('categoryEditDlg'));
+        editingCategoryData = null;
+    });
+
+    // --- Utilidad 1: Remesas ---
+    $('cancelNewRemitBtn')?.addEventListener('click', () => closeModal($('remitNewDlg')));
+    $('cancelEditRemitBtn')?.addEventListener('click', () => closeModal($('remitEditDlg')));
+
+    $('remitNewForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!validateRequiredFields($('remitNewForm'), [$('newRemitName')])) return;
+
+        const sendCurr = $('newRemitSendCurr').value;
+        const recvCurr = $('newRemitRecvCurr').value;
+        let defaultTc = 1;
+        if (sendCurr === 'EUR' && recvCurr === 'PEN') defaultTc = 3.75;
+        else if (sendCurr === 'USD' && recvCurr === 'PEN') defaultTc = 3.55;
+        else if (sendCurr === 'EUR' && recvCurr === 'USD') defaultTc = 1.08;
+
+        const newId = crypto.randomUUID();
+        remittancesList.forEach(r => { r.expanded = false; });
+        remittancesList.unshift({
+            id: newId,
+            name: $('newRemitName').value.trim(),
+            sendCurr,
+            recvCurr,
+            tc: defaultTc,
+            commission: 0,
+            expanded: true,
+            items: []
         });
-        dlg.addEventListener('close', () => {
-            if (!document.querySelector('dialog[open]')) {
-                document.body.classList.remove('no-scroll');
+
+        persistRemittancesList();
+        closeModal($('remitNewDlg'));
+        renderRemittancesList();
+        scrollCardIntoView($(`remit_box_${newId}`));
+    });
+
+    $('remitEditForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!validateRequiredFields($('remitEditForm'), [$('editRemitName')])) return;
+
+        const rem = remittancesList.find(r => r.id === editingRemittanceId);
+        if (rem) {
+            rem.name = $('editRemitName').value.trim();
+            rem.sendCurr = $('editRemitSendCurr').value;
+            rem.recvCurr = $('editRemitRecvCurr').value;
+        }
+        persistRemittancesList();
+        closeModal($('remitEditDlg'));
+        renderRemittancesList();
+    });
+
+    const remitContainer = $('remittancesList');
+    if (remitContainer) {
+        remitContainer.addEventListener('click', (e) => {
+            const actionEl = e.target.closest('[data-action]');
+            if (!actionEl) return;
+
+            const action = actionEl.dataset.action;
+            const remId = actionEl.dataset.remitId;
+
+            if (action === 'toggle-remit') {
+                if (e.target.closest('button')) return;
+                toggleRemitAccordion(remId);
+            } else if (action === 'edit-remit') {
+                e.stopPropagation();
+                editRemittance(remId);
+            } else if (action === 'remove-remit-item') {
+                removeRemitItem(remId, Number(actionEl.dataset.index));
+            } else if (action === 'add-remit-item') {
+                addRemitItem(remId);
             }
         });
-    });
 
-    document.addEventListener('input', (e) => e.target.classList?.remove('input-error'));
-}
+        remitContainer.addEventListener('input', (e) => {
+            const target = e.target;
+            const remId = target.dataset.remitId;
+            if (!remId) return;
+            const rem = remittancesList.find(r => r.id === remId);
+            if (!rem) return;
 
-/* ==========================================
-   11. ARRANQUE DE LA APLICACIÓN
-   ========================================== */
-function init() {
-    if (!appConfig.utilities) {
-        appConfig.utilities = { financeManager: true, remittances: true, installments: true, dayCounter: true };
-    } else if (typeof appConfig.utilities.financeManager === 'undefined') {
-        appConfig.utilities.financeManager = true;
+            if (target.classList.contains('remit-tc-input')) {
+                rem.tc = parseInputNumber(target.value);
+            } else if (target.classList.contains('remit-comm-input')) {
+                rem.commission = parseInputNumber(target.value);
+            } else if (target.classList.contains('remit-recv-input')) {
+                const idx = Number(target.dataset.index);
+                if (rem.items[idx]) rem.items[idx].recvAmount = parseInputNumber(target.value);
+            }
+            persistRemittancesList();
+            updateRemitDOMTotals(rem);
+        });
+
+        remitContainer.addEventListener('focusin', (e) => {
+            const target = e.target;
+            const rem = remittancesList.find(r => r.id === target.dataset.remitId);
+            if (!rem) return;
+
+            if (target.classList.contains('remit-tc-input') && rem.tc > 0) {
+                target.value = formatTcInputValue(rem.tc, rem.recvCurr);
+            } else if (target.classList.contains('remit-comm-input')) {
+                target.value = rem.commission > 0 ? String(rem.commission).replace('.', ',') : '';
+            } else if (target.classList.contains('remit-recv-input')) {
+                const val = rem.items[Number(target.dataset.index)]?.recvAmount || 0;
+                target.value = val > 0 ? String(val).replace('.', ',') : '';
+            }
+        });
+
+        remitContainer.addEventListener('focusout', (e) => {
+            const target = e.target;
+            const rem = remittancesList.find(r => r.id === target.dataset.remitId);
+            if (!rem) return;
+
+            if (target.classList.contains('remit-tc-input')) {
+                target.value = formatTcInputValue(rem.tc, rem.recvCurr);
+            } else if (target.classList.contains('remit-comm-input')) {
+                target.value = formatNumberDisplay(rem.commission, rem.sendCurr);
+            } else if (target.classList.contains('remit-recv-input')) {
+                const val = rem.items[Number(target.dataset.index)]?.recvAmount || 0;
+                target.value = formatNumberDisplay(val, rem.recvCurr);
+            }
+        });
+
+        remitContainer.addEventListener('keydown', (e) => {
+            if (e.key !== 'Enter') return;
+            const target = e.target;
+            if (target.classList.contains('remit-concept-field')) {
+                e.preventDefault();
+                addRemitItem(target.dataset.remitId);
+            } else if (target.matches('.remit-tc-input, .remit-comm-input, .remit-recv-input')) {
+                e.preventDefault();
+                target.blur();
+            }
+        });
     }
 
-    ['expense', 'income'].forEach(kind => {
-        appConfig.categories[kind] = (appConfig.categories[kind] || []).map(c =>
-            typeof c === 'string' ? { name: c, color: '#03DAC6', icon: 'Compras' } : c
-        );
+    // --- Utilidad 2: Compras en cuotas ---
+    $('cancelNewInstallmentBtn')?.addEventListener('click', () => closeModal($('installmentNewDlg')));
+
+    ['FinancedAmount', 'InterestAmount', 'TotalCount'].forEach(field => {
+        $(`newInst${field}`)?.addEventListener('input', () => autoCalculateInstallment('new'));
+        $(`editInst${field}`)?.addEventListener('input', () => autoCalculateInstallment('edit'));
     });
 
-    updateUserDisplay();
-    applyTheme();
-    applyUtilitiesVisibility();
-    updateCurrencyLabels();
-    updateCategoryOptions('new');
-    updateCategoryOptions('edit');
+    $('installmentNewForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = readInstallmentForm('new');
+        if (!formData) return;
 
-    bindEvents();
-    setFinanceViewMode('movements');
+        const newId = crypto.randomUUID();
+        installmentsPurchases.forEach(p => { p.expanded = false; });
+        installmentsPurchases.unshift({
+            id: newId,
+            ...formData,
+            expanded: true,
+            installments: buildInstallmentsArray(formData.totalCount, formData.regularAmount, formData.finalAmount, formData.firstDate)
+        });
+
+        persistInstallments();
+        closeModal($('installmentNewDlg'));
+        renderInstallments();
+        scrollCardIntoView($(`purchase_box_${newId}`));
+    });
+
+    $('installmentEditForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const purchase = installmentsPurchases.find(p => p.id === editingInstallmentId);
+        if (!purchase) return;
+
+        const formData = readInstallmentForm('edit');
+        if (!formData) return;
+
+        Object.assign(purchase, formData, {
+            installments: buildInstallmentsArray(formData.totalCount, formData.regularAmount, formData.finalAmount, formData.firstDate, purchase.installments)
+        });
+
+        persistInstallments();
+        closeModal($('installmentEditDlg'));
+        renderInstallments();
+    });
+
+    $('installmentsList')?.addEventListener('click', (e) => {
+        const actionEl = e.target.closest('[data-action]');
+        if (!actionEl) return;
+
+        const action = actionEl.dataset.action;
+        const purchaseId = actionEl.dataset.purchaseId;
+
+        if (action === 'toggle-inst-accordion') {
+            if (e.target.closest('button')) return;
+            toggleInstallmentAccordion(purchaseId);
+        } else if (action === 'edit-inst-purchase') {
+            e.stopPropagation();
+            editInstallmentPurchase(purchaseId);
+        } else if (action === 'toggle-inst-paid') {
+            if (e.target.type !== 'checkbox') e.stopPropagation();
+            toggleInstallmentPaid(purchaseId, Number(actionEl.dataset.instNumber));
+        }
+    });
+
+    // --- Utilidad 3: Contador de días trabajados ---
+    $('cancelNewDayCounterMonth')?.addEventListener('click', () => closeModal($('dayCounterMonthNewDlg')));
+    $('cancelEditDayCounterMonth')?.addEventListener('click', () => closeModal($('dayCounterMonthEditDlg')));
+
+    $('dayCounterMonthNewForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!validateRequiredFields($('dayCounterMonthNewForm'), [$('newMonthName'), $('newMonthTarget')])) return;
+
+        const newId = crypto.randomUUID();
+        dayCounterMonths.forEach(m => { m.expanded = false; });
+        dayCounterMonths.unshift({
+            id: newId,
+            name: $('newMonthName').value.trim(),
+            targetDays: parseInt($('newMonthTarget').value) || 15,
+            expanded: true,
+            days: []
+        });
+
+        persistDayCounter();
+        closeModal($('dayCounterMonthNewDlg'));
+        renderDayCounter();
+        scrollCardIntoView($(`dc_month_${newId}`));
+    });
+
+    $('dayCounterMonthEditForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!validateRequiredFields($('dayCounterMonthEditForm'), [$('editMonthName'), $('editMonthTarget')])) return;
+
+        const month = dayCounterMonths.find(m => m.id === editingMonthId);
+        if (month) {
+            month.name = $('editMonthName').value.trim();
+            month.targetDays = parseInt($('editMonthTarget').value) || 15;
+        }
+        persistDayCounter();
+        closeModal($('dayCounterMonthEditDlg'));
+        renderDayCounter();
+    });
+
+    $('dayDate')?.addEventListener('change', (e) => {
+        $('dayNameDisplay').value = getDayNameFromDate(e.target.value);
+    });
+    $('dayEntryTime')?.addEventListener('change', (e) => {
+        $('dayExitTime').value = calculateExitTime(e.target.value);
+    });
+
+    $('copyPreviousDayBtn')?.addEventListener('click', () => {
+        const month = dayCounterMonths.find(m => m.id === editingDayMonthId);
+        const lastDay = month?.days?.at(-1);
+        if (!lastDay) return;
+
+        const [y, m, d] = lastDay.date.split('-').map(Number);
+        const nextDateObj = new Date(y, m - 1, d + 1);
+        const nextDateStr = `${nextDateObj.getFullYear()}-${pad(nextDateObj.getMonth() + 1)}-${pad(nextDateObj.getDate())}`;
+
+        $('dayDate').value = nextDateStr;
+        $('dayNameDisplay').value = getDayNameFromDate(nextDateStr);
+        $('dayEntryTime').value = lastDay.entryTime;
+        $('dayExitTime').value = lastDay.exitTime;
+        $('dayLocation').value = lastDay.location;
+        clearValidationErrors($('dayCounterDayForm'));
+    });
+
+    $('cancelDayCounterDay')?.addEventListener('click', () => closeModal($('dayCounterDayDlg')));
+    $('cancelDayCounterDayNormal')?.addEventListener('click', () => closeModal($('dayCounterDayDlg')));
+
+    $('dayCounterDayForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!validateRequiredFields($('dayCounterDayForm'), [$('dayDate'), $('dayEntryTime'), $('dayExitTime'), $('dayLocation')])) return;
+
+        const month = dayCounterMonths.find(m => m.id === editingDayMonthId);
+        if (!month) return;
+
+        const dayObj = {
+            date: $('dayDate').value,
+            dayName: getDayNameFromDate($('dayDate').value),
+            entryTime: $('dayEntryTime').value,
+            exitTime: $('dayExitTime').value,
+            location: $('dayLocation').value.trim()
+        };
+
+        if (editingDayIndex !== null) {
+            month.days[editingDayIndex] = dayObj;
+        } else {
+            month.days.push(dayObj);
+        }
+
+        month.days.sort((a, b) => a.date.localeCompare(b.date));
+        persistDayCounter();
+        closeModal($('dayCounterDayDlg'));
+        renderDayCounter();
+    });
+
+    $('dayCounterMonthsList')?.addEventListener('click', (e) => {
+        const actionEl = e.target.closest('[data-action]');
+        if (!actionEl) return;
+
+        const action = actionEl.dataset.action;
+        const monthId = actionEl.dataset.monthId;
+
+        if (action === 'toggle-month') {
+            if (e.target.closest('button')) return;
+            toggleMonthAccordion(monthId);
+        } else if (action === 'edit-month') {
+            e.stopPropagation();
+            editMonthModal(monthId);
+        } else if (action === 'add-day') {
+            openAddDayModal(monthId);
+        } else if (action === 'edit-day') {
+            openEditDayModal(monthId, Number(actionEl.dataset.dayIndex));
+        }
+    });
+
+    // --- Limpieza automática de errores de validación al escribir ---
+    document.addEventListener('input', (e) => {
+        if (e.target.classList?.contains('input-error')) e.target.classList.remove('input-error');
+    });
+    document.addEventListener('change', (e) => {
+        if (e.target.classList?.contains('input-error')) e.target.classList.remove('input-error');
+    });
+
+    // --- Sincronización de tamaño del documento ---
+    const reportSize = () => window.parent?.postMessage({ type: 'resize', height: document.documentElement.scrollHeight }, '*');
+    window.addEventListener('load', reportSize);
+    new ResizeObserver(reportSize).observe(document.documentElement);
+}
+
+// Arranque de la aplicación
+function initApp() {
+    activeAppSection = getInitialSectionFromConfig();
+    persistConfig();
+    setupCategoryTabs();
+    refreshCategoryUI();
     renderRemittancesList();
     renderInstallments();
     renderDayCounter();
-
-    document.querySelectorAll('.table-wrapper').forEach(wrapper => {
-        let scrollTimeout;
-        wrapper.addEventListener('scroll', () => {
-            wrapper.classList.add('is-scrolling');
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => wrapper.classList.remove('is-scrolling'), 800);
-        }, { passive: true });
-    });
+    setupEventListeners();
+    setFinanceViewMode('movements');
 }
 
-init();
+initApp();

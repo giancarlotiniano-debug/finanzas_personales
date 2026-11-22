@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#0A66C2">
-    <title>Finanzas personales</title>
+    <meta name="theme-color" content="#FFFFFF">
+    <title>Pedrito</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="apple-touch-icon" href="img/icon.png">
     <meta name="mobile-web-app-capable" content="yes">
@@ -17,29 +17,110 @@
 <body>
 
     <!-- ==========================================
-         CABECERA PRINCIPAL
+         1. CABECERA PRINCIPAL
          ========================================== -->
     <header>
         <div class="header-content">
             <div class="brand">
-                <div class="logo" id="userInitial">I</div>
-                <span id="welcomeText">Bienvenido, Invitado.</span>
+                <button type="button" class="header-menu-btn" id="openNavDrawerBtn" title="Abrir menú" aria-label="Abrir menú">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h12M3 18h6"/></svg>
+                </button>
+                <span id="sectionHeaderTitle">Gestor financiero</span>
             </div>
-            <button class="icon-btn" id="configBtn" title="Configuración de usuario" aria-label="Configuración de usuario">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h2.5M10.5 5H21M3 12h10.5M18.5 12H21M3 19h2.5M10.5 19H21"/><circle cx="8" cy="5" r="2.5"/><circle cx="16" cy="12" r="2.5"/><circle cx="8" cy="19" r="2.5"/></svg>
-            </button>
+
+            <div class="header-section-actions">
+                <button type="button" class="header-new-btn is-hidden" id="headerSectionNewBtn" aria-label="Nuevo">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Nuevo</span>
+                </button>
+            </div>
         </div>
     </header>
 
     <!-- ==========================================
-         CONTENIDO PRINCIPAL
+         2. MENÚ DESPLEGABLE LATERAL IZQUIERDO
+         ========================================== -->
+    <div class="nav-drawer-backdrop is-hidden" id="navDrawerBackdrop" aria-hidden="true"></div>
+    <aside class="nav-drawer" id="navDrawer" aria-label="Menú de secciones y configuración" aria-hidden="true">
+        <div class="nav-drawer-top">
+            <button type="button" class="nav-close-btn" id="closeNavDrawerBtn" title="Cerrar menú" aria-label="Cerrar menú">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>    
+            </button>
+        </div>
+
+        <nav class="nav-drawer-links" role="navigation" aria-label="Secciones de la aplicación">
+            <button type="button" class="nav-section-item active" data-nav-section="financeManager">
+                Gestor financiero
+            </button>
+            <button type="button" class="nav-section-item" data-nav-section="remittances">
+                Calcular remesas
+            </button>
+            <button type="button" class="nav-section-item" data-nav-section="installments">
+                Compras en cuotas
+            </button>
+            <button type="button" class="nav-section-item" data-nav-section="dayCounter">
+                Días trabajados
+            </button>
+        </nav>
+
+        <!-- Popover de Copia de Seguridad -->
+        <div class="nav-backup-backdrop is-hidden" id="navBackupBackdrop" aria-hidden="true"></div>
+        <div class="nav-drawer-backup-card is-hidden" id="navBackupPopover" role="dialog" aria-modal="true" aria-label="Copia de seguridad">
+            <div class="nav-backup-title">Copia de seguridad</div>
+            <div class="nav-backup-actions">
+                <button type="button" class="nav-backup-btn" id="importCsvBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span>Importar</span>
+                </button>
+                <button type="button" class="nav-backup-btn" id="openExportDlgBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <span>Exportar</span>
+                </button>
+            </div>
+        </div>
+        <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+
+        <!-- Pie del menú: Backup, Moneda y Tema -->
+        <div class="nav-drawer-footer">
+            <div class="nav-footer-left">
+                <button type="button" class="nav-more-btn" id="navMoreBackupBtn" title="Copia de seguridad" aria-label="Copia de seguridad" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><circle cx="5" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="19" cy="12" r="2"></circle></svg>
+                </button>
+
+                <label class="nav-currency-wrapper" for="currencySelect">
+                    <span class="sr-only">Moneda</span>
+                    <select id="currencySelect" class="nav-currency-select" aria-label="Seleccionar moneda">
+                        <option value="EUR">Euro (€)</option>
+                        <option value="PEN">Sol (S/)</option>
+                        <option value="USD">Dólar ($)</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="nav-theme-switch" role="group" aria-label="Tema de interfaz">
+                <button type="button" class="nav-theme-btn active" data-theme-value="light" id="themeLightBtn" title="Modo claro" aria-label="Modo claro">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+                    <span class="nav-theme-label">Claro</span>
+                </button>
+                <button type="button" class="nav-theme-btn" data-theme-value="dark" id="themeDarkBtn" title="Modo oscuro" aria-label="Modo oscuro">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    <span class="nav-theme-label">Oscuro</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ==========================================
+         3. CONTENIDO PRINCIPAL
          ========================================== -->
     <main>
 
-        <!-- Tres tarjetas independientes del gestor de finanzas -->
+        <!-- ------------------------------------------
+             3.1 SECCIÓN: GESTOR FINANCIERO
+             ------------------------------------------ -->
         <section class="finance-stack" id="financeManagerLayout">
             <!-- Tarjeta 1: Métricas + barra de uso -->
-            <div class="finance-subcard metrics-top-block" id="metricsCardsSection">
+            <div class="finance-subcard metrics-top-block">
                 <div class="metrics-top-row">
                     <div class="metrics-side-group">
                         <div class="metrics-side-item">
@@ -72,7 +153,6 @@
                 <button type="button" class="filter-pill-btn" id="openFilterBtn" title="Filtrar movimientos" aria-label="Filtrar movimientos">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a1.5 1.5 0 0 1 1.5-1.5h11A1.5 1.5 0 0 1 17 5v1.2a2 2 0 0 1-.6 1.4L12 12v6.5l-4-2V12L3.6 7.6A2 2 0 0 1 3 6.2V5zm13 7h5m-7 4h7m-7 4h7"/></svg>
                     <span>Filtrar</span>
-                    <span class="filter-active-dot is-hidden" id="filterActiveDot"></span>
                 </button>
 
                 <div class="view-mode-switch" role="tablist" aria-label="Cambiar entre movimientos y categorías">
@@ -96,14 +176,24 @@
                             <svg class="finance-active-filter-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M3 5a1.5 1.5 0 0 1 1.5-1.5h11A1.5 1.5 0 0 1 17 5v1.2a2 2 0 0 1-.6 1.4L12 12v6.5l-4-2V12L3.6 7.6A2 2 0 0 1 3 6.2V5zm13 7h5m-7 4h7m-7 4h7"/>
                             </svg>
-                            <span class="finance-active-filter-caption" id="activeFilterCaption">Todo</span>
+                            <span class="finance-active-filter-caption" id="activeFilterCaption">Sin filtros</span>
                         </div>
                     </div>
                     <div class="finance-view-actions">
                         <button type="button" class="edit-cats-pill-btn is-hidden" id="editCategoriesBtn" title="Editar categorías" aria-label="Editar categorías">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                            <span>Editar</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <span class="edit-cats-label">Editar</span>
                         </button>
+                        <div class="cat-top-type-switch is-hidden" id="catTopTypeSwitch" role="group" aria-label="Seleccionar gastos o ingresos">
+                            <button type="button" class="cat-top-type-btn active" data-kind="expense" id="catTabExpense" title="Gastos" aria-label="Gastos" aria-pressed="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v12m-2.5-2.5L5 15l2.5-2.5M19 3v15m-2.5-2.5L19 18l2.5-2.5M12 17v5m-2.5-2.5L12 22l2.5-2.5M14.5 4.2a2.5 2.5 0 0 0-2.2-.7h-.6a2.2 2.2 0 0 0 0 4.4h1a2.2 2.2 0 0 1 0 4.4h-1a2.5 2.5 0 0 1-2.2-.8M12 1.5v2m0 8.8V14"/></svg>
+                                <span class="cat-top-type-label">Gastos</span>
+                            </button>
+                            <button type="button" class="cat-top-type-btn" data-kind="income" id="catTabIncome" title="Ingresos" aria-label="Ingresos" aria-pressed="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V6M2.5 8.5L5 6l2.5 2.5M19 21V9m-2.5 2.5L19 9l2.5 2.5M12 7V2m-2.5 2.5L12 2l2.5 2.5M14.5 13.2a2.5 2.5 0 0 0-2.2-.7h-.6a2.2 2.2 0 0 0 0 4.4h1a2.2 2.2 0 0 1 0 4.4h-1a2.5 2.5 0 0 1-2.2-.8M12 10.5v2m0 8.8v1.7"/></svg>
+                                <span class="cat-top-type-label">Ingresos</span>
+                            </button>
+                        </div>
                         <button class="pill-new-btn" id="addBtn" type="button" aria-label="Nuevo movimiento">
                             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             <span>Nuevo</span>
@@ -134,11 +224,6 @@
 
                 <!-- Vista: Categorías -->
                 <div id="categoriesContainer" class="is-hidden">
-                    <div class="cat-type-selector">
-                        <button type="button" class="cat-tab-btn active" data-kind="expense" id="catTabExpense">Gastos</button>
-                        <button type="button" class="cat-tab-btn" data-kind="income" id="catTabIncome">Ingresos</button>
-                    </div>
-
                     <div class="cat-chart-container">
                         <div id="catChartWrapper" class="cat-chart-wrapper"></div>
                     </div>
@@ -150,93 +235,29 @@
             </div>
         </section>
 
-        <!-- ==========================================
-             SECCIÓN DE UTILIDADES
-             ========================================== -->
+        <!-- ------------------------------------------
+             3.2 SECCIÓN: UTILIDADES (REMESAS, CUOTAS, DÍAS)
+             ------------------------------------------ -->
         <div class="utilities-layout" id="utilitiesSection">
-            <div class="section-divider">
-                <div class="section-divider-title">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7" rx="2"></rect>
-                        <rect x="14" y="3" width="7" height="7" rx="2"></rect>
-                        <rect x="14" y="14" width="7" height="7" rx="2"></rect>
-                        <rect x="3" y="14" width="7" height="7" rx="2"></rect>
-                    </svg>
-                    <span>Utilidades</span>
-                </div>
-                <div class="section-divider-line"></div>
-            </div>
-
-            <section class="card summary-card" id="remittancesCard">
-                <div class="section-heading">
-                    <div class="section-title">Calcular remesas</div>
-                    <div class="heading-actions">
-                        <button class="action-icon-btn mobile-toggle-btn" id="toggleRemitBtn" title="Desplegar calculadora" aria-label="Desplegar calculadora">
-                            <svg id="toggleRemitIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="remitContainer" class="is-hidden">
-                    <div id="remittancesList"></div>
-
-                    <div class="utility-footer-action">
-                        <button type="button" class="utility-category-newbutton" id="addRemittanceBtn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            Nueva remesa
-                        </button>
-                    </div>
-                </div>
+            <section class="card" id="remittancesCard">
+                <div id="remittancesList"></div>
             </section>
 
-            <section class="card summary-card" id="installmentsCard">
-                <div class="section-heading">
-                    <div class="section-title">Gestor de cuotas</div>
-                    <div class="heading-actions">
-                        <button class="action-icon-btn mobile-toggle-btn" id="toggleInstallmentsBtn" title="Desplegar gestor de cuotas" aria-label="Desplegar gestor de cuotas">
-                            <svg id="toggleInstallmentsIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="installmentsContainer" class="is-hidden">
-                    <div id="installmentsList"></div>
-
-                    <div class="utility-footer-action">
-                        <button type="button" class="utility-category-newbutton" id="addInstallmentPurchaseBtn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            Nueva compra
-                        </button>
-                    </div>
-                </div>
+            <section class="card" id="installmentsCard">
+                <div id="installmentsList"></div>
             </section>
 
-            <section class="card summary-card" id="dayCounterCard">
-                <div class="section-heading">
-                    <div class="section-title">Contador de días</div>
-                    <div class="heading-actions">
-                        <button class="action-icon-btn mobile-toggle-btn" id="toggleDayCounterBtn" title="Desplegar contador de días" aria-label="Desplegar contador de días">
-                            <svg id="toggleDayCounterIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="dayCounterContainer" class="is-hidden">
-                    <div id="dayCounterMonthsList"></div>
-
-                    <div class="utility-footer-action">
-                        <button type="button" class="utility-category-newbutton" id="addDayCounterMonthBtn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            Nuevo mes
-                        </button>
-                    </div>
-                </div>
+            <section class="card" id="dayCounterCard">
+                <div id="dayCounterMonthsList"></div>
             </section>
         </div>
 
     </main>
 
-    <!-- Modales -->
+    <!-- ==========================================
+         4. MODALES DE GESTOR FINANCIERO
+         ========================================== -->
+    <!-- Modal: Filtros -->
     <dialog id="filterDlg">
         <form class="modal filter-modal" id="filterForm" tabindex="-1">
             <h2>Filtrar movimientos</h2>
@@ -311,6 +332,7 @@
         </form>
     </dialog>
 
+    <!-- Modal: Nuevo Movimiento -->
     <dialog id="newDlg">
         <form class="modal" id="newForm" tabindex="-1">
             <h2>Nuevo movimiento</h2>
@@ -350,6 +372,7 @@
         </form>
     </dialog>
 
+    <!-- Modal: Editar Movimiento -->
     <dialog id="editDlg">
         <form class="modal" id="editForm" tabindex="-1">
             <h2>Editar movimiento</h2>
@@ -394,6 +417,7 @@
         </form>
     </dialog>
 
+    <!-- Modal: Detalle de Movimiento -->
     <dialog id="detailDlg">
         <div class="modal detail-modal" tabindex="-1">
             <div class="detail-modal-header">
@@ -409,6 +433,93 @@
         </div>
     </dialog>
 
+    <!-- ==========================================
+         5. MODALES DE GESTIÓN DE CATEGORÍAS
+         ========================================== -->
+    <!-- Modal: Listado de Categorías -->
+    <dialog id="categoriesDlg">
+        <div class="modal" tabindex="-1">
+            <h2>Gestión de categorías</h2>
+            <div id="categoryManagerList" class="category-manager-list"></div>
+            <div class="categories-add-row" style="margin-top: 15px;">
+                <button type="button" class="category-newbutton" id="openCreateCategoryBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Nueva categoría
+                </button>
+            </div>
+            <div class="modal-actions" style="margin-top: 15px;">
+                <button type="button" class="aceptarmovimiento" id="closeCategoriesDlg">Aceptar</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Modal: Crear Categoría -->
+    <dialog id="categoryCreateDlg">
+        <form class="modal" id="categoryCreateForm" tabindex="-1">
+            <h2>Crear nueva categoría</h2>
+            <div class="formgrid">
+                <div class="field full">
+                    <label for="newCatName">Nombre</label>
+                    <input id="newCatName" placeholder="Ej. Mascotas">
+                </div>
+                <div class="field full">
+                    <label for="newCatKind">Tipo</label>
+                    <select id="newCatKind">
+                        <option value="expense">Gasto</option>
+                        <option value="income">Ingreso</option>
+                    </select>
+                </div>
+                <div class="field full">
+                    <label>Icono</label>
+                    <div id="iconSelectorGrid" class="icon-selector-grid"></div>
+                    <input type="hidden" id="newCatIcon" value="Compras">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="cancelarmovimiento" id="cancelCreateCategoryBtn">Cancelar</button>
+                <button class="aceptarmovimiento" type="submit">Aceptar</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Modal: Editar Categoría -->
+    <dialog id="categoryEditDlg">
+        <form class="modal" id="categoryEditForm" tabindex="-1">
+            <h2>Editar categoría</h2>
+            <div class="formgrid">
+                <div class="field full">
+                    <label for="editCatName">Nombre de la categoría</label>
+                    <input id="editCatName" placeholder="Ej. Mascotas">
+                </div>
+                <div class="field full">
+                    <label for="editCatKind">Tipo</label>
+                    <select id="editCatKind">
+                        <option value="expense">Gasto</option>
+                        <option value="income">Ingreso</option>
+                    </select>
+                </div>
+                <div class="field full">
+                    <label>Icono</label>
+                    <div id="editIconSelectorGrid" class="icon-selector-grid"></div>
+                    <input type="hidden" id="editCatIcon" value="Compras">
+                </div>
+            </div>
+            <div class="modal-actions modal-actions-split">
+                <button type="button" class="large-delete-button" id="deleteCategoryBtn" title="Eliminar categoría" aria-label="Eliminar categoría">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+                <div class="flex-center-gap">
+                    <button type="button" class="cancelarmovimiento" id="cancelEditCategoryBtn">Cancelar</button>
+                    <button class="aceptarmovimiento" type="submit">Aceptar</button>
+                </div>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- ==========================================
+         6. MODALES DE UTILIDADES (REMESAS, CUOTAS, DÍAS)
+         ========================================== -->
+    <!-- Modal: Nueva Remesa -->
     <dialog id="remitNewDlg">
         <form class="modal" id="remitNewForm" tabindex="-1">
             <h2>Calcular nueva remesa</h2>
@@ -441,6 +552,7 @@
         </form>
     </dialog>
 
+    <!-- Modal: Editar Remesa -->
     <dialog id="remitEditDlg">
         <form class="modal" id="remitEditForm" tabindex="-1">
             <h2>Detalles de la remesa</h2>
@@ -478,6 +590,7 @@
         </form>
     </dialog>
 
+    <!-- Modal: Nueva Compra en Cuotas -->
     <dialog id="installmentNewDlg">
         <form class="modal" id="installmentNewForm" tabindex="-1">
             <h2>Nueva compra en cuotas</h2>
@@ -530,6 +643,7 @@
         </form>
     </dialog>
 
+    <!-- Modal: Editar Compra en Cuotas -->
     <dialog id="installmentEditDlg">
         <form class="modal" id="installmentEditForm" tabindex="-1">
             <h2>Detalles de la compra</h2>
@@ -584,6 +698,7 @@
         </form>
     </dialog>
 
+    <!-- Modal: Nuevo Mes de Trabajo -->
     <dialog id="dayCounterMonthNewDlg">
         <form class="modal" id="dayCounterMonthNewForm" tabindex="-1">
             <h2>Nuevo mes de trabajo</h2>
@@ -604,6 +719,7 @@
         </form>
     </dialog>
 
+    <!-- Modal: Editar Mes de Trabajo -->
     <dialog id="dayCounterMonthEditDlg">
         <form class="modal" id="dayCounterMonthEditForm" tabindex="-1">
             <h2>Editar mes de trabajo</h2>
@@ -629,12 +745,13 @@
         </form>
     </dialog>
 
+    <!-- Modal: Registrar / Editar Día Trabajado -->
     <dialog id="dayCounterDayDlg">
         <form class="modal" id="dayCounterDayForm" tabindex="-1">
             <h2 id="dayDlgTitle">Registrar día</h2>
             <div class="formgrid">
                 <div class="field full" id="copyPreviousDayWrapper" style="display: none;">
-                    <button type="button" class="utility-category-newbutton" id="copyPreviousDayBtn">
+                    <button type="button" class="copylastday-button" id="copyPreviousDayBtn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4v5h-5M3 20v-5h5"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L21 9M20.49 15a9 9 0 0 1-14.85 3.36L3 15"/><rect x="8.5" y="8" width="7" height="8" rx="2"/><circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/></svg>
                         Copiar datos del último día
                     </button>
@@ -676,72 +793,10 @@
         </form>
     </dialog>
 
-    <dialog id="configDlg">
-        <div class="modal" tabindex="-1">
-            <h2>Configuración</h2>
-            <div class="formgrid">
-                <div class="field full">
-                    <label for="userNameInput">Nombre de usuario</label>
-                    <input id="userNameInput" type="text" placeholder="Tu nombre">
-                </div>
-                <div class="field">
-                    <label for="currencySelect">Moneda</label>
-                    <select id="currencySelect">
-                        <option value="EUR">Euro (€)</option>
-                        <option value="PEN">Soles (S/)</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label for="themeSelect">Interfaz</label>
-                    <select id="themeSelect">
-                        <option value="light">Modo Claro</option>
-                        <option value="dark">Modo Oscuro</option>
-                    </select>
-                </div>
-                <div class="field full">
-                    <label>Copia de seguridad</label>
-                    <div class="config-backup-actions">
-                        <button type="button" class="imp-exp-button" id="importCsvBtn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Importar
-                        </button>
-                        <button type="button" class="imp-exp-button" id="openExportDlgBtn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                            Exportar
-                        </button>
-                        <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
-                    </div>
-                </div>
-                <div class="field full">
-                    <label>Ver/ocultar secciones</label>
-                    <div class="config-utilities-list">
-                        <label class="config-utility-option">
-                            <input type="checkbox" id="toggleUtilFinanceManager" checked>
-                            <span>Gestor de finanzas</span>
-                        </label>
-                        <label class="config-utility-option">
-                            <input type="checkbox" id="toggleUtilRemit" checked>
-                            <span>Calcular remesas</span>
-                        </label>
-                        <label class="config-utility-option">
-                            <input type="checkbox" id="toggleUtilInstallments" checked>
-                            <span>Gestor de cuotas</span>
-                        </label>
-                        <label class="config-utility-option">
-                            <input type="checkbox" id="toggleUtilDayCounter" checked>
-                            <span>Contador de días</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="cancelarmovimiento" id="cancelConfigBtn">Cancelar</button>
-                <button type="button" class="aceptarmovimiento" id="saveConfigBtn">Guardar</button>
-            </div>
-        </div>
-    </dialog>
-
-    <!-- Modal de Selección de Exportación -->
+    <!-- ==========================================
+         7. MODALES DE COPIA DE SEGURIDAD (CSV)
+         ========================================== -->
+    <!-- Modal: Exportar CSV -->
     <dialog id="exportDlg">
         <form class="modal" id="exportForm" tabindex="-1">
             <h2>Exportar</h2>
@@ -777,7 +832,7 @@
         </form>
     </dialog>
 
-    <!-- Modal de Selección de Importación -->
+    <!-- Modal: Importar CSV -->
     <dialog id="importSelectDlg">
         <form class="modal" id="importSelectForm" tabindex="-1">
             <h2>Importar</h2>
@@ -809,83 +864,6 @@
             <div class="modal-actions">
                 <button type="button" class="cancelarmovimiento" id="cancelImportSelect">Cancelar</button>
                 <button class="aceptarmovimiento" type="submit">Importar</button>
-            </div>
-        </form>
-    </dialog>
-
-    <dialog id="categoriesDlg">
-        <div class="modal" tabindex="-1">
-            <h2>Gestión de categorías</h2>
-            <div id="categoryManagerList" class="category-manager-list"></div>
-            <div class="categories-add-row" style="margin-top: 15px;">
-                <button type="button" class="utility-category-newbutton" id="openCreateCategoryBtn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    Nueva categoría
-                </button>
-            </div>
-            <div class="modal-actions" style="margin-top: 15px;">
-                <button type="button" class="aceptarmovimiento" id="closeCategoriesDlg">Aceptar</button>
-            </div>
-        </div>
-    </dialog>
-
-    <dialog id="categoryCreateDlg">
-        <form class="modal" id="categoryCreateForm" tabindex="-1">
-            <h2>Crear nueva categoría</h2>
-            <div class="formgrid">
-                <div class="field full">
-                    <label for="newCatName">Nombre</label>
-                    <input id="newCatName" placeholder="Ej. Mascotas">
-                </div>
-                <div class="field full">
-                    <label for="newCatKind">Tipo</label>
-                    <select id="newCatKind">
-                        <option value="expense">Gasto</option>
-                        <option value="income">Ingreso</option>
-                    </select>
-                </div>
-                <div class="field full">
-                    <label>Icono</label>
-                    <div id="iconSelectorGrid" class="icon-selector-grid"></div>
-                    <input type="hidden" id="newCatIcon" value="Compras">
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="cancelarmovimiento" id="cancelCreateCategoryBtn">Cancelar</button>
-                <button class="aceptarmovimiento" type="submit">Aceptar</button>
-            </div>
-        </form>
-    </dialog>
-
-    <dialog id="categoryEditDlg">
-        <form class="modal" id="categoryEditForm" tabindex="-1">
-            <h2>Editar categoría</h2>
-            <div class="formgrid">
-                <div class="field full">
-                    <label for="editCatName">Nombre de la categoría</label>
-                    <input id="editCatName" placeholder="Ej. Mascotas">
-                </div>
-                <div class="field full">
-                    <label for="editCatKind">Tipo</label>
-                    <select id="editCatKind">
-                        <option value="expense">Gasto</option>
-                        <option value="income">Ingreso</option>
-                    </select>
-                </div>
-                <div class="field full">
-                    <label>Icono</label>
-                    <div id="editIconSelectorGrid" class="icon-selector-grid"></div>
-                    <input type="hidden" id="editCatIcon" value="Compras">
-                </div>
-            </div>
-            <div class="modal-actions modal-actions-split">
-                <button type="button" class="large-delete-button" id="deleteCategoryBtn" title="Eliminar categoría" aria-label="Eliminar categoría">
-                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                </button>
-                <div class="flex-center-gap">
-                    <button type="button" class="cancelarmovimiento" id="cancelEditCategoryBtn">Cancelar</button>
-                    <button class="aceptarmovimiento" type="submit">Aceptar</button>
-                </div>
             </div>
         </form>
     </dialog>
