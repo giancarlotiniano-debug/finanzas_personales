@@ -757,7 +757,7 @@ function importMovementsCsv(event) {
                 };
             });
             const parsedDays = Object.values(rawDaysMap).map(m => {
-                m.days.sort((a, b) => a.date.localeCompare(b.date));
+                m.days.sort((a, b) => b.date.localeCompare(a.date));
                 return m;
             });
 
@@ -1449,7 +1449,7 @@ function render() {
         const remainingAfterMove = runningBalanceById.get(item.id) ?? 0;
 
         rowsHtml += `
-            <tr class="movement-row ${borderClass}">
+            <tr class="movement-row ${borderClass}" data-movement-id="${item.id}">
                 <td>
                     <div class="movement-name-wrapper">
                         <span class="category-icon-wrapper" style="color: ${catColor};">${iconSvg}</span>
@@ -1466,13 +1466,6 @@ function render() {
                     <div class="movement-amount-stack">
                         <span>${item.kind === 'income' ? '+' : '−'}${formatMoney(item.amount)}</span>
                         <span class="movement-balance-sub">${formatMoney(remainingAfterMove)}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="actions">
-                        <button class="editar-movimiento" data-edit="${item.id}" title="Editar" aria-label="Editar">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        </button>
                     </div>
                 </td>
             </tr>
@@ -1529,6 +1522,7 @@ function showMovementDetail(id) {
     const item = movements.find(m => m.id === id);
     if (!item) return;
 
+    if ($('detailEditBtn')) $('detailEditBtn').dataset.movementId = item.id;
     if ($('detailConcept')) $('detailConcept').textContent = item.desc || 'Sin concepto';
     if ($('detailContent')) {
         $('detailContent').innerHTML = `
@@ -2165,6 +2159,8 @@ function renderDayCounter() {
     const listContainer = $('dayCounterMonthsList');
     if (!listContainer) return;
 
+    dayCounterMonths.forEach(m => m.days.sort((a, b) => b.date.localeCompare(a.date)));
+
     if (!dayCounterMonths.length) {
         listContainer.innerHTML = '<div class="empty empty-compact">Aún no hay meses registrados.</div>';
         return;
@@ -2352,6 +2348,152 @@ function setupEventListeners() {
             openNewDayCounterMonthModal();
         }
     });
+
+        // --- Gesto de deslizar desde el borde izquierdo para abrir/cerrar el menú lateral ---
+    const EDGE_SWIPE_MAX_START_X = 15; // px desde el borde izquierdo para iniciar apertura
+    const SWIPE_OPEN_THRESHOLD = 75;    // px mínimos deslizados a la derecha para abrir
+    const SWIPE_CLOSE_THRESHOLD = 75;   // px mínimos deslizados a la izquierda para cerrar
+    const drawerWidthFallback = 320;
+
+    let swipeState = {
+        tracking: false,
+        mode: null, // 'open' | 'close'
+        startX: 0,
+        startY: 0,
+        currentX: 0,
+        directionLocked: false,
+        isHorizontalSwipe: false
+    };
+
+    function getDrawerWidth() {
+        const drawerEl = $('navDrawer');
+        return drawerEl ? drawerEl.getBoundingClientRect().width || drawerWidthFallback : drawerWidthFallback;
+    }
+
+    document.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) return;
+        // No interferir si hay un <dialog> modal abierto
+        if (document.querySelector('dialog[open]')) return;
+
+        const touch = e.touches[0];
+        const drawerEl = $('navDrawer');
+        const isDrawerOpen = drawerEl?.classList.contains('is-open');
+
+        if (!isDrawerOpen && touch.clientX <= EDGE_SWIPE_MAX_START_X) {
+            swipeState = {
+                tracking: true,
+                mode: 'open',
+                startX: touch.clientX,
+                startY: touch.clientY,
+                currentX: touch.clientX,
+                directionLocked: false,
+                isHorizontalSwipe: false
+            };
+        } else if (isDrawerOpen) {
+            swipeState = {
+                tracking: true,
+                mode: 'close',
+                startX: touch.clientX,
+                startY: touch.clientY,
+                currentX: touch.clientX,
+                directionLocked: false,
+                isHorizontalSwipe: false
+            };
+        }
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+        if (!swipeState.tracking || e.touches.length !== 1) return;
+
+        const touch = e.touches[0];
+        const deltaX = touch.clientX - swipeState.startX;
+        const deltaY = touch.clientY - swipeState.startY;
+
+        if (!swipeState.directionLocked) {
+            if (Math.abs(deltaX) < 8 && Math.abs(deltaY) < 8) return;
+            swipeState.directionLocked = true;
+            swipeState.isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 1.2;
+
+            if (!swipeState.isHorizontalSwipe) {
+                swipeState.tracking = false;
+                return;
+            }
+
+            const drawerEl = $('navDrawer');
+            const backdropEl = $('navDrawerBackdrop');
+            drawerEl?.classList.add('is-dragging');
+            if (swipeState.mode === 'open' && backdropEl) {
+                backdropEl.classList.remove('is-hidden');
+                backdropEl.setAttribute('aria-hidden', 'false');
+                backdropEl.style.transition = 'none';
+                backdropEl.style.opacity = '0';
+            }
+        }
+
+        if (!swipeState.isHorizontalSwipe) return;
+
+        // Evita el scroll horizontal de la página mientras se arrastra el drawer
+        if (e.cancelable) e.preventDefault();
+
+        swipeState.currentX = touch.clientX;
+        const drawerEl = $('navDrawer');
+        const backdropEl = $('navDrawerBackdrop');
+        const width = getDrawerWidth();
+
+        if (swipeState.mode === 'open') {
+            const progress = Math.min(1, Math.max(0, deltaX / width));
+            const translateX = -100 + progress * 100;
+            if (drawerEl) drawerEl.style.transform = `translateX(${translateX}%)`;
+            if (backdropEl) backdropEl.style.opacity = String(progress);
+        } else if (swipeState.mode === 'close') {
+            const negativeDelta = Math.min(0, deltaX);
+            const progress = Math.min(1, Math.max(0, 1 + negativeDelta / width));
+            const translateX = -(1 - progress) * 100;
+            if (drawerEl) drawerEl.style.transform = `translateX(${translateX}%)`;
+            if (backdropEl) backdropEl.style.opacity = String(progress);
+        }
+    }, { passive: false });
+
+    function finishDrawerSwipe() {
+        if (!swipeState.tracking) return;
+
+        const deltaX = swipeState.currentX - swipeState.startX;
+        const drawerEl = $('navDrawer');
+        const backdropEl = $('navDrawerBackdrop');
+
+        if (drawerEl) {
+            drawerEl.classList.remove('is-dragging');
+            drawerEl.style.transform = '';
+        }
+        if (backdropEl) {
+            backdropEl.style.transition = '';
+            backdropEl.style.opacity = '';
+        }
+
+        if (swipeState.isHorizontalSwipe) {
+            if (swipeState.mode === 'open') {
+                if (deltaX >= SWIPE_OPEN_THRESHOLD) {
+                    openNavDrawer();
+                } else {
+                    closeNavDrawer();
+                }
+            } else if (swipeState.mode === 'close') {
+                if (deltaX <= -SWIPE_CLOSE_THRESHOLD) {
+                    closeNavDrawer();
+                } else {
+                    openNavDrawer();
+                }
+            }
+        }
+
+        swipeState.tracking = false;
+        swipeState.mode = null;
+        swipeState.directionLocked = false;
+        swipeState.isHorizontalSwipe = false;
+    }
+
+    document.addEventListener('touchend', finishDrawerSwipe, { passive: true });
+    document.addEventListener('touchcancel', finishDrawerSwipe, { passive: true });
 
     $('currencySelect')?.addEventListener('change', (e) => {
         appConfig.currency = e.target.value;
@@ -2621,12 +2763,15 @@ function setupEventListeners() {
 
     $('closeDetailBtn')?.addEventListener('click', () => closeModal($('detailDlg')));
 
-    $('rows')?.addEventListener('click', (e) => {
-        const editBtn = e.target.closest('button[data-edit]');
-        if (editBtn) return editMovement(editBtn.dataset.edit);
+    $('detailEditBtn')?.addEventListener('click', () => {
+        const movementId = $('detailEditBtn')?.dataset.movementId;
+        closeModal($('detailDlg'));
+        if (movementId) editMovement(movementId);
+    });
 
+    $('rows')?.addEventListener('click', (e) => {
         const rowEl = e.target.closest('tr.movement-row');
-        const id = rowEl?.querySelector('button[data-edit]')?.dataset.edit;
+        const id = rowEl?.dataset.movementId;
         if (id) showMovementDetail(id);
     });
 
@@ -3023,7 +3168,7 @@ function setupEventListeners() {
 
     $('copyPreviousDayBtn')?.addEventListener('click', () => {
         const month = dayCounterMonths.find(m => m.id === editingDayMonthId);
-        const lastDay = month?.days?.at(-1);
+        const lastDay = month?.days?.[0];
         if (!lastDay) return;
 
         const [y, m, d] = lastDay.date.split('-').map(Number);
@@ -3048,9 +3193,18 @@ function setupEventListeners() {
         const month = dayCounterMonths.find(m => m.id === editingDayMonthId);
         if (!month) return;
 
+        const selectedDate = $('dayDate').value;
+
+        // Comprobar si la fecha ya está registrada (ignorando el mismo registro si se está editando)
+        const alreadyExists = month.days.some((d, idx) => d.date === selectedDate && idx !== editingDayIndex);
+        if (alreadyExists) {
+            const proceed = confirm(`El día ${formatDateEs(selectedDate)} ya ha sido registrado. ¿Deseas registrarlo nuevamente?`);
+            if (!proceed) return;
+        }
+
         const dayObj = {
-            date: $('dayDate').value,
-            dayName: getDayNameFromDate($('dayDate').value),
+            date: selectedDate,
+            dayName: getDayNameFromDate(selectedDate),
             entryTime: $('dayEntryTime').value,
             exitTime: $('dayExitTime').value,
             location: $('dayLocation').value.trim()
@@ -3062,7 +3216,8 @@ function setupEventListeners() {
             month.days.push(dayObj);
         }
 
-        month.days.sort((a, b) => a.date.localeCompare(b.date));
+        // Ordenar con el más reciente siempre arriba
+        month.days.sort((a, b) => b.date.localeCompare(a.date));
         persistDayCounter();
         closeModal($('dayCounterDayDlg'));
         renderDayCounter();

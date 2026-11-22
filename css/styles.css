@@ -102,7 +102,7 @@ input[type="number"] {
 .flex-center-gap {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 /* ==========================================
@@ -115,7 +115,7 @@ header {
     right: 0;
     z-index: 50;
     background: var(--fondo);
-    padding: calc(12px + env(safe-area-inset-top, 0px)) 0 5px;
+    padding: calc(12px + env(safe-area-inset-top, 0px)) 0 12px;
     transition: background-color 0.2s ease;
 }
 
@@ -219,6 +219,10 @@ header {
 
 .nav-drawer.is-open {
     transform: translateX(0);
+}
+
+.nav-drawer.is-dragging {
+    transition: none;
 }
 
 .nav-drawer-top {
@@ -479,6 +483,7 @@ main {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    margin-top: 20px;
 }
 
 .metrics-top-row {
@@ -862,7 +867,7 @@ main {
    ========================================== */
 button {
     border: 0;
-    border-radius: 10px;
+    border-radius: 15px;
     cursor: pointer;
     font-weight: 650;
 }
@@ -894,7 +899,7 @@ button.cancelarmovimiento {
 .large-delete-button {
     width: 44px;
     height: 44px;
-    border-radius: 10px;
+    border-radius: 15px;
     background-color: var(--red);
     align-items: center;
     justify-content: center;
@@ -989,7 +994,6 @@ button.cancelarmovimiento {
     stroke: var(--primario);
 }
 
-.category-newbutton,
 .copylastday-button,
 .day-newbutton {
     width: 100%;
@@ -1002,6 +1006,33 @@ button.cancelarmovimiento {
     font-weight: 650;
     color: var(--blanco);
     background-color: var(--primario);
+}
+
+.category-newbutton {
+    width: 100px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 12px;
+    border-radius: 15px;
+    font-weight: 650;
+    color: var(--blanco);
+    background-color: var(--primario);
+}
+
+.head-editar-categorias {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.head-editar-categorias .titulo-editarcategorias {
+    margin: 0;
+    line-height: 1.25;
 }
 
 /* ==========================================
@@ -1262,15 +1293,15 @@ tr.movement-row:last-child {
     -webkit-mask-image: linear-gradient(
         to bottom,
         transparent 0%,
-        #000 14px,
-        #000 calc(100% - 14px),
+        #000 3px,
+        #000 calc(100% - 6px),
         transparent 100%
     );
     mask-image: linear-gradient(
         to bottom,
         transparent 0%,
-        #000 14px,
-        #000 calc(100% - 14px),
+        #000 3px,
+        #000 calc(100% - 6px),
         transparent 100%
     );
 }
@@ -1310,7 +1341,7 @@ tr.movement-row:last-child {
     justify-content: center;
     width: 34px;
     height: 34px;
-    border-radius: 10px;
+    border-radius: 12px;
     background: var(--tarjetas);
     border: 1px solid currentColor;
     color: currentColor;
@@ -1381,7 +1412,7 @@ body.dark-mode .cat-percentage-badge {
 .card {
     background: var(--fondo);
     border-radius: 25px;
-    padding: 20px 10px;
+    padding: 20px 0px;
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
@@ -1464,7 +1495,7 @@ body.dark-mode .cat-percentage-badge {
     justify-content: space-between;
     align-items: center;
     padding: 3px 0 18px 0;
-    margin-bottom: 12px;
+    margin-bottom: 18px;
     border-bottom: 1px solid var(--primario);
 }
 
@@ -1492,8 +1523,11 @@ body.dark-mode .cat-percentage-badge {
 }
 
 .remit-items-wrapper {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 2px;
     padding: 0 12px;
+    gap: 10px;
 }
 
 .remit-item-row {
@@ -1501,7 +1535,7 @@ body.dark-mode .cat-percentage-badge {
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    padding: 8px 0;
+    padding: 0;
     border-bottom: 2px solid var(--tarjetas);
 }
 
@@ -1617,15 +1651,15 @@ body.dark-mode .cat-percentage-badge {
     -webkit-mask-image: linear-gradient(
         to bottom,
         transparent 0%,
-        #000 8px,
-        #000 calc(100% - 5px),
+        #000 3px,
+        #000 calc(100% - 6px),
         transparent 100%
     );
     mask-image: linear-gradient(
         to bottom,
         transparent 0%,
-        #000 8px,
-        #000 calc(100% - 5px),
+        #000 3px,
+        #000 calc(100% - 6px),
         transparent 100%
     );
 }
@@ -1665,7 +1699,7 @@ body.dark-mode .installment-purchase-header.all-paid {
 
 /* Días trabajados */
 .installment-installments-list-dias {
-    padding: 0 25px 20px 25px;
+    padding: 0 20px 20px 20px;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -1690,15 +1724,15 @@ body.dark-mode .installment-purchase-header.all-paid {
     -webkit-mask-image: linear-gradient(
         to bottom,
         transparent 0%,
-        #000 8px,
-        #000 calc(100% - 5px),
+        #000 3px,
+        #000 calc(100% - 6px),
         transparent 100%
     );
     mask-image: linear-gradient(
         to bottom,
         transparent 0%,
-        #000 8px,
-        #000 calc(100% - 5px),
+        #000 3px,
+        #000 calc(100% - 6px),
         transparent 100%
     );
 }
@@ -1730,11 +1764,13 @@ body.dark-mode .installment-purchase-header.all-paid {
 
 .dc-day-name {
     font-weight: 700;
+    font-size: 13px;
     color: var(--primario);
 }
 
 .dc-day-date {
     font-size: 13px;
+    font-weight: 550;
     color: var(--texto);
 }
 
@@ -1742,16 +1778,17 @@ body.dark-mode .installment-purchase-header.all-paid {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    text-align: center;
+    text-align: left;
 }
 
 .dc-day-time {
     font-size: 13px;
+    font-weight: 550;
     color: var(--texto);
 }
 
 .dc-day-loc {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--primario);
 }
@@ -1767,10 +1804,9 @@ body.dark-mode .installment-purchase-header.all-paid {
    ========================================== */
 dialog {
     border: 0;
-    border-radius: 18px;
+    border-radius: 25px;
     padding: 0;
     width: min(480px, calc(100% - 28px));
-    box-shadow: 0 20px 70px rgba(60, 60, 60, 0.3);
     background: var(--tarjetas);
     color: var(--texto);
 }
@@ -1787,12 +1823,13 @@ dialog::backdrop {
 
 .modal h2 {
     margin: 0 0 18px;
+    font-size: 20px;
 }
 
 .modal-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
+    gap: 10px;
     margin-top: 20px;
 }
 
@@ -1836,7 +1873,7 @@ dialog::backdrop {
     min-height: 54px;
     max-height: 54px;
     border: 1px solid var(--fondo);
-    border-radius: 9px;
+    border-radius: 15px;
     background: var(--fondo);
     color: var(--texto);
     font-family: inherit;
@@ -2007,7 +2044,6 @@ input[type="time"]::-webkit-date-and-time-value {
 
 .filter-date-panel {
     background: var(--fondo);
-    border: 1px solid rgba(128, 128, 128, 0.22);
     border-radius: 14px;
     padding: 12px;
 }
@@ -2172,7 +2208,6 @@ body.dark-mode .filter-cal-day.is-in-week {
     min-height: 44px;
     max-height: 44px;
     border-radius: 11px;
-    border: 1px solid rgba(128, 128, 128, 0.22);
 }
 
 .filter-date-panel .filter-two-cols .field input {
@@ -2198,7 +2233,7 @@ body.dark-mode .filter-cal-day.is-in-week {
     border: 0 !important;
     background: transparent !important;
     color: var(--texto);
-    font-size: 15px;
+    font-size: 16px;
     outline: none;
 }
 
@@ -2214,9 +2249,8 @@ body.dark-mode .filter-cal-day.is-in-week {
     width: 44px;
     height: 44px;
     padding: 0;
-    border-radius: 10px;
-    background: var(--fondo);
-    color: var(--red);
+    border-radius: 15px;
+    background: var(--red);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -2226,7 +2260,7 @@ body.dark-mode .filter-cal-day.is-in-week {
 .filter-reset-btn svg {
     width: 20px;
     height: 20px;
-    stroke: currentColor;
+    stroke: var(--blanco);
     stroke-width: 1.8;
 }
 
@@ -2326,6 +2360,10 @@ body.dark-mode .filter-cal-day.is-in-week {
 }
 
 .detail-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     padding: 20px 24px 16px 24px;
     border-bottom: 1px solid var(--fondo);
 }
@@ -2335,10 +2373,33 @@ body.dark-mode .filter-cal-day.is-in-week {
     font-size: 18px;
     font-weight: 650;
     color: var(--texto);
+    text-align: left;
+}
+
+.detail-edit-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 15px;
+    background: var(--red);
+    color: var(--blanco);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: opacity 0.15s ease, transform 0.12s ease;
+}
+
+.detail-edit-btn:hover {
+    opacity: 0.9;
+}
+
+.detail-edit-btn svg {
+    stroke: var(--blanco);
 }
 
 .detail-modal-body {
-    padding: 20px 24px 24px 24px;
+    padding: 24px;
 }
 
 .detail-concept-title {
@@ -2349,7 +2410,8 @@ body.dark-mode .filter-cal-day.is-in-week {
 }
 
 .detail-modal-actions {
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 22px;
 }
 
@@ -2514,7 +2576,7 @@ body.dark-mode .filter-cal-day.is-in-week {
     }
 
     .filter-date-tabs {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(5, 1fr);
     }
 
     .finance-view-actions {
@@ -2551,7 +2613,7 @@ body.dark-mode .filter-cal-day.is-in-week {
         height: 38px;
         width: 40px;
         padding: 0;
-        border-radius: 20px;
+        border-radius: 16px;
     }
 
     .edit-cats-pill-btn .edit-cats-label {
@@ -2574,16 +2636,16 @@ body.dark-mode .filter-cal-day.is-in-week {
 
     tr.movement-row {
         display: grid;
-        grid-template-columns: 1fr auto auto;
+        grid-template-columns: 1fr auto;
         align-items: center;
         gap: 12px;
-        padding: 10px 8px;
+        padding: 10px 16px 10px 10px;
         cursor: pointer;
         transition: background-color 0.15s ease;
     }
 
     tr.date-header-row td {
-        padding: 14px 0 10px 0;
+        padding: 0;
         display: block;
         border: 0;
     }
@@ -2592,6 +2654,10 @@ body.dark-mode .filter-cal-day.is-in-week {
         display: block;
         border: 0;
         padding: 0;
+    }
+
+    tr.date-header-row:not(:first-child) td {
+        padding-top: 8px;
     }
 
     .finance-stack table tbody tr.movement-row td:nth-child(2),
@@ -2609,20 +2675,21 @@ body.dark-mode .filter-cal-day.is-in-week {
     }
 
     .table-wrapper {
+        margin-top: 18px;
         max-height: 500px;
         overflow-y: auto;
         -webkit-mask-image: linear-gradient(
             to bottom,
             transparent 0%,
-            #000 14px,
-            #000 calc(100% - 24px),
+            #000 3px,
+            #000 calc(100% - 6px),
             transparent 100%
         );
         mask-image: linear-gradient(
             to bottom,
             transparent 0%,
-            #000 14px,
-            #000 calc(100% - 24px),
+            #000 3px,
+            #000 calc(100% - 6px),
             transparent 100%
         );
     }

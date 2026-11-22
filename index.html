@@ -304,16 +304,14 @@
                 <span class="filter-section-label">Por rango de importes</span>
                 <div class="filter-two-cols">
                     <div class="field">
-                        <label for="filterMinAmount">Desde</label>
                         <div class="filter-amount-box">
-                            <input id="filterMinAmount" type="text" inputmode="decimal" placeholder="0,00">
+                            <input id="filterMinAmount" type="text" inputmode="decimal" placeholder="Desde">
                             <span class="filter-currency-suffix" id="filterCurrMin">€</span>
                         </div>
                     </div>
                     <div class="field">
-                        <label for="filterMaxAmount">Hasta</label>
                         <div class="filter-amount-box">
-                            <input id="filterMaxAmount" type="text" inputmode="decimal" placeholder="0,00">
+                            <input id="filterMaxAmount" type="text" inputmode="decimal" placeholder="Hasta">
                             <span class="filter-currency-suffix" id="filterCurrMax">€</span>
                         </div>
                     </div>
@@ -342,19 +340,19 @@
                     <input id="newDesc" placeholder="Ej. Compra supermercado">
                 </div>
                 <div class="field">
-                    <label for="newKind">Tipo</label>
-                    <select id="newKind">
-                        <option value="expense">Gasto</option>
-                        <option value="income">Ingreso</option>
-                    </select>
+                    <label for="newDate">Fecha</label>
+                    <input id="newDate" type="date">
                 </div>
                 <div class="field">
                     <label for="newAmount" id="newAmountLabel">Importe</label>
                     <input id="newAmount" type="number" min="0.01" step="0.01" placeholder="0,00">
                 </div>
                 <div class="field">
-                    <label for="newDate">Fecha</label>
-                    <input id="newDate" type="date">
+                    <label for="newKind">Tipo</label>
+                    <select id="newKind">
+                        <option value="expense">Gasto</option>
+                        <option value="income">Ingreso</option>
+                    </select>
                 </div>
                 <div class="field">
                     <label for="newCategory">Categoría</label>
@@ -382,19 +380,19 @@
                     <input id="editDesc" placeholder="Ej. Compra supermercado">
                 </div>
                 <div class="field">
-                    <label for="editKind">Tipo</label>
-                    <select id="editKind">
-                        <option value="expense">Gasto</option>
-                        <option value="income">Ingreso</option>
-                    </select>
+                    <label for="editDate">Fecha</label>
+                    <input id="editDate" type="date">
                 </div>
                 <div class="field">
                     <label for="editAmount" id="editAmountLabel">Importe</label>
                     <input id="editAmount" type="number" min="0.01" step="0.01" placeholder="0,00">
                 </div>
                 <div class="field">
-                    <label for="editDate">Fecha</label>
-                    <input id="editDate" type="date">
+                    <label for="editKind">Tipo</label>
+                    <select id="editKind">
+                        <option value="expense">Gasto</option>
+                        <option value="income">Ingreso</option>
+                    </select>
                 </div>
                 <div class="field">
                     <label for="editCategory">Categoría</label>
@@ -420,13 +418,13 @@
     <!-- Modal: Detalle de Movimiento -->
     <dialog id="detailDlg">
         <div class="modal detail-modal" tabindex="-1">
-            <div class="detail-modal-header">
-                <h2>Detalles del movimiento</h2>
-            </div>
             <div class="detail-modal-body">
                 <p id="detailConcept" class="detail-concept-title"></p>
                 <div id="detailContent"></div>
-                <div class="modal-actions detail-modal-actions">
+                <div class="modal-actions modal-actions-split detail-modal-actions">
+                    <button type="button" class="detail-edit-btn" id="detailEditBtn" title="Editar movimiento" aria-label="Editar movimiento">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
                     <button type="button" id="closeDetailBtn" class="aceptarmovimiento btn-modal-wide">Aceptar</button>
                 </div>
             </div>
@@ -439,13 +437,15 @@
     <!-- Modal: Listado de Categorías -->
     <dialog id="categoriesDlg">
         <div class="modal" tabindex="-1">
-            <h2>Gestión de categorías</h2>
-            <div id="categoryManagerList" class="category-manager-list"></div>
-            <div class="categories-add-row" style="margin-top: 15px;">
+            <div class="head-editar-categorias">
+                <h2 class="titulo-editarcategorias">Editar categorías</h2>
                 <button type="button" class="category-newbutton" id="openCreateCategoryBtn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    Nueva categoría
+                    Nueva
                 </button>
+            </div>
+            <div id="categoryManagerList" class="category-manager-list"></div>
+            <div class="categories-add-row" style="margin-top: 15px;">
             </div>
             <div class="modal-actions" style="margin-top: 15px;">
                 <button type="button" class="aceptarmovimiento" id="closeCategoriesDlg">Aceptar</button>
@@ -555,7 +555,7 @@
     <!-- Modal: Editar Remesa -->
     <dialog id="remitEditDlg">
         <form class="modal" id="remitEditForm" tabindex="-1">
-            <h2>Detalles de la remesa</h2>
+            <h2>Editar remesa</h2>
             <div class="formgrid">
                 <div class="field full">
                     <label for="editRemitName">Nombre de la remesa</label>
@@ -593,20 +593,13 @@
     <!-- Modal: Nueva Compra en Cuotas -->
     <dialog id="installmentNewDlg">
         <form class="modal" id="installmentNewForm" tabindex="-1">
-            <h2>Nueva compra en cuotas</h2>
+            <h2>Nueva compra</h2>
             <div class="formgrid">
                 <div class="field full">
                     <label for="newInstName">Nombre de la compra</label>
                     <input id="newInstName" placeholder="Ej. Televisor">
                 </div>
-                <div class="field">
-                    <label for="newInstCurrency">Moneda</label>
-                    <select id="newInstCurrency">
-                        <option value="EUR" selected>Euros (€)</option>
-                        <option value="USD">Dólares ($)</option>
-                        <option value="PEN">Soles (S/)</option>
-                    </select>
-                </div>
+                
                 <div class="field">
                     <label for="newInstFinancedAmount">Importe financiado</label>
                     <input id="newInstFinancedAmount" type="text" inputmode="decimal" placeholder="0,00">
@@ -631,10 +624,19 @@
                     <label for="newInstFinalAmount">Cuota final (opcional)</label>
                     <input id="newInstFinalAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
-                <div class="field full">
+                <div class="field">
                     <label for="newInstFirstDate">Fecha del primer pago</label>
                     <input id="newInstFirstDate" type="date">
                 </div>
+                <div class="field">
+                    <label for="newInstCurrency">Moneda</label>
+                    <select id="newInstCurrency">
+                        <option value="EUR" selected>Euros (€)</option>
+                        <option value="USD">Dólares ($)</option>
+                        <option value="PEN">Soles (S/)</option>
+                    </select>
+                </div>
+                
             </div>
             <div class="modal-actions">
                 <button type="button" class="cancelarmovimiento" id="cancelNewInstallmentBtn">Cancelar</button>
@@ -646,7 +648,7 @@
     <!-- Modal: Editar Compra en Cuotas -->
     <dialog id="installmentEditDlg">
         <form class="modal" id="installmentEditForm" tabindex="-1">
-            <h2>Detalles de la compra</h2>
+            <h2>Editar compra</h2>
             <div class="formgrid">
                 <div class="field full">
                     <label for="editInstName">Nombre de la compra</label>
@@ -684,7 +686,7 @@
                     <label for="editInstFinalAmount">Cuota final (opcional)</label>
                     <input id="editInstFinalAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
-                <div class="field full">
+                <div class="field">
                     <label for="editInstFirstDate">Fecha del primer pago</label>
                     <input id="editInstFirstDate" type="date">
                 </div>
@@ -722,7 +724,7 @@
     <!-- Modal: Editar Mes de Trabajo -->
     <dialog id="dayCounterMonthEditDlg">
         <form class="modal" id="dayCounterMonthEditForm" tabindex="-1">
-            <h2>Editar mes de trabajo</h2>
+            <h2>Editar lista</h2>
             <div class="formgrid">
                 <div class="field full">
                     <label for="editMonthName">Nombre del mes</label>
