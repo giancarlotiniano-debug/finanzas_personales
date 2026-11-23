@@ -2720,7 +2720,7 @@ function bindEvents() {
         isSwipingToOpenDrawer = false;
         currentOpenDrawerOffset = 0;
 
-        if (openTouchStartX <= 36) {
+        if (openTouchStartX <= 2) {
             const drawerWidth = navDrawer.getBoundingClientRect().width || Math.min(340, window.innerWidth * 0.85);
             navDrawer.classList.add('is-dragging');
             navDrawer.style.transform = `translateX(${-drawerWidth}px)`;

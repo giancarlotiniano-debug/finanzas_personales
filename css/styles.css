@@ -619,14 +619,14 @@ main {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    height: 44px;
+    gap: 5px;
+    height: 36px;
     padding: 0 16px;
     border-radius: 25px;
     background: var(--tarjetas);
     color: var(--primario);
     font-weight: 700;
-    font-size: 14.5px;
+    font-size: 14px;
     cursor: pointer;
     transition: background-color 0.15s ease, color 0.15s ease;
     white-space: nowrap;
@@ -651,7 +651,7 @@ main {
 .view-mode-switch {
     display: inline-flex;
     align-items: center;
-    background: var(--primario);
+    background: var(--tarjetas);
     border-radius: 25px;
     padding: 3px;
     height: 44px;
@@ -670,7 +670,7 @@ main {
     padding: 0 8px;
     border-radius: 25px;
     background: transparent;
-    color: var(--blanco);
+    color: var(--texto);
     opacity: 0.5;
     display: inline-flex;
     align-items: center;
@@ -705,8 +705,8 @@ main {
 
 .view-mode-option.active {
     padding: 0 12px;
-    background: var(--blanco);
-    color: var(--primario);
+    background: var(--primario);
+    color: var(--blanco);
     opacity: 1;
 }
 
@@ -738,7 +738,7 @@ main {
     margin: 0;
     font-size: 18px;
     font-weight: 750;
-    color: var(--primario);
+    color: var(--texto);
     line-height: 1.25;
 }
 
@@ -776,15 +776,11 @@ main {
 .cat-top-type-switch {
     display: inline-flex;
     align-items: center;
-    background: var(--primario);
+    background: var(--fondo);
     border-radius: 25px;
     padding: 3px 4px;
     height: 44px;
     flex-shrink: 0;
-}
-
-.dark-mode .cat-top-type-switch {
-    background: var(--fondo);
 }
 
 .cat-top-type-btn {
@@ -811,7 +807,7 @@ main {
 .cat-top-type-btn svg {
     width: 20px;
     height: 20px;
-    stroke: var(--blanco);
+    stroke: var(--texto);
     opacity: 0.8;
     pointer-events: none;
     flex-shrink: 0;
@@ -826,14 +822,9 @@ main {
 
 .cat-top-type-btn.active {
     padding: 0 16px;
-    background: var(--blanco);
-    color: var(--primario);
-    opacity: 1;
-}
-
-.dark-mode .cat-top-type-btn.active{
     background: var(--primario);
     color: var(--blanco);
+    opacity: 1;
 }
 
 .cat-top-type-btn.active svg {
@@ -856,7 +847,7 @@ main {
     background: var(--primario);
     color: var(--blanco);
     font-weight: 700;
-    font-size: 14.5px;
+    font-size: 14px;
     cursor: pointer;
     white-space: nowrap;
     flex-shrink: 0;
@@ -871,8 +862,8 @@ main {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 2px;
-    height: 38px;
+    gap: 5px;
+    height: 36px;
     width: auto;
     padding: 0 16px;
     border-radius: 25px;
@@ -888,6 +879,8 @@ main {
 .pill-new-btn svg {
     stroke: var(--blanco);
     flex-shrink: 0;
+    height: 14px;
+    width: 14px;
 }
 
 /* ==========================================
@@ -1230,10 +1223,6 @@ tr.movement-row {
     border-bottom-right-radius: 14px;
 }
 
-tr.movement-row:hover {
-    background-color: var(--fondo);
-}
-
 .empty {
     text-align: center;
     padding: 28px;
@@ -1287,11 +1276,6 @@ tr.movement-row {
     border-radius: 14px;
     transition: background-color 0.15s ease;
 }
-
-tr.movement-row:hover {
-    background-color: var(--fondo);
-}
-
 
 /* ==========================================
    7. GRÁFICO Y DESGLOSE POR CATEGORÍAS
@@ -2792,7 +2776,8 @@ body.dark-mode .filter-cal-day.is-in-week {
     }
 
     .filter-pill-btn {
-        height: 44px;
+        height: 38px;
+        width: auto;
         padding: 0 14px;
         font-size: 14px;
     }
@@ -2810,11 +2795,11 @@ body.dark-mode .filter-cal-day.is-in-week {
     }
 
     .view-mode-option .view-mode-label {
-        font-size: 12.5px;
+        font-size: 14px;
     }
 
     .view-mode-option.active {
-        padding: 0 12px;
+        padding: 0 14px;
     }
 
     .finance-view-title {
@@ -2846,7 +2831,7 @@ body.dark-mode .filter-cal-day.is-in-week {
     }
 
     .cat-top-type-btn .cat-top-type-label {
-        font-size: 12.5px;
+        font-size: 14px;
     }
 
     .cat-top-type-btn.active {
@@ -2854,15 +2839,16 @@ body.dark-mode .filter-cal-day.is-in-week {
     }
 
     .pill-new-btn {
-        height: 44px;
+        height: 38px;
+        width: auto;
         padding: 0 14px;
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .edit-cats-pill-btn {
         height: 38px;
-        width: 38px;
-        padding: 0;
+        width: auto;
+        padding: 0 9px;
         border-radius: 25px;
     }
 
@@ -2948,5 +2934,8 @@ body.dark-mode .filter-cal-day.is-in-week {
 @media (hover: hover) and (pointer: fine) {
     .cat-breakdown-item:hover {
         background: var(--fondo);
+    }
+    tr.movement-row:hover {
+        background-color: var(--fondo);
     }
 }
