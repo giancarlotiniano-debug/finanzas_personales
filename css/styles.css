@@ -27,6 +27,7 @@ body.dark-mode {
    ========================================== */
 * {
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -466,6 +467,12 @@ main {
     margin-bottom: 26px;
 }
 
+.finance-panels-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .finance-subcard {
     background: var(--tarjetas);
     border-radius: 20px;
@@ -476,6 +483,8 @@ main {
 .finance-list-card {
     display: flex;
     flex-direction: column;
+    min-height: 400px;
+    max-height: 600px;
 }
 
 /* Tarjeta 1: Métricas + Barra de uso */
@@ -602,6 +611,7 @@ main {
     justify-content: space-between;
     gap: 10px;
     background-color: var(--fondo);
+    padding: 10px 0;
 }
 
 .filter-pill-btn {
@@ -641,12 +651,16 @@ main {
 .view-mode-switch {
     display: inline-flex;
     align-items: center;
-    background: var(--tarjetas);
+    background: var(--primario);
     border-radius: 25px;
     padding: 3px;
     height: 44px;
     flex-shrink: 0;
     margin-left: auto;
+}
+
+.dark-mode .view-mode-switch {
+    background: var(--tarjetas);
 }
 
 .view-mode-option {
@@ -656,7 +670,7 @@ main {
     padding: 0 8px;
     border-radius: 25px;
     background: transparent;
-    color: var(--texto);
+    color: var(--blanco);
     opacity: 0.5;
     display: inline-flex;
     align-items: center;
@@ -691,10 +705,14 @@ main {
 
 .view-mode-option.active {
     padding: 0 12px;
-    background: var(--fondo);
+    background: var(--blanco);
     color: var(--primario);
-    border: 1px solid var(--primario);
     opacity: 1;
+}
+
+.dark-mode .view-mode-option.active {
+    background: var(--primario);
+    color: var(--blanco);
 }
 
 .view-mode-option.active .view-mode-label {
@@ -758,11 +776,15 @@ main {
 .cat-top-type-switch {
     display: inline-flex;
     align-items: center;
-    background: var(--fondo);
+    background: var(--primario);
     border-radius: 25px;
-    padding: 3px;
+    padding: 3px 4px;
     height: 44px;
     flex-shrink: 0;
+}
+
+.dark-mode .cat-top-type-switch {
+    background: var(--fondo);
 }
 
 .cat-top-type-btn {
@@ -789,7 +811,8 @@ main {
 .cat-top-type-btn svg {
     width: 20px;
     height: 20px;
-    stroke: currentColor;
+    stroke: var(--blanco);
+    opacity: 0.8;
     pointer-events: none;
     flex-shrink: 0;
 }
@@ -802,11 +825,15 @@ main {
 }
 
 .cat-top-type-btn.active {
-    padding: 0 12px;
+    padding: 0 16px;
+    background: var(--blanco);
+    color: var(--primario);
+    opacity: 1;
+}
+
+.dark-mode .cat-top-type-btn.active{
     background: var(--primario);
     color: var(--blanco);
-    border: 1px solid var(--primario);
-    opacity: 1;
 }
 
 .cat-top-type-btn.active svg {
@@ -822,8 +849,9 @@ main {
     align-items: center;
     justify-content: center;
     gap: 5px;
-    height: 44px;
-    padding: 0 15px;
+    height: 36px;
+    width: auto;
+    padding: 0 16px;
     border-radius: 25px;
     background: var(--primario);
     color: var(--blanco);
@@ -844,8 +872,8 @@ main {
     align-items: center;
     justify-content: center;
     gap: 2px;
-    height: 44px;
-    width: 90px;
+    height: 38px;
+    width: auto;
     padding: 0 16px;
     border-radius: 25px;
     background: var(--primario);
@@ -1039,11 +1067,27 @@ button.cancelarmovimiento {
    6. TABLA DE MOVIMIENTOS Y ESTADOS VACÍOS
    ========================================== */
 .table-wrapper {
-    max-height: 750px;
+    max-height: 500px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
-    transition: scrollbar-color 0.3s ease;
+}
+
+.table-wrapper.is-scrolling {
+  scrollbar-color: var(--primario) transparent;
+}
+
+.table-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 9999px;
+}
+
+.table-wrapper.is-scrolling::-webkit-scrollbar-thumb {
+  background-color: var(--primario);
 }
 
 .table-wrapper thead th {
@@ -1055,7 +1099,7 @@ button.cancelarmovimiento {
 
 table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
     color: var(--texto);
     font-size: 15px;
 }
@@ -1065,7 +1109,7 @@ th {
     color: var(--primario);
     font-size: 12px;
     font-weight: 650;
-    padding: 10px 8px 8px 8px;
+    padding: 16px 0px 8px 0px;
 }
 
 td {
@@ -1075,6 +1119,10 @@ td {
 
 tr:last-child td {
     border-bottom: 0;
+}
+
+.category-text {
+    font-weight: 550;
 }
 
 .amount {
@@ -1104,7 +1152,7 @@ tr:last-child td {
 }
 
 .movement-title {
-    font-weight: 600;
+    font-weight: 550;
     font-size: 15px;
     line-height: 1.2;
     color: var(--texto);
@@ -1150,18 +1198,26 @@ tr.no-border td {
 }
 
 tr.movement-row {
+    display: grid;
+    grid-template-columns: 52% 26% 22%;
+    align-items: center;
     cursor: pointer;
+    border-radius: 14px;
     transition: background-color 0.15s ease;
 }
 
-tr.movement-row:first-child {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+.movement-row td:first-child {
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
 }
 
-tr.movement-row:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+.movement-row td:last-child {
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
+}
+
+tr.movement-row:hover {
+    background-color: var(--fondo);
 }
 
 .empty {
@@ -1181,6 +1237,47 @@ tr.movement-row:last-child {
     text-align: center;
     color: var(--texto);
 }
+
+.finance-stack table,
+.finance-stack table thead,
+.finance-stack table tbody,
+.finance-stack table tr.date-header-row {
+    display: block;
+    width: 100%;
+}
+
+.finance-stack table thead tr,
+tr.movement-row {
+    display: grid;
+    grid-template-columns: 52% 26% 22%;
+    align-items: center;
+    width: 100%;
+}
+
+.finance-stack table thead th:nth-child(2),
+.finance-stack table thead th:nth-child(3) {
+    text-align: right;
+}
+
+.finance-stack table thead th:nth-child(4),
+tr.movement-row td:nth-child(4) {
+    display: none;
+}
+
+.finance-stack table thead th {
+    padding: 16px 8px 8px 8px;
+}
+
+tr.movement-row {
+    cursor: pointer;
+    border-radius: 14px;
+    transition: background-color 0.15s ease;
+}
+
+tr.movement-row:hover {
+    background-color: var(--fondo);
+}
+
 
 /* ==========================================
    7. GRÁFICO Y DESGLOSE POR CATEGORÍAS
@@ -1285,11 +1382,14 @@ tr.movement-row:last-child {
 }
 
 .cat-breakdown-list {
+    position: relative;
+    scroll-behavior: smooth;
     display: flex;
     flex-direction: column;
     gap: 5px;
     max-height: 250px;
     overflow-y: auto;
+    padding: 3px 5px;
     -webkit-mask-image: linear-gradient(
         to bottom,
         transparent 0%,
@@ -1304,6 +1404,7 @@ tr.movement-row:last-child {
         #000 calc(100% - 6px),
         transparent 100%
     );
+    scrollbar-color: transparent transparent;
 }
 
 .cat-breakdown-item {
@@ -1318,10 +1419,6 @@ tr.movement-row:last-child {
     -webkit-touch-callout: none;
     user-select: none;
     touch-action: manipulation;
-}
-
-.cat-breakdown-item:hover {
-    background: var(--fondo);
 }
 
 .cat-breakdown-item.selected {
@@ -1342,18 +1439,21 @@ tr.movement-row:last-child {
     width: 34px;
     height: 34px;
     border-radius: 12px;
-    background: var(--tarjetas);
-    border: 1px solid currentColor;
-    color: currentColor;
+    background: currentColor;
     flex-shrink: 0;
 }
 
 .category-icon-wrapper svg {
     width: 18px;
     height: 18px;
-    stroke: currentColor;
-    stroke-width: 1.6;
+    stroke: var(--blanco);
+    stroke-width: 1.5;
     flex-shrink: 0;
+}
+
+.category-icon-wrapper svg circle {
+    fill: var(--blanco);
+    stroke: none;
 }
 
 .editcategory-icon-wrapper {
@@ -2489,17 +2589,61 @@ body.dark-mode .filter-cal-day.is-in-week {
    10. RESPONSIVE DESIGN
    ========================================== */
 @media (min-width: 761px) {
+    .finance-panels-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+        gap: 16px;
+        align-items: start;
+    }
+
+    .finance-panels-row .view-mode-switch {
+        display: none;
+    }
+
+    .view-mode-switch {
+    display: none;
+    }
+
+    .finance-panels-row #movementsCard,
+    .finance-panels-row #categoriesCard {
+        display: flex !important;
+    }
+
+    .finance-panels-row #categoriesCard.is-hidden {
+        display: flex !important;
+    }
+
+    .finance-panels-row #movementsContainer.is-hidden,
+    .finance-panels-row #categoriesContainer.is-hidden,
+    .finance-panels-row #catTopTypeSwitch.is-hidden,
+    .finance-panels-row #editCategoriesBtn.is-hidden,
+    .finance-panels-row #addBtn.is-hidden {
+        display: revert !important;
+    }
+
+    .finance-panels-row #catTopTypeSwitch.is-hidden {
+        display: inline-flex !important;
+    }
+
+    .finance-panels-row #editCategoriesBtn.is-hidden,
+    .finance-panels-row #addBtn.is-hidden {
+        display: inline-flex !important;
+    }
+
+    /* columna movimiento */
     .finance-stack table th:nth-child(1),
-    .finance-stack table td:nth-child(1) { width: 44%; }
+    .finance-stack table td:nth-child(1) { /*width: 52%;*/ font-size: 15px; font-weight: 650; }
 
+    /* columna categorias */
     .finance-stack table th:nth-child(2),
-    .finance-stack table td:nth-child(2) { width: 22%; text-align: right; }
+    .finance-stack table td:nth-child(2) { /*width: 26%;*/ text-align: right; font-size: 15px; font-weight: 650;  }
 
+    /* columna importe*/
     .finance-stack table th:nth-child(3),
-    .finance-stack table td:nth-child(3) { width: 18%; text-align: right; }
+    .finance-stack table td:nth-child(3) { /*width: 22%;*/ text-align: right; font-size: 15px; font-weight: 650; }
 
     .finance-stack table th:nth-child(4),
-    .finance-stack table td:nth-child(4) { width: 16%; text-align: center; }
+    .finance-stack table td:nth-child(4) { display: none; }
 }
 
 @media (max-width: 760px) {
@@ -2533,6 +2677,10 @@ body.dark-mode .filter-cal-day.is-in-week {
         border-radius: 25px;
     }
 
+    .finance-list-card {
+        min-height: 180px;
+    }
+
     .metrics-side-val { font-size: 16px; }
     .metrics-side-group { gap: 14px; }
 
@@ -2549,6 +2697,7 @@ body.dark-mode .filter-cal-day.is-in-week {
     }
 
     .view-mode-switch {
+        display: inline-flex;
         height: 44px;
     }
 
@@ -2611,9 +2760,9 @@ body.dark-mode .filter-cal-day.is-in-week {
 
     .edit-cats-pill-btn {
         height: 38px;
-        width: 40px;
+        width: 38px;
         padding: 0;
-        border-radius: 16px;
+        border-radius: 25px;
     }
 
     .edit-cats-pill-btn .edit-cats-label {

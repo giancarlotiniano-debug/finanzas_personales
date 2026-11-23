@@ -173,6 +173,19 @@ const formatCurrencyCustom = (amount, code) => {
 };
 
 const formatMoney = (amount) => formatCurrencyCustom(amount, appConfig.currency);
+
+const formatPlainInputValue = (val, currCode) => {
+    const num = Number(val);
+    if (isNaN(num) || num <= 0) return '';
+    const useDotDecimal = currCode === 'PEN' || currCode === 'USD';
+    const thousandsSep = useDotDecimal ? ',' : '.';
+    const decimalSep = useDotDecimal ? '.' : ',';
+    const rounded = Math.round(num * 10000) / 10000;
+    const [intPart, decPart] = String(rounded).split('.');
+    const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousandsSep);
+    return decPart ? `${formattedInt}${decimalSep}${decPart}` : formattedInt;
+};
+
 const formatNumberDisplay = (val, currCode) => (isNaN(val) || val <= 0) ? '' : formatCurrencyCustom(val, currCode);
 
 const formatTcInputValue = (val, recvCurrCode) => {
@@ -185,7 +198,7 @@ const formatTcInputValue = (val, recvCurrCode) => {
 
 function parseInputNumber(rawValue) {
     if (!rawValue) return 0;
-    let s = String(rawValue).replace(/S\/\.|[€$A-Za-z\s]/g, '').trim();
+    let s = String(rawValue).replace(/S\/\.?|[€$A-Za-z\s]/g, '').trim();
 
     if (s.includes(',') && s.includes('.')) {
         s = s.lastIndexOf(',') > s.lastIndexOf('.')
@@ -830,6 +843,10 @@ function applyImportSelection(selection) {
 /* ==========================================
    7. GESTOR FINANCIERO: FILTROS, MOVIMIENTOS Y CATEGORÍAS
    ========================================== */
+function isDesktopFinanceLayout() {
+    return window.matchMedia && window.matchMedia('(min-width: 761px)').matches;
+}
+
 function setFinanceViewMode(mode) {
     activeFinanceViewMode = mode === 'categories' ? 'categories' : 'movements';
     selectedDonutCategory = null;
@@ -846,16 +863,13 @@ function setFinanceViewMode(mode) {
     btnCat?.setAttribute('aria-selected', String(isCategories));
 
     if (titleEl) {
-        titleEl.textContent = isCategories ? 'Categorías' : 'Movimientos';
+        titleEl.textContent = 'Movimientos';
     }
 
     updateActiveFilterCaption();
 
-    $('movementsContainer')?.classList.toggle('is-hidden', isCategories);
-    $('categoriesContainer')?.classList.toggle('is-hidden', !isCategories);
-    $('catTopTypeSwitch')?.classList.toggle('is-hidden', !isCategories);
-    $('editCategoriesBtn')?.classList.toggle('is-hidden', !isCategories);
-    $('addBtn')?.classList.toggle('is-hidden', isCategories);
+    $('movementsCard')?.classList.toggle('is-hidden', isCategories);
+    $('categoriesCard')?.classList.toggle('is-hidden', !isCategories);
 
     render();
 }
@@ -1238,8 +1252,11 @@ function formatActiveFilterLabel(filters = movementFilters) {
 }
 
 function updateActiveFilterCaption() {
+    const labelText = formatActiveFilterLabel(movementFilters);
     const captionEl = $('activeFilterCaption');
-    if (captionEl) captionEl.textContent = formatActiveFilterLabel(movementFilters);
+    const catCaptionEl = $('activeCategoryFilterCaption');
+    if (captionEl) captionEl.textContent = labelText;
+    if (catCaptionEl) catCaptionEl.textContent = labelText;
 }
 
 function updateFilterButtonIndicator() {
@@ -1475,7 +1492,7 @@ function render() {
     $('rows').innerHTML = rowsHtml;
     $('empty').style.display = visibleMovements.length ? 'none' : 'block';
 
-    if (activeFinanceViewMode === 'categories') {
+    if (activeFinanceViewMode === 'categories' || isDesktopFinanceLayout()) {
         renderCategoriesRedesign(visibleMovements);
     }
 }
@@ -1557,9 +1574,11 @@ function setupCategoryTabs() {
     btnIncome.addEventListener('click', () => switchTab('income'));
 }
 
-function toggleDonutSegment(categoryName) {
+function toggleDonutSegment(categoryName, options = {}) {
     selectedDonutCategory = (selectedDonutCategory === categoryName) ? null : categoryName;
-    renderCategoriesRedesign();
+    renderCategoriesRedesign(getFilteredMovements(), {
+        scrollToSelected: Boolean(options.scrollToSelected && selectedDonutCategory)
+    });
 }
 
 function getCategoryMeta(kind, name) {
@@ -1577,8 +1596,7 @@ function getCategoryMeta(kind, name) {
     return { color, accentColor: color, iconSvg };
 }
 
-function renderCategoriesRedesign(sourceMovements = getFilteredMovements()) {
-    const activeMovements = sourceMovements.filter(item => item.kind === currentCatKind);
+function renderCategoriesRedesign(sourceMovements = getFilteredMovements(), options = {}) {    const activeMovements = sourceMovements.filter(item => item.kind === currentCatKind);
 
     const categoryTotals = {};
     activeMovements.forEach(item => {
@@ -1686,6 +1704,34 @@ function renderCategoriesRedesign(sourceMovements = getFilteredMovements()) {
                 </div>
             `;
         }).join('');
+
+        if (options.scrollToSelected && selectedDonutCategory) {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    const targetItem = Array.from(listContainer.querySelectorAll('[data-list-category]'))
+                        .find(el => el.dataset.listCategory === selectedDonutCategory);
+                    if (!targetItem) return;
+
+                    const containerRect = listContainer.getBoundingClientRect();
+                    const itemRect = targetItem.getBoundingClientRect();
+                    const isPartiallyOrFullyHidden =
+                        itemRect.top < containerRect.top || itemRect.bottom > containerRect.bottom;
+
+                    if (isPartiallyOrFullyHidden) {
+                        const itemTopRelativeToContainer =
+                            itemRect.top - containerRect.top + listContainer.scrollTop;
+                        const centeredOffset =
+                            itemTopRelativeToContainer -
+                            (listContainer.clientHeight - targetItem.clientHeight) / 2;
+
+                        listContainer.scrollTo({
+                            top: Math.max(0, centeredOffset),
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
     }
 }
 
@@ -2063,30 +2109,30 @@ function renderInstallments() {
             <div class="installment-row ${inst.paid ? 'paid' : ''}" data-action="toggle-inst-paid" data-purchase-id="${purchase.id}" data-inst-number="${inst.number}">
                 <div class="flex-col">
                     <span class="installment-row-title">Cuota ${inst.number} de ${purchase.totalCount}</span>
-                    <span class="installment-row-date">Fecha: ${formatDateEs(inst.date)}</span>
+                    <span class="installment-row-date">Vencimiento: ${formatDateEs(inst.date)}</span>
                 </div>
                 <div class="installment-row-right">
                     <span class="installment-row-amount">${formatCurrencyCustom(inst.amount, curr)}</span>
-                    <input type="checkbox" class="installment-checkbox" ${inst.paid ? 'checked' : ''} data-action="toggle-inst-paid" data-purchase-id="${purchase.id}" data-inst-number="${inst.number}" title="Marcar como pagado">
+                    <input type="checkbox" class="installment-checkbox" ${inst.paid ? 'checked' : ''} data-stop-propagation="true">
                 </div>
             </div>
         `).join('');
 
         return `
             <div class="installment-purchase-card ${purchase.expanded ? 'is-open' : ''}" id="purchase_box_${purchase.id}">
-                <div class="installment-purchase-header ${allPaid ? 'all-paid' : ''}" data-action="toggle-inst-accordion" data-purchase-id="${purchase.id}">
+                <div class="installment-purchase-header ${allPaid ? 'all-paid' : ''}" data-action="toggle-purchase" data-purchase-id="${purchase.id}">
                     <div class="flex-col">
                         <span class="installment-card-title">${escapeHtml(purchase.name)}</span>
-                        <span class="installment-card-subtitle">Total: ${formatCurrencyCustom(purchase.totalAmount, curr)} (${totalPaidCount}/${purchase.totalCount} pagadas)</span>
+                        <span class="installment-card-subtitle">Total: ${formatCurrencyCustom(purchase.totalAmount, curr)} • Pagadas: ${totalPaidCount}/${purchase.totalCount}</span>
                     </div>
                     <div class="flex-center-gap">
-                        <button type="button" class="editbutton-xs" data-action="edit-inst-purchase" data-purchase-id="${purchase.id}" title="Editar compra" aria-label="Editar compra">
+                        <button type="button" class="editbutton-xs" data-action="edit-purchase" data-purchase-id="${purchase.id}" title="Detalles de la compra" aria-label="Detalles de la compra">
                             <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
                         </button>
                         <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
                 </div>
-                <div id="inst_details_${purchase.id}" class="installment-installments-list-compras" style="display: ${purchase.expanded ? 'flex' : 'none'};">
+                <div id="purchase_details_${purchase.id}" class="installment-installments-list-compras" style="display: ${purchase.expanded ? 'flex' : 'none'};">
                     ${installmentsHtml}
                 </div>
             </div>
@@ -2094,7 +2140,7 @@ function renderInstallments() {
     }).join('');
 }
 
-function toggleInstallmentAccordion(purchaseId) {
+function togglePurchaseAccordion(purchaseId) {
     const purchase = installmentsPurchases.find(p => p.id === purchaseId);
     if (!purchase) return;
 
@@ -2115,28 +2161,22 @@ function toggleInstallmentPaid(purchaseId, instNumber) {
     renderInstallments();
 }
 
-function editInstallmentPurchase(purchaseId) {
+function editPurchase(purchaseId) {
     const purchase = installmentsPurchases.find(p => p.id === purchaseId);
     if (!purchase) return;
 
     editingInstallmentId = purchaseId;
     $('editInstName').value = purchase.name;
     $('editInstCurrency').value = purchase.currency || 'EUR';
-    $('editInstFinancedAmount').value = purchase.financedAmount != null ? String(purchase.financedAmount).replace('.', ',') : '';
-    $('editInstInterestAmount').value = purchase.interestAmount != null ? String(purchase.interestAmount).replace('.', ',') : '';
-    $('editInstTotalAmount').value = purchase.totalAmount != null ? Number(purchase.totalAmount).toFixed(2).replace('.', ',') : '';
+    $('editInstFinancedAmount').value = String(purchase.financedAmount || 0).replace('.', ',');
+    $('editInstInterestAmount').value = purchase.interestAmount ? String(purchase.interestAmount).replace('.', ',') : '';
+    $('editInstTotalAmount').value = String(purchase.totalAmount || 0).replace('.', ',');
     $('editInstTotalCount').value = purchase.totalCount;
-    $('editInstRegularAmount').value = String(purchase.regularAmount).replace('.', ',');
-    $('editInstFinalAmount').value = purchase.finalAmount !== purchase.regularAmount ? String(purchase.finalAmount).replace('.', ',') : '';
+    $('editInstRegularAmount').value = String(purchase.regularAmount || 0).replace('.', ',');
+    $('editInstFinalAmount').value = (purchase.finalAmount && purchase.finalAmount !== purchase.regularAmount)
+        ? String(purchase.finalAmount).replace('.', ',')
+        : '';
     $('editInstFirstDate').value = purchase.firstDate;
-
-    $('deleteInstallmentBtn').onclick = () => {
-        if (!confirm('¿Estás seguro de eliminar esta compra y todas sus cuotas?')) return;
-        installmentsPurchases = installmentsPurchases.filter(p => p.id !== editingInstallmentId);
-        persistInstallments();
-        closeModal($('installmentEditDlg'));
-        renderInstallments();
-    };
 
     clearValidationErrors($('installmentEditForm'));
     openModal($('installmentEditDlg'));
@@ -2150,28 +2190,24 @@ function openNewDayCounterMonthModal() {
     if ($('newMonthName')) {
         $('newMonthName').value = `${SPANISH_MONTH_NAMES[today.getMonth()]} ${today.getFullYear()}`;
     }
-    if ($('newMonthTarget')) $('newMonthTarget').value = 15;
+    if ($('newMonthTarget')) $('newMonthTarget').value = '15';
     clearValidationErrors($('dayCounterMonthNewForm'));
     openModal($('dayCounterMonthNewDlg'));
 }
 
 function renderDayCounter() {
-    const listContainer = $('dayCounterMonthsList');
-    if (!listContainer) return;
-
-    dayCounterMonths.forEach(m => m.days.sort((a, b) => b.date.localeCompare(a.date)));
+    const container = $('dayCounterMonthsList');
+    if (!container) return;
 
     if (!dayCounterMonths.length) {
-        listContainer.innerHTML = '<div class="empty empty-compact">Aún no hay meses registrados.</div>';
+        container.innerHTML = '<div class="empty empty-compact">Aún no hay meses registrados.</div>';
         return;
     }
 
-    listContainer.innerHTML = dayCounterMonths.map((month) => {
-        const worked = month.days.length;
+    container.innerHTML = dayCounterMonths.map((month) => {
+        const daysCount = month.days.length;
         const target = month.targetDays || 15;
-        const statusText = worked > target
-            ? `Trabajados: ${worked} de ${target} • Extras: ${worked - target}`
-            : `Trabajados: ${worked} de ${target}`;
+        const extraDays = Math.max(0, daysCount - target);
 
         const daysHtml = month.days.map((day, idx) => `
             <div class="dc-day-row">
@@ -2181,47 +2217,45 @@ function renderDayCounter() {
                 </div>
                 <div class="dc-day-middle">
                     <span class="dc-day-loc">${escapeHtml(day.location)}</span>
-                    <span class="dc-day-time">${escapeHtml(day.entryTime)} a ${escapeHtml(day.exitTime)}</span>                 
+                    <span class="dc-day-time">${escapeHtml(day.entryTime)} – ${escapeHtml(day.exitTime)}</span>
                 </div>
                 <div class="dc-day-right">
                     <button type="button" class="editdaysbutton-xs" data-action="edit-day" data-month-id="${month.id}" data-day-index="${idx}" title="Editar día" aria-label="Editar día">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     </button>
                 </div>
             </div>
         `).join('');
 
         return `
-            <div class="installment-purchase-card ${month.expanded ? 'is-open' : ''}" id="dc_month_${month.id}">
-                <div class="installment-purchase-header" data-action="toggle-month" data-month-id="${month.id}">
+            <div class="installment-purchase-card ${month.expanded ? 'is-open' : ''}" id="dc_month_box_${month.id}">
+                <div class="installment-purchase-header" data-action="toggle-dc-month" data-month-id="${month.id}">
                     <div class="flex-col">
                         <span class="installment-card-title">${escapeHtml(month.name)}</span>
-                        <span class="installment-card-subtitle">${statusText}</span>
+                        <span class="installment-card-subtitle">Trabajados: ${daysCount} • Extras: ${extraDays}</span>
                     </div>
                     <div class="flex-center-gap">
-                        <button type="button" class="editbutton-xs" data-action="edit-month" data-month-id="${month.id}" title="Editar mes" aria-label="Editar mes">
+                        <button type="button" class="editbutton-xs" data-action="edit-dc-month" data-month-id="${month.id}" title="Editar mes" aria-label="Editar mes">
                             <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
                         </button>
                         <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
                 </div>
-                <div id="dc_details_${month.id}" class="installment-installments-list-dias" style="display: ${month.expanded ? 'flex' : 'none'};">
+                <div id="dc_month_details_${month.id}" class="installment-installments-list-dias" style="display: ${month.expanded ? 'flex' : 'none'};">
                     <div class="dc-days-wrapper">
-                        ${daysHtml || '<div class="empty empty-compact">No hay días registrados aún.</div>'}
+                        ${daysHtml || '<div class="empty empty-compact">Aún no se han registrado días.</div>'}
                     </div>
-                    <div class="utility-footer-action">
-                        <button type="button" class="day-newbutton" data-action="add-day" data-month-id="${month.id}">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            Nuevo día
-                        </button>
-                    </div>
+                    <button type="button" class="day-newbutton" data-action="open-new-day" data-month-id="${month.id}">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Registrar día
+                    </button>
                 </div>
             </div>
         `;
     }).join('');
 }
 
-function toggleMonthAccordion(monthId) {
+function toggleDayCounterMonthAccordion(monthId) {
     const month = dayCounterMonths.find(m => m.id === monthId);
     if (!month) return;
 
@@ -2229,10 +2263,10 @@ function toggleMonthAccordion(monthId) {
     dayCounterMonths.forEach(m => { m.expanded = m.id === monthId ? willBeExpanded : false; });
     persistDayCounter();
     renderDayCounter();
-    scrollCardIntoView($(`dc_month_${monthId}`), willBeExpanded);
+    scrollCardIntoView($(`dc_month_box_${monthId}`), willBeExpanded);
 }
 
-function editMonthModal(monthId) {
+function editDayCounterMonth(monthId) {
     const month = dayCounterMonths.find(m => m.id === monthId);
     if (!month) return;
 
@@ -2240,80 +2274,430 @@ function editMonthModal(monthId) {
     $('editMonthName').value = month.name;
     $('editMonthTarget').value = month.targetDays;
 
-    $('deleteMonthModalBtn').onclick = () => {
-        if (!confirm('¿Estás seguro de eliminar este mes y todos sus días registrados?')) return;
-        dayCounterMonths = dayCounterMonths.filter(m => m.id !== editingMonthId);
-        persistDayCounter();
-        closeModal($('dayCounterMonthEditDlg'));
-        renderDayCounter();
-    };
+    if ($('deleteMonthModalBtn')) {
+        $('deleteMonthModalBtn').onclick = () => {
+            if (!confirm('¿Eliminar este mes y todos los días registrados en él?')) return;
+            dayCounterMonths = dayCounterMonths.filter(m => m.id !== editingMonthId);
+            persistDayCounter();
+            closeModal($('dayCounterMonthEditDlg'));
+            renderDayCounter();
+        };
+    }
 
     clearValidationErrors($('dayCounterMonthEditForm'));
     openModal($('dayCounterMonthEditDlg'));
 }
 
-function openAddDayModal(monthId) {
+function openDayCounterDayModal(monthId, dayIndex = null) {
     const month = dayCounterMonths.find(m => m.id === monthId);
     if (!month) return;
 
     editingDayMonthId = monthId;
-    editingDayIndex = null;
-
-    $('dayDlgTitle').textContent = 'Registrar día';
-    $('dayModalActionsSplit').style.display = 'none';
-    $('dayModalActionsNormal').style.display = 'flex';
-    $('copyPreviousDayWrapper').style.display = month.days.length > 0 ? 'block' : 'none';
-
-    const todayStr = `${currentMonth}-${pad(today.getDate())}`;
-    $('dayDate').value = todayStr;
-    $('dayNameDisplay').value = getDayNameFromDate(todayStr);
-    $('dayEntryTime').value = '18:00';
-    $('dayExitTime').value = '06:00';
-    $('dayLocation').value = '';
-
+    editingDayIndex = dayIndex;
     clearValidationErrors($('dayCounterDayForm'));
+
+    const isEditing = dayIndex !== null && month.days[dayIndex];
+    const copyWrapper = $('copyPreviousDayWrapper');
+
+    if (isEditing) {
+        const day = month.days[dayIndex];
+        $('dayDlgTitle').textContent = 'Editar día';
+        $('dayDate').value = day.date;
+        $('dayNameDisplay').value = day.dayName;
+        $('dayEntryTime').value = day.entryTime;
+        $('dayExitTime').value = day.exitTime;
+        $('dayLocation').value = day.location;
+
+        if (copyWrapper) copyWrapper.style.display = 'none';
+        $('dayModalActionsSplit').style.display = 'flex';
+        $('dayModalActionsNormal').style.display = 'none';
+    } else {
+        $('dayDlgTitle').textContent = 'Registrar día';
+        const defaultDate = `${currentMonth}-${pad(today.getDate())}`;
+        $('dayDate').value = defaultDate;
+        $('dayNameDisplay').value = getDayNameFromDate(defaultDate);
+        $('dayEntryTime').value = '18:00';
+        $('dayExitTime').value = '06:00';
+        $('dayLocation').value = '';
+
+        if (copyWrapper) copyWrapper.style.display = month.days.length > 0 ? 'block' : 'none';
+        $('dayModalActionsSplit').style.display = 'none';
+        $('dayModalActionsNormal').style.display = 'flex';
+    }
+
     openModal($('dayCounterDayDlg'));
 }
 
-function openEditDayModal(monthId, dayIndex) {
-    const month = dayCounterMonths.find(m => m.id === monthId);
-    const day = month?.days[dayIndex];
-    if (!day) return;
+function addDaysToIsoDate(dateStr, daysToAdd) {
+    const parts = parseIsoParts(dateStr);
+    if (!parts) return dateStr || '';
+    const nextDate = new Date(parts.y, parts.m - 1, parts.d + daysToAdd);
+    return toIsoDateLocal(nextDate);
+}
 
-    editingDayMonthId = monthId;
-    editingDayIndex = dayIndex;
+function copyLastDayData() {
+    const month = dayCounterMonths.find(m => m.id === editingDayMonthId);
+    if (!month?.days.length) return;
 
-    $('dayDlgTitle').textContent = 'Editar día';
-    $('dayModalActionsSplit').style.display = 'flex';
-    $('dayModalActionsNormal').style.display = 'none';
-    $('copyPreviousDayWrapper').style.display = 'none';
-
-    $('dayDate').value = day.date;
-    $('dayNameDisplay').value = day.dayName;
-    $('dayEntryTime').value = day.entryTime;
-    $('dayExitTime').value = day.exitTime;
-    $('dayLocation').value = day.location;
-
-    $('deleteDayModalBtn').onclick = () => {
-        if (!confirm('¿Eliminar este día trabajado?')) return;
-        month.days.splice(editingDayIndex, 1);
-        persistDayCounter();
-        closeModal($('dayCounterDayDlg'));
-        renderDayCounter();
-    };
-
+    const lastDay = month.days[0];
+    if (lastDay.date) {
+        const nextIsoDate = addDaysToIsoDate(lastDay.date, 1);
+        $('dayDate').value = nextIsoDate;
+        $('dayNameDisplay').value = getDayNameFromDate(nextIsoDate);
+    }
+    $('dayEntryTime').value = lastDay.entryTime || '';
+    $('dayExitTime').value = lastDay.exitTime || '';
+    $('dayLocation').value = lastDay.location || '';
     clearValidationErrors($('dayCounterDayForm'));
-    openModal($('dayCounterDayDlg'));
 }
 
 /* ==========================================
-   11. EVENT LISTENERS GLOBALES E INICIALIZACIÓN
+   11. EVENTOS Y ARRANQUE DE LA APLICACIÓN
    ========================================== */
-function setupEventListeners() {
-    // --- Menú lateral y cabecera ---
+function bindDelegatedEvents() {
+    $('rows')?.addEventListener('click', (e) => {
+        const row = e.target.closest('tr.movement-row');
+        if (row) showMovementDetail(row.dataset.movementId);
+    });
+
+     $('catChartWrapper')?.addEventListener('click', (e) => {
+        const seg = e.target.closest('[data-donut-category]');
+        if (seg) {
+            e.stopPropagation();
+            toggleDonutSegment(seg.dataset.donutCategory, { scrollToSelected: true });
+        }
+    });
+
+    $('categories')?.addEventListener('click', (e) => {
+        const item = e.target.closest('[data-list-category]');
+        if (item) {
+            e.stopPropagation();
+            toggleDonutSegment(item.dataset.listCategory);
+        }
+    });
+
+    $('categories')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            const item = e.target.closest('[data-list-category]');
+            if (item) {
+                e.preventDefault();
+                toggleDonutSegment(item.dataset.listCategory);
+            }
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!selectedDonutCategory) return;
+
+        const clickedInsideChart = e.target.closest('#catChartWrapper');
+        const clickedInsideList = e.target.closest('[data-list-category]');
+
+        if (!clickedInsideChart && !clickedInsideList) {
+            selectedDonutCategory = null;
+            renderCategoriesRedesign();
+        }
+    });
+
+    $('categoryManagerList')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-action="open-edit-category"]');
+        if (btn) openEditCategoryModal(btn.dataset.kind, Number(btn.dataset.index));
+    });
+
+    $('iconSelectorGrid')?.addEventListener('click', (e) => {
+        const item = e.target.closest('.icon-option-item');
+        if (item) selectCategoryIcon(item.dataset.icon, 'newCatIcon', '#iconSelectorGrid');
+    });
+
+    $('editIconSelectorGrid')?.addEventListener('click', (e) => {
+        const item = e.target.closest('.icon-option-item');
+        if (item) selectCategoryIcon(item.dataset.icon, 'editCatIcon', '#editIconSelectorGrid');
+    });
+
+    $('remittancesList')?.addEventListener('click', (e) => {
+        const target = e.target.closest('[data-action]');
+        if (!target) return;
+        const { action, remitId, index } = target.dataset;
+        if (action === 'toggle-remit') toggleRemitAccordion(remitId);
+        else if (action === 'edit-remit') { e.stopPropagation(); editRemittance(remitId); }
+        else if (action === 'remove-remit-item') removeRemitItem(remitId, Number(index));
+        else if (action === 'add-remit-item') addRemitItem(remitId);
+    });
+
+    $('remittancesList')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.target.classList.contains('remit-concept-field')) {
+            e.preventDefault();
+            addRemitItem(e.target.dataset.remitId);
+        } else if (e.key === 'Enter' && e.target.classList.contains('remit-tc-input')) {
+            e.preventDefault();
+            const input = e.target;
+            const rem = remittancesList.find(r => r.id === input.dataset.remitId);
+            if (rem) {
+                const val = parseInputNumber(input.value);
+                rem.tc = val;
+                persistRemittancesList();
+                input.value = val > 0 ? formatTcInputValue(val, rem.recvCurr) : '';
+                updateRemitDOMTotals(rem);
+            }
+            input.blur();
+        } else if (e.key === 'Enter' && e.target.classList.contains('remit-recv-input')) {
+            e.preventDefault();
+            const input = e.target;
+            const rem = remittancesList.find(r => r.id === input.dataset.remitId);
+            if (rem) {
+                const idx = Number(input.dataset.index);
+                const val = parseInputNumber(input.value);
+                if (rem.items[idx]) {
+                    rem.items[idx].recvAmount = val;
+                    persistRemittancesList();
+                    input.value = formatNumberDisplay(val, rem.recvCurr);
+                    updateRemitDOMTotals(rem);
+                }
+            }
+            input.blur();
+        }
+    });
+
+    $('remittancesList')?.addEventListener('input', (e) => {
+        const input = e.target;
+        const rem = remittancesList.find(r => r.id === input.dataset.remitId);
+        if (!rem) return;
+
+        if (input.classList.contains('remit-tc-input')) {
+            rem.tc = parseInputNumber(input.value) || 0;
+            persistRemittancesList();
+            updateRemitDOMTotals(rem);
+        } else if (input.classList.contains('remit-recv-input')) {
+            const idx = Number(input.dataset.index);
+            if (rem.items[idx]) {
+                rem.items[idx].recvAmount = parseInputNumber(input.value);
+                persistRemittancesList();
+                updateRemitDOMTotals(rem);
+            }
+        } else if (input.classList.contains('remit-comm-input')) {
+            rem.commission = parseInputNumber(input.value);
+            persistRemittancesList();
+            updateRemitDOMTotals(rem);
+        }
+    });
+
+    $('remittancesList')?.addEventListener('focus', (e) => {
+        const input = e.target;
+        const rem = remittancesList.find(r => r.id === input.dataset.remitId);
+        if (!rem) return;
+
+        if (input.classList.contains('remit-recv-input')) {
+            const idx = Number(input.dataset.index);
+            const val = rem.items[idx]?.recvAmount ?? parseInputNumber(input.value);
+            input.value = formatPlainInputValue(val, rem.recvCurr);
+        } else if (input.classList.contains('remit-comm-input')) {
+            const val = rem.commission ?? parseInputNumber(input.value);
+            input.value = formatPlainInputValue(val, rem.sendCurr);
+        }
+    }, true);
+
+    $('remittancesList')?.addEventListener('blur', (e) => {
+        const input = e.target;
+        const rem = remittancesList.find(r => r.id === input.dataset.remitId);
+        if (!rem) return;
+
+        if (input.classList.contains('remit-tc-input')) {
+            const val = parseInputNumber(input.value);
+            rem.tc = val;
+            persistRemittancesList();
+            input.value = val > 0 ? formatTcInputValue(val, rem.recvCurr) : '';
+            updateRemitDOMTotals(rem);
+        } else if (input.classList.contains('remit-recv-input')) {
+            const idx = Number(input.dataset.index);
+            const val = parseInputNumber(input.value);
+            if (rem.items[idx]) {
+                rem.items[idx].recvAmount = val;
+                persistRemittancesList();
+                input.value = formatNumberDisplay(val, rem.recvCurr);
+                updateRemitDOMTotals(rem);
+            }
+        } else if (input.classList.contains('remit-comm-input')) {
+            const val = parseInputNumber(input.value);
+            rem.commission = val;
+            persistRemittancesList();
+            input.value = formatNumberDisplay(val, rem.sendCurr);
+            updateRemitDOMTotals(rem);
+        }
+    }, true);
+
+    $('installmentsList')?.addEventListener('click', (e) => {
+        const editBtn = e.target.closest('[data-action="edit-purchase"]');
+        if (editBtn) { e.stopPropagation(); editPurchase(editBtn.dataset.purchaseId); return; }
+
+        const row = e.target.closest('[data-action="toggle-inst-paid"]');
+        if (row) { toggleInstallmentPaid(row.dataset.purchaseId, Number(row.dataset.instNumber)); return; }
+
+        const header = e.target.closest('[data-action="toggle-purchase"]');
+        if (header) togglePurchaseAccordion(header.dataset.purchaseId);
+    });
+
+    $('dayCounterMonthsList')?.addEventListener('click', (e) => {
+        const target = e.target.closest('[data-action]');
+        if (!target) return;
+        const { action, monthId, dayIndex } = target.dataset;
+        if (action === 'toggle-dc-month') toggleDayCounterMonthAccordion(monthId);
+        else if (action === 'edit-dc-month') { e.stopPropagation(); editDayCounterMonth(monthId); }
+        else if (action === 'open-new-day') openDayCounterDayModal(monthId, null);
+        else if (action === 'edit-day') openDayCounterDayModal(monthId, Number(dayIndex));
+    });
+}
+
+function bindFilterEvents() {
+    $('openFilterBtn')?.addEventListener('click', openFilterDialog);
+    $('cancelFilterBtn')?.addEventListener('click', () => closeModal($('filterDlg')));
+    $('resetFiltersBtn')?.addEventListener('click', clearFilterDialogDraft);
+
+    document.querySelectorAll('#filterDlg .filter-seg-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const nextKind = btn.dataset.filterKind;
+            filterDraft.kind = nextKind;
+            filterDraft.category = 'all';
+            syncFilterUIState(nextKind);
+            populateFilterCategorySelect(nextKind, 'all');
+        });
+    });
+
+    $('filterCategorySelect')?.addEventListener('change', (e) => {
+        filterDraft.category = e.target.value;
+    });
+
+    document.querySelectorAll('#filterDlg .filter-date-tab').forEach(tab => {
+        tab.addEventListener('click', () => handleFilterDateTabClick(tab.dataset.dateMode));
+    });
+
+    $('filterDatePickerPanel')?.addEventListener('click', (e) => {
+        const navBtn = e.target.closest('[data-cal-nav]');
+        if (navBtn) {
+            const delta = navBtn.dataset.calNav === 'next' ? 1 : -1;
+            const nextDate = new Date(filterDraft.calYear, filterDraft.calMonth + delta, 1);
+            filterDraft.calYear = nextDate.getFullYear();
+            filterDraft.calMonth = nextDate.getMonth();
+            renderFilterDatePanel();
+            return;
+        }
+
+        const dayBtn = e.target.closest('[data-cal-iso]');
+        if (dayBtn) {
+            const iso = dayBtn.dataset.calIso;
+            const parts = parseIsoParts(iso);
+            filterDraft.anchorDate = iso;
+            if (parts) {
+                filterDraft.calYear = parts.y;
+                filterDraft.calMonth = parts.m - 1;
+            }
+            if (filterDraft.dateMode === 'day') {
+                filterDraft.startDate = iso;
+                filterDraft.endDate = iso;
+            } else if (filterDraft.dateMode === 'week') {
+                const wk = getMondayToSundayWeekRange(iso);
+                filterDraft.startDate = wk.startDate;
+                filterDraft.endDate = wk.endDate;
+            }
+            renderFilterDatePanel();
+            return;
+        }
+
+        const monthBtn = e.target.closest('[data-pick-month]');
+        if (monthBtn) {
+            filterDraft.pickerMonth = Number(monthBtn.dataset.pickMonth);
+            const range = computeRangeForMode('month', filterDraft.anchorDate, filterDraft.pickerYear, filterDraft.pickerMonth);
+            filterDraft.startDate = range.startDate;
+            filterDraft.endDate = range.endDate;
+            filterDraft.anchorDate = range.anchorDate;
+            renderFilterDatePanel();
+            return;
+        }
+
+        const yearBtn = e.target.closest('[data-pick-year]');
+        if (yearBtn) {
+            filterDraft.pickerYear = Number(yearBtn.dataset.pickYear);
+            const modeToCompute = filterDraft.dateMode === 'year' ? 'year' : 'month';
+            const range = computeRangeForMode(modeToCompute, filterDraft.anchorDate, filterDraft.pickerYear, filterDraft.pickerMonth);
+            filterDraft.startDate = range.startDate;
+            filterDraft.endDate = range.endDate;
+            filterDraft.anchorDate = range.anchorDate;
+            renderFilterDatePanel();
+        }
+    });
+
+    $('filterDatePickerPanel')?.addEventListener('change', (e) => {
+        if (e.target.id === 'filterStartDate') filterDraft.startDate = e.target.value;
+        if (e.target.id === 'filterEndDate') filterDraft.endDate = e.target.value;
+    });
+
+    $('filterForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const queryVal = ($('filterSearchInput')?.value || '').trim();
+        const kindVal = filterDraft.kind || 'all';
+        const catVal = kindVal === 'all' ? 'all' : ($('filterCategorySelect')?.value || 'all');
+        const dateModeVal = filterDraft.dateMode || 'all';
+
+        let startVal = '';
+        let endVal = '';
+
+        if (dateModeVal !== 'all') {
+            if (dateModeVal === 'custom') {
+                startVal = ($('filterStartDate')?.value || filterDraft.startDate || '').trim();
+                endVal = ($('filterEndDate')?.value || filterDraft.endDate || '').trim();
+                if (startVal && endVal && startVal > endVal) {
+                    const tmp = startVal;
+                    startVal = endVal;
+                    endVal = tmp;
+                }
+            } else {
+                startVal = filterDraft.startDate || '';
+                endVal = filterDraft.endDate || '';
+            }
+        }
+
+        const rawMin = ($('filterMinAmount')?.value || '').trim();
+        const rawMax = ($('filterMaxAmount')?.value || '').trim();
+        let minVal = rawMin ? parseInputNumber(rawMin) : null;
+        let maxVal = rawMax ? parseInputNumber(rawMax) : null;
+
+        if (minVal !== null && isNaN(minVal)) minVal = null;
+        if (maxVal !== null && isNaN(maxVal)) maxVal = null;
+        if (minVal !== null && maxVal !== null && minVal > maxVal) {
+            const tmpAmt = minVal;
+            minVal = maxVal;
+            maxVal = tmpAmt;
+        }
+
+        movementFilters = {
+            query: queryVal,
+            kind: kindVal,
+            category: catVal,
+            dateMode: dateModeVal,
+            startDate: startVal,
+            endDate: endVal,
+            minAmount: minVal,
+            maxAmount: maxVal
+        };
+
+        persistFilters();
+        closeModal($('filterDlg'));
+        render();
+    });
+}
+
+function bindEvents() {
     $('openNavDrawerBtn')?.addEventListener('click', openNavDrawer);
     $('closeNavDrawerBtn')?.addEventListener('click', closeNavDrawer);
     $('navDrawerBackdrop')?.addEventListener('click', closeNavDrawer);
+
+    document.querySelectorAll('[data-nav-section]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectAppSection(btn.dataset.navSection, {
+                closeDrawer: true,
+                expandActiveUtility: true
+            });
+        });
+    });
 
     $('navMoreBackupBtn')?.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -2321,179 +2705,18 @@ function setupEventListeners() {
     });
     $('navBackupBackdrop')?.addEventListener('click', () => toggleBackupPopover(false));
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            if (!$('navBackupPopover')?.classList.contains('is-hidden')) {
-                toggleBackupPopover(false);
-                return;
-            }
-            if ($('navDrawer')?.classList.contains('is-open')) {
-                closeNavDrawer();
-            }
-        }
+    $('importCsvBtn')?.addEventListener('click', () => {
+        toggleBackupPopover(false);
+        $('csvFileInput')?.click();
     });
-
-    document.querySelectorAll('[data-nav-section]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            selectAppSection(btn.dataset.navSection, { expandActiveUtility: true, closeDrawer: true });
-        });
+    $('openExportDlgBtn')?.addEventListener('click', () => {
+        toggleBackupPopover(false);
+        if ($('expMovements')) $('expMovements').checked = true;
+        if ($('expRemittances')) $('expRemittances').checked = true;
+        if ($('expInstallments')) $('expInstallments').checked = true;
+        if ($('expDayCounter')) $('expDayCounter').checked = true;
+        openModal($('exportDlg'));
     });
-
-    $('headerSectionNewBtn')?.addEventListener('click', () => {
-        if (activeAppSection === 'remittances') {
-            openNewRemittanceModal();
-        } else if (activeAppSection === 'installments') {
-            openNewInstallmentPurchaseModal();
-        } else if (activeAppSection === 'dayCounter') {
-            openNewDayCounterMonthModal();
-        }
-    });
-
-        // --- Gesto de deslizar desde el borde izquierdo para abrir/cerrar el menú lateral ---
-    const EDGE_SWIPE_MAX_START_X = 15; // px desde el borde izquierdo para iniciar apertura
-    const SWIPE_OPEN_THRESHOLD = 75;    // px mínimos deslizados a la derecha para abrir
-    const SWIPE_CLOSE_THRESHOLD = 75;   // px mínimos deslizados a la izquierda para cerrar
-    const drawerWidthFallback = 320;
-
-    let swipeState = {
-        tracking: false,
-        mode: null, // 'open' | 'close'
-        startX: 0,
-        startY: 0,
-        currentX: 0,
-        directionLocked: false,
-        isHorizontalSwipe: false
-    };
-
-    function getDrawerWidth() {
-        const drawerEl = $('navDrawer');
-        return drawerEl ? drawerEl.getBoundingClientRect().width || drawerWidthFallback : drawerWidthFallback;
-    }
-
-    document.addEventListener('touchstart', (e) => {
-        if (e.touches.length !== 1) return;
-        // No interferir si hay un <dialog> modal abierto
-        if (document.querySelector('dialog[open]')) return;
-
-        const touch = e.touches[0];
-        const drawerEl = $('navDrawer');
-        const isDrawerOpen = drawerEl?.classList.contains('is-open');
-
-        if (!isDrawerOpen && touch.clientX <= EDGE_SWIPE_MAX_START_X) {
-            swipeState = {
-                tracking: true,
-                mode: 'open',
-                startX: touch.clientX,
-                startY: touch.clientY,
-                currentX: touch.clientX,
-                directionLocked: false,
-                isHorizontalSwipe: false
-            };
-        } else if (isDrawerOpen) {
-            swipeState = {
-                tracking: true,
-                mode: 'close',
-                startX: touch.clientX,
-                startY: touch.clientY,
-                currentX: touch.clientX,
-                directionLocked: false,
-                isHorizontalSwipe: false
-            };
-        }
-    }, { passive: true });
-
-    document.addEventListener('touchmove', (e) => {
-        if (!swipeState.tracking || e.touches.length !== 1) return;
-
-        const touch = e.touches[0];
-        const deltaX = touch.clientX - swipeState.startX;
-        const deltaY = touch.clientY - swipeState.startY;
-
-        if (!swipeState.directionLocked) {
-            if (Math.abs(deltaX) < 8 && Math.abs(deltaY) < 8) return;
-            swipeState.directionLocked = true;
-            swipeState.isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 1.2;
-
-            if (!swipeState.isHorizontalSwipe) {
-                swipeState.tracking = false;
-                return;
-            }
-
-            const drawerEl = $('navDrawer');
-            const backdropEl = $('navDrawerBackdrop');
-            drawerEl?.classList.add('is-dragging');
-            if (swipeState.mode === 'open' && backdropEl) {
-                backdropEl.classList.remove('is-hidden');
-                backdropEl.setAttribute('aria-hidden', 'false');
-                backdropEl.style.transition = 'none';
-                backdropEl.style.opacity = '0';
-            }
-        }
-
-        if (!swipeState.isHorizontalSwipe) return;
-
-        // Evita el scroll horizontal de la página mientras se arrastra el drawer
-        if (e.cancelable) e.preventDefault();
-
-        swipeState.currentX = touch.clientX;
-        const drawerEl = $('navDrawer');
-        const backdropEl = $('navDrawerBackdrop');
-        const width = getDrawerWidth();
-
-        if (swipeState.mode === 'open') {
-            const progress = Math.min(1, Math.max(0, deltaX / width));
-            const translateX = -100 + progress * 100;
-            if (drawerEl) drawerEl.style.transform = `translateX(${translateX}%)`;
-            if (backdropEl) backdropEl.style.opacity = String(progress);
-        } else if (swipeState.mode === 'close') {
-            const negativeDelta = Math.min(0, deltaX);
-            const progress = Math.min(1, Math.max(0, 1 + negativeDelta / width));
-            const translateX = -(1 - progress) * 100;
-            if (drawerEl) drawerEl.style.transform = `translateX(${translateX}%)`;
-            if (backdropEl) backdropEl.style.opacity = String(progress);
-        }
-    }, { passive: false });
-
-    function finishDrawerSwipe() {
-        if (!swipeState.tracking) return;
-
-        const deltaX = swipeState.currentX - swipeState.startX;
-        const drawerEl = $('navDrawer');
-        const backdropEl = $('navDrawerBackdrop');
-
-        if (drawerEl) {
-            drawerEl.classList.remove('is-dragging');
-            drawerEl.style.transform = '';
-        }
-        if (backdropEl) {
-            backdropEl.style.transition = '';
-            backdropEl.style.opacity = '';
-        }
-
-        if (swipeState.isHorizontalSwipe) {
-            if (swipeState.mode === 'open') {
-                if (deltaX >= SWIPE_OPEN_THRESHOLD) {
-                    openNavDrawer();
-                } else {
-                    closeNavDrawer();
-                }
-            } else if (swipeState.mode === 'close') {
-                if (deltaX <= -SWIPE_CLOSE_THRESHOLD) {
-                    closeNavDrawer();
-                } else {
-                    openNavDrawer();
-                }
-            }
-        }
-
-        swipeState.tracking = false;
-        swipeState.mode = null;
-        swipeState.directionLocked = false;
-        swipeState.isHorizontalSwipe = false;
-    }
-
-    document.addEventListener('touchend', finishDrawerSwipe, { passive: true });
-    document.addEventListener('touchcancel', finishDrawerSwipe, { passive: true });
 
     $('currencySelect')?.addEventListener('change', (e) => {
         appConfig.currency = e.target.value;
@@ -2507,222 +2730,117 @@ function setupEventListeners() {
         btn.addEventListener('click', () => {
             appConfig.theme = btn.dataset.themeValue === 'dark' ? 'dark' : 'light';
             persistConfig();
-            render();
         });
     });
 
-    // --- Exportar / Importar CSV ---
-    $('openExportDlgBtn')?.addEventListener('click', () => {
-        closeNavDrawer();
-        ['expMovements', 'expRemittances', 'expInstallments', 'expDayCounter'].forEach(id => {
-            if ($(id)) $(id).checked = false;
-        });
-        openModal($('exportDlg'));
-    });
-    $('cancelExportBtn')?.addEventListener('click', () => closeModal($('exportDlg')));
-    $('exportForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        executeCustomExport();
+    const drawer = $('navDrawer');
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isSwipingDrawer = false;
+    let currentDrawerOffset = 0;
+
+    drawer?.addEventListener('touchstart', (e) => {
+        if (!drawer.classList.contains('is-open')) return;
+        const touch = e.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        isSwipingDrawer = false;
+        currentDrawerOffset = 0;
+        drawer.classList.add('is-dragging');
+    }, { passive: true });
+
+    drawer?.addEventListener('touchmove', (e) => {
+        if (!drawer.classList.contains('is-open')) return;
+        const touch = e.touches[0];
+        const dx = touch.clientX - touchStartX;
+        const dy = touch.clientY - touchStartY;
+
+        if (!isSwipingDrawer && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) {
+            isSwipingDrawer = true;
+        }
+        if (isSwipingDrawer) {
+            currentDrawerOffset = Math.min(0, dx);
+            drawer.style.transform = `translateX(${currentDrawerOffset}px)`;
+        }
+    }, { passive: true });
+
+    drawer?.addEventListener('touchend', () => {
+        if (!drawer.classList.contains('is-open')) return;
+        drawer.classList.remove('is-dragging');
+        drawer.style.transform = '';
+        if (isSwipingDrawer && currentDrawerOffset < -75) {
+            closeNavDrawer();
+        }
+        isSwipingDrawer = false;
+        currentDrawerOffset = 0;
     });
 
-    $('importCsvBtn')?.addEventListener('click', () => {
-        closeNavDrawer();
-        $('csvFileInput')?.click();
-    });
-    $('csvFileInput')?.addEventListener('change', importMovementsCsv);
-    $('cancelImportSelect')?.addEventListener('click', () => closeModal($('importSelectDlg')));
-    $('importSelectForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        applyImportSelection({
-            movements: $('impSelectMovs')?.checked ?? true,
-            remittances: $('impSelectRemit')?.checked ?? true,
-            installments: $('impSelectInst')?.checked ?? true,
-            dayCounter: $('impSelectDays')?.checked ?? true
-        });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (!$('navBackupPopover')?.classList.contains('is-hidden')) {
+                toggleBackupPopover(false);
+            } else if ($('navDrawer')?.classList.contains('is-open')) {
+                closeNavDrawer();
+            }
+        }
     });
 
-    // --- Barra de uso de ingresos y cambio de vista (Movimientos / Categorías) ---
-    const usageBarEl = $('cashflowUsageBar');
-    if (usageBarEl) {
-        usageBarEl.addEventListener('click', (e) => {
+    $('headerSectionNewBtn')?.addEventListener('click', () => {
+        if (activeAppSection === 'remittances') openNewRemittanceModal();
+        else if (activeAppSection === 'installments') openNewInstallmentPurchaseModal();
+        else if (activeAppSection === 'dayCounter') openNewDayCounterMonthModal();
+    });
+
+    const usageBar = $('cashflowUsageBar');
+    usageBar?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleCashflowUsageTooltip();
+    });
+    usageBar?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
             e.stopPropagation();
             toggleCashflowUsageTooltip();
-        });
-        usageBarEl.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                toggleCashflowUsageTooltip();
-            }
-        });
-        document.addEventListener('click', (e) => {
-            if (!usageBarEl.contains(e.target)) {
-                toggleCashflowUsageTooltip(false);
-            }
-        });
-    }
-
-    $('switchModeMovements')?.addEventListener('click', () => setFinanceViewMode('movements'));
-    $('switchModeCategories')?.addEventListener('click', () => setFinanceViewMode('categories'));
-
-    // --- Filtros de movimientos ---
-    $('openFilterBtn')?.addEventListener('click', openFilterDialog);
-    $('cancelFilterBtn')?.addEventListener('click', () => closeModal($('filterDlg')));
-    $('resetFiltersBtn')?.addEventListener('click', clearFilterDialogDraft);
-
-    document.querySelectorAll('#filterDlg .filter-seg-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const newKind = btn.dataset.filterKind || 'all';
-            filterDraft.kind = newKind;
-            filterDraft.category = 'all';
-            syncFilterUIState(newKind);
-            populateFilterCategorySelect(newKind, 'all');
-        });
-    });
-
-    $('filterCategorySelect')?.addEventListener('change', (e) => {
-        filterDraft.category = e.target.value || 'all';
-    });
-
-    document.querySelectorAll('#filterDlg .filter-date-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            const mode = tab.dataset.dateMode || 'all';
-            if (filterDraft.dateMode === mode) {
-                filterDraft.pickerOpen = !filterDraft.pickerOpen;
-                renderFilterDatePanel();
-            } else {
-                handleFilterDateTabClick(mode);
-            }
-        });
-    });
-
-    $('filterDatePickerPanel')?.addEventListener('click', (e) => {
-        const navBtn = e.target.closest('[data-cal-nav]');
-        if (navBtn) {
-            const dir = navBtn.dataset.calNav === 'prev' ? -1 : 1;
-            let nextMonth = filterDraft.calMonth + dir;
-            let nextYear = filterDraft.calYear;
-            if (nextMonth < 0) { nextMonth = 11; nextYear -= 1; }
-            else if (nextMonth > 11) { nextMonth = 0; nextYear += 1; }
-            filterDraft.calMonth = nextMonth;
-            filterDraft.calYear = nextYear;
-            renderFilterDatePanel();
-            return;
         }
-
-        const dayBtn = e.target.closest('[data-cal-iso]');
-        if (dayBtn) {
-            const iso = dayBtn.dataset.calIso;
-            const parts = parseIsoParts(iso);
-            if (parts) {
-                filterDraft.calYear = parts.y;
-                filterDraft.calMonth = parts.m - 1;
-                filterDraft.pickerYear = parts.y;
-                filterDraft.pickerMonth = parts.m - 1;
-            }
-            const computed = computeRangeForMode(filterDraft.dateMode, iso, filterDraft.pickerYear, filterDraft.pickerMonth);
-            filterDraft.startDate = computed.startDate;
-            filterDraft.endDate = computed.endDate;
-            filterDraft.anchorDate = computed.anchorDate;
-            renderFilterDatePanel();
-            return;
-        }
-
-        const monthOpt = e.target.closest('[data-pick-month]');
-        if (monthOpt) {
-            filterDraft.pickerMonth = Number(monthOpt.dataset.pickMonth);
-            const computed = computeRangeForMode('month', filterDraft.anchorDate, filterDraft.pickerYear, filterDraft.pickerMonth);
-            filterDraft.startDate = computed.startDate;
-            filterDraft.endDate = computed.endDate;
-            filterDraft.anchorDate = computed.anchorDate;
-            renderFilterDatePanel();
-            return;
-        }
-
-        const yearOpt = e.target.closest('[data-pick-year]');
-        if (yearOpt) {
-            filterDraft.pickerYear = Number(yearOpt.dataset.pickYear);
-            const computed = computeRangeForMode(filterDraft.dateMode, filterDraft.anchorDate, filterDraft.pickerYear, filterDraft.pickerMonth);
-            filterDraft.startDate = computed.startDate;
-            filterDraft.endDate = computed.endDate;
-            filterDraft.anchorDate = computed.anchorDate;
-            renderFilterDatePanel();
+    });
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#cashflowUsageBar')) {
+            toggleCashflowUsageTooltip(false);
         }
     });
 
-    $('filterDatePickerPanel')?.addEventListener('change', (e) => {
-        if (e.target.id === 'filterStartDate') filterDraft.startDate = e.target.value || '';
-        else if (e.target.id === 'filterEndDate') filterDraft.endDate = e.target.value || '';
+    document.querySelectorAll('.view-mode-option[data-view-mode]').forEach(btn => {
+        btn.addEventListener('click', () => setFinanceViewMode(btn.dataset.viewMode));
     });
 
-    $('filterForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
+    bindFilterEvents();
 
-        const rawQuery = $('filterSearchInput')?.value || '';
-        const selectedCat = filterDraft.kind === 'all' ? 'all' : ($('filterCategorySelect')?.value || 'all');
-
-        const minStr = ($('filterMinAmount')?.value || '').trim();
-        const maxStr = ($('filterMaxAmount')?.value || '').trim();
-        let minAmount = minStr ? parseInputNumber(minStr) : null;
-        let maxAmount = maxStr ? parseInputNumber(maxStr) : null;
-        if (minAmount !== null && maxAmount !== null && minAmount > maxAmount) {
-            [minAmount, maxAmount] = [maxAmount, minAmount];
-        }
-
-        let startDate = '';
-        let endDate = '';
-        const mode = filterDraft.dateMode || 'all';
-
-        if (mode === 'custom') {
-            startDate = $('filterStartDate')?.value || filterDraft.startDate || '';
-            endDate = $('filterEndDate')?.value || filterDraft.endDate || '';
-            if (startDate && endDate && startDate > endDate) {
-                [startDate, endDate] = [endDate, startDate];
-            }
-        } else if (mode !== 'all') {
-            const computed = computeRangeForMode(mode, filterDraft.anchorDate, filterDraft.pickerYear, filterDraft.pickerMonth);
-            startDate = computed.startDate;
-            endDate = computed.endDate;
-        }
-
-        movementFilters = {
-            query: rawQuery,
-            kind: filterDraft.kind,
-            category: selectedCat,
-            dateMode: mode,
-            startDate,
-            endDate,
-            minAmount,
-            maxAmount
-        };
-
-        persistFilters();
-        closeModal($('filterDlg'));
-        render();
-    });
-
-    // --- Movimientos: Crear, Editar, Detalle ---
     $('addBtn')?.addEventListener('click', openNewMovement);
     $('cancelNew')?.addEventListener('click', () => closeModal($('newDlg')));
     $('newKind')?.addEventListener('change', () => updateCategoryOptions('new'));
 
     $('newForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!validateRequiredFields($('newForm'), [$('newDesc'), $('newAmount'), $('newDate')])) return;
+        const descInput = $('newDesc');
+        const amountInput = $('newAmount');
+        const dateInput = $('newDate');
 
-        const amount = Number($('newAmount').value);
+        if (!validateRequiredFields($('newForm'), [descInput, amountInput, dateInput])) return;
+
+        const amount = parseFloat(amountInput.value);
         if (isNaN(amount) || amount <= 0) {
-            $('newAmount').classList.add('input-error');
-            $('newAmount').focus();
+            amountInput.classList.add('input-error');
+            amountInput.focus();
             return;
         }
 
-        movements.push({
+        movements.unshift({
             id: crypto.randomUUID(),
             timestamp: Date.now(),
-            desc: $('newDesc').value.trim(),
+            desc: descInput.value.trim(),
             kind: $('newKind').value,
             amount: Math.round(amount * 100) / 100,
-            date: $('newDate').value,
+            date: dateInput.value,
             category: $('newCategory').value,
             notes: $('newNotes').value.trim()
         });
@@ -2737,160 +2855,102 @@ function setupEventListeners() {
 
     $('editForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!validateRequiredFields($('editForm'), [$('editDesc'), $('editAmount'), $('editDate')])) return;
+        const descInput = $('editDesc');
+        const amountInput = $('editAmount');
+        const dateInput = $('editDate');
 
-        const amount = Number($('editAmount').value);
+        if (!validateRequiredFields($('editForm'), [descInput, amountInput, dateInput])) return;
+
+        const amount = parseFloat(amountInput.value);
         if (isNaN(amount) || amount <= 0) {
-            $('editAmount').classList.add('input-error');
-            $('editAmount').focus();
+            amountInput.classList.add('input-error');
+            amountInput.focus();
             return;
         }
 
         const item = movements.find(m => m.id === editingId);
         if (item) {
-            item.desc = $('editDesc').value.trim();
+            item.desc = descInput.value.trim();
             item.kind = $('editKind').value;
             item.amount = Math.round(amount * 100) / 100;
-            item.date = $('editDate').value;
+            item.date = dateInput.value;
             item.category = $('editCategory').value;
             item.notes = $('editNotes').value.trim();
+            persist();
         }
 
-        persist();
         closeModal($('editDlg'));
         render();
     });
 
     $('closeDetailBtn')?.addEventListener('click', () => closeModal($('detailDlg')));
-
     $('detailEditBtn')?.addEventListener('click', () => {
-        const movementId = $('detailEditBtn')?.dataset.movementId;
+        const movId = $('detailEditBtn')?.dataset.movementId;
         closeModal($('detailDlg'));
-        if (movementId) editMovement(movementId);
-    });
-
-    $('rows')?.addEventListener('click', (e) => {
-        const rowEl = e.target.closest('tr.movement-row');
-        const id = rowEl?.dataset.movementId;
-        if (id) showMovementDetail(id);
-    });
-
-    // --- Categorías y Gráfico Donut ---
-    $('catChartWrapper')?.addEventListener('click', (e) => {
-        const segment = e.target.closest('.cat-donut-segment');
-        if (segment) {
-            e.stopPropagation();
-            toggleDonutSegment(segment.dataset.donutCategory);
-        }
-    });
-
-    $('categories')?.addEventListener('click', (e) => {
-        const item = e.target.closest('.cat-breakdown-item');
-        if (item) {
-            e.stopPropagation();
-            toggleDonutSegment(item.dataset.listCategory);
-        }
-    });
-
-    $('categories')?.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            const item = e.target.closest('.cat-breakdown-item');
-            if (item) {
-                e.preventDefault();
-                toggleDonutSegment(item.dataset.listCategory);
-            }
-        }
-    });
-
-    document.addEventListener('click', (e) => {
-        if (selectedDonutCategory && !e.target.closest('.cat-donut-segment') && !e.target.closest('.cat-breakdown-item')) {
-            selectedDonutCategory = null;
-            renderCategoriesRedesign();
-        }
+        if (movId) editMovement(movId);
     });
 
     $('editCategoriesBtn')?.addEventListener('click', () => {
         renderConfigCategories();
         openModal($('categoriesDlg'));
     });
-
     $('closeCategoriesDlg')?.addEventListener('click', () => closeModal($('categoriesDlg')));
 
     $('openCreateCategoryBtn')?.addEventListener('click', () => {
         $('categoryCreateForm')?.reset();
-        $('newCatKind').value = 'expense';
+        $('newCatKind').value = currentCatKind;
         renderIconGrid('iconSelectorGrid', 'newCatIcon', 'Compras');
         clearValidationErrors($('categoryCreateForm'));
         openModal($('categoryCreateDlg'));
     });
-
     $('cancelCreateCategoryBtn')?.addEventListener('click', () => closeModal($('categoryCreateDlg')));
-    $('cancelEditCategoryBtn')?.addEventListener('click', () => closeModal($('categoryEditDlg')));
-
-    $('deleteCategoryBtn')?.addEventListener('click', () => {
-        if (!editingCategoryData) return;
-        removeCategory(editingCategoryData.kind, editingCategoryData.index);
-        closeModal($('categoryEditDlg'));
-        editingCategoryData = null;
-    });
-
-    $('categoryManagerList')?.addEventListener('click', (e) => {
-        const editBtn = e.target.closest('[data-action="open-edit-category"]');
-        if (editBtn) openEditCategoryModal(editBtn.dataset.kind, Number(editBtn.dataset.index));
-    });
-
-    $('iconSelectorGrid')?.addEventListener('click', (e) => {
-        const opt = e.target.closest('.icon-option-item');
-        if (opt) selectCategoryIcon(opt.dataset.icon, 'newCatIcon', '#iconSelectorGrid');
-    });
-
-    $('editIconSelectorGrid')?.addEventListener('click', (e) => {
-        const opt = e.target.closest('.icon-option-item');
-        if (opt) selectCategoryIcon(opt.dataset.icon, 'editCatIcon', '#editIconSelectorGrid');
-    });
 
     $('categoryCreateForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!validateRequiredFields($('categoryCreateForm'), [$('newCatName')])) return;
+        const nameInput = $('newCatName');
+        if (!validateRequiredFields($('categoryCreateForm'), [nameInput])) return;
 
-        const name = $('newCatName').value.trim();
+        const name = nameInput.value.trim();
         const kind = $('newCatKind').value;
         const icon = $('newCatIcon').value || 'Compras';
 
         if (appConfig.categories[kind].some(c => c.name.toLowerCase() === name.toLowerCase())) {
-            alert('Ya existe una categoría con ese nombre.');
-            $('newCatName').classList.add('input-error');
-            $('newCatName').focus();
+            alert('Ya existe una categoría con ese nombre en este apartado.');
             return;
         }
 
-        const hue = Math.round(((appConfig.colorCounter || 0) * 137.508) % 360);
         appConfig.colorCounter = (appConfig.colorCounter || 0) + 1;
+        const color = `hsl(${(appConfig.colorCounter * 137.508) % 360}, 70%, 50%)`;
 
-        appConfig.categories[kind].push({ name, color: `hsl(${hue}, 65%, 52%)`, icon });
+        appConfig.categories[kind].push({ name, color, icon });
         persistConfig();
         refreshCategoryUI();
         closeModal($('categoryCreateDlg'));
     });
 
+    $('cancelEditCategoryBtn')?.addEventListener('click', () => closeModal($('categoryEditDlg')));
+    $('deleteCategoryBtn')?.addEventListener('click', () => {
+        if (!editingCategoryData) return;
+        const { kind, index } = editingCategoryData;
+        closeModal($('categoryEditDlg'));
+        removeCategory(kind, index);
+    });
+
     $('categoryEditForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!editingCategoryData || !validateRequiredFields($('categoryEditForm'), [$('editCatName')])) return;
+        if (!editingCategoryData) return;
 
-        const { kind: oldKind, index } = editingCategoryData;
-        const newName = $('editCatName').value.trim();
+        const nameInput = $('editCatName');
+        if (!validateRequiredFields($('categoryEditForm'), [nameInput])) return;
+
+        const newName = nameInput.value.trim();
         const newKind = $('editCatKind').value;
         const newIcon = $('editCatIcon').value || 'Compras';
-        const oldCat = appConfig.categories[oldKind][index];
-        const oldName = oldCat.name;
+        const { kind: oldKind, index: oldIndex } = editingCategoryData;
+        const oldCat = appConfig.categories[oldKind][oldIndex];
 
-        const isDuplicate = appConfig.categories[newKind].some((c, idx) =>
-            c.name.toLowerCase() === newName.toLowerCase() && !(oldKind === newKind && idx === index)
-        );
-        if (isDuplicate) {
-            alert('Ya existe una categoría con ese nombre en esta sección.');
-            $('editCatName').classList.add('input-error');
-            $('editCatName').focus();
+        if (appConfig.categories[newKind].some((c, i) => !(newKind === oldKind && i === oldIndex) && c.name.toLowerCase() === newName.toLowerCase())) {
+            alert('Ya existe una categoría con ese nombre en este apartado.');
             return;
         }
 
@@ -2898,13 +2958,17 @@ function setupEventListeners() {
             oldCat.name = newName;
             oldCat.icon = newIcon;
         } else {
-            appConfig.categories[oldKind].splice(index, 1);
-            appConfig.categories[newKind].push({ name: newName, color: oldCat.color, icon: newIcon });
+            appConfig.categories[oldKind].splice(oldIndex, 1);
+            appConfig.categories[newKind].push({
+                name: newName,
+                color: oldCat.color || 'var(--secundario)',
+                icon: newIcon
+            });
         }
 
-        if (oldName !== newName || oldKind !== newKind) {
+        if (oldCat.name !== newName || oldKind !== newKind) {
             movements.forEach(m => {
-                if (m.category === oldName && m.kind === oldKind) {
+                if (m.kind === oldKind && m.category === oldCat.name) {
                     m.category = newName;
                     m.kind = newKind;
                 }
@@ -2912,41 +2976,25 @@ function setupEventListeners() {
             persist();
         }
 
-        if (movementFilters.category === oldName && movementFilters.kind === oldKind) {
-            movementFilters.category = newName;
-            movementFilters.kind = newKind;
-            persistFilters();
-        }
-
         persistConfig();
         refreshCategoryUI();
         closeModal($('categoryEditDlg'));
-        editingCategoryData = null;
     });
 
-    // --- Utilidad 1: Remesas ---
     $('cancelNewRemitBtn')?.addEventListener('click', () => closeModal($('remitNewDlg')));
-    $('cancelEditRemitBtn')?.addEventListener('click', () => closeModal($('remitEditDlg')));
-
     $('remitNewForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!validateRequiredFields($('remitNewForm'), [$('newRemitName')])) return;
-
-        const sendCurr = $('newRemitSendCurr').value;
-        const recvCurr = $('newRemitRecvCurr').value;
-        let defaultTc = 1;
-        if (sendCurr === 'EUR' && recvCurr === 'PEN') defaultTc = 3.75;
-        else if (sendCurr === 'USD' && recvCurr === 'PEN') defaultTc = 3.55;
-        else if (sendCurr === 'EUR' && recvCurr === 'USD') defaultTc = 1.08;
+        const nameInput = $('newRemitName');
+        if (!validateRequiredFields($('remitNewForm'), [nameInput])) return;
 
         const newId = crypto.randomUUID();
         remittancesList.forEach(r => { r.expanded = false; });
         remittancesList.unshift({
             id: newId,
-            name: $('newRemitName').value.trim(),
-            sendCurr,
-            recvCurr,
-            tc: defaultTc,
+            name: nameInput.value.trim(),
+            sendCurr: $('newRemitSendCurr').value,
+            recvCurr: $('newRemitRecvCurr').value,
+            tc: 3.75,
             commission: 0,
             expanded: true,
             items: []
@@ -2955,134 +3003,54 @@ function setupEventListeners() {
         persistRemittancesList();
         closeModal($('remitNewDlg'));
         renderRemittancesList();
-        scrollCardIntoView($(`remit_box_${newId}`));
+        scrollCardIntoView($(`remit_box_${newId}`), true);
     });
 
+    $('cancelEditRemitBtn')?.addEventListener('click', () => closeModal($('remitEditDlg')));
     $('remitEditForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!validateRequiredFields($('remitEditForm'), [$('editRemitName')])) return;
+        const nameInput = $('editRemitName');
+        if (!validateRequiredFields($('remitEditForm'), [nameInput])) return;
 
         const rem = remittancesList.find(r => r.id === editingRemittanceId);
         if (rem) {
-            rem.name = $('editRemitName').value.trim();
+            rem.name = nameInput.value.trim();
             rem.sendCurr = $('editRemitSendCurr').value;
             rem.recvCurr = $('editRemitRecvCurr').value;
+            persistRemittancesList();
         }
-        persistRemittancesList();
+
         closeModal($('remitEditDlg'));
         renderRemittancesList();
     });
 
-    const remitContainer = $('remittancesList');
-    if (remitContainer) {
-        remitContainer.addEventListener('click', (e) => {
-            const actionEl = e.target.closest('[data-action]');
-            if (!actionEl) return;
-
-            const action = actionEl.dataset.action;
-            const remId = actionEl.dataset.remitId;
-
-            if (action === 'toggle-remit') {
-                if (e.target.closest('button')) return;
-                toggleRemitAccordion(remId);
-            } else if (action === 'edit-remit') {
-                e.stopPropagation();
-                editRemittance(remId);
-            } else if (action === 'remove-remit-item') {
-                removeRemitItem(remId, Number(actionEl.dataset.index));
-            } else if (action === 'add-remit-item') {
-                addRemitItem(remId);
-            }
-        });
-
-        remitContainer.addEventListener('input', (e) => {
-            const target = e.target;
-            const remId = target.dataset.remitId;
-            if (!remId) return;
-            const rem = remittancesList.find(r => r.id === remId);
-            if (!rem) return;
-
-            if (target.classList.contains('remit-tc-input')) {
-                rem.tc = parseInputNumber(target.value);
-            } else if (target.classList.contains('remit-comm-input')) {
-                rem.commission = parseInputNumber(target.value);
-            } else if (target.classList.contains('remit-recv-input')) {
-                const idx = Number(target.dataset.index);
-                if (rem.items[idx]) rem.items[idx].recvAmount = parseInputNumber(target.value);
-            }
-            persistRemittancesList();
-            updateRemitDOMTotals(rem);
-        });
-
-        remitContainer.addEventListener('focusin', (e) => {
-            const target = e.target;
-            const rem = remittancesList.find(r => r.id === target.dataset.remitId);
-            if (!rem) return;
-
-            if (target.classList.contains('remit-tc-input') && rem.tc > 0) {
-                target.value = formatTcInputValue(rem.tc, rem.recvCurr);
-            } else if (target.classList.contains('remit-comm-input')) {
-                target.value = rem.commission > 0 ? String(rem.commission).replace('.', ',') : '';
-            } else if (target.classList.contains('remit-recv-input')) {
-                const val = rem.items[Number(target.dataset.index)]?.recvAmount || 0;
-                target.value = val > 0 ? String(val).replace('.', ',') : '';
-            }
-        });
-
-        remitContainer.addEventListener('focusout', (e) => {
-            const target = e.target;
-            const rem = remittancesList.find(r => r.id === target.dataset.remitId);
-            if (!rem) return;
-
-            if (target.classList.contains('remit-tc-input')) {
-                target.value = formatTcInputValue(rem.tc, rem.recvCurr);
-            } else if (target.classList.contains('remit-comm-input')) {
-                target.value = formatNumberDisplay(rem.commission, rem.sendCurr);
-            } else if (target.classList.contains('remit-recv-input')) {
-                const val = rem.items[Number(target.dataset.index)]?.recvAmount || 0;
-                target.value = formatNumberDisplay(val, rem.recvCurr);
-            }
-        });
-
-        remitContainer.addEventListener('keydown', (e) => {
-            if (e.key !== 'Enter') return;
-            const target = e.target;
-            if (target.classList.contains('remit-concept-field')) {
-                e.preventDefault();
-                addRemitItem(target.dataset.remitId);
-            } else if (target.matches('.remit-tc-input, .remit-comm-input, .remit-recv-input')) {
-                e.preventDefault();
-                target.blur();
-            }
-        });
-    }
-
-    // --- Utilidad 2: Compras en cuotas ---
     $('cancelNewInstallmentBtn')?.addEventListener('click', () => closeModal($('installmentNewDlg')));
-
-    ['FinancedAmount', 'InterestAmount', 'TotalCount'].forEach(field => {
-        $(`newInst${field}`)?.addEventListener('input', () => autoCalculateInstallment('new'));
-        $(`editInst${field}`)?.addEventListener('input', () => autoCalculateInstallment('edit'));
+    ['newInstFinancedAmount', 'newInstInterestAmount', 'newInstTotalCount'].forEach(id => {
+        $(id)?.addEventListener('input', () => autoCalculateInstallment('new'));
     });
 
     $('installmentNewForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        const formData = readInstallmentForm('new');
-        if (!formData) return;
+        const data = readInstallmentForm('new');
+        if (!data) return;
 
         const newId = crypto.randomUUID();
         installmentsPurchases.forEach(p => { p.expanded = false; });
         installmentsPurchases.unshift({
             id: newId,
-            ...formData,
+            ...data,
             expanded: true,
-            installments: buildInstallmentsArray(formData.totalCount, formData.regularAmount, formData.finalAmount, formData.firstDate)
+            installments: buildInstallmentsArray(data.totalCount, data.regularAmount, data.finalAmount, data.firstDate)
         });
 
         persistInstallments();
         closeModal($('installmentNewDlg'));
         renderInstallments();
-        scrollCardIntoView($(`purchase_box_${newId}`));
+        scrollCardIntoView($(`purchase_box_${newId}`), true);
+    });
+
+    ['editInstFinancedAmount', 'editInstInterestAmount', 'editInstTotalCount'].forEach(id => {
+        $(id)?.addEventListener('input', () => autoCalculateInstallment('edit'));
     });
 
     $('installmentEditForm')?.addEventListener('submit', (e) => {
@@ -3090,11 +3058,11 @@ function setupEventListeners() {
         const purchase = installmentsPurchases.find(p => p.id === editingInstallmentId);
         if (!purchase) return;
 
-        const formData = readInstallmentForm('edit');
-        if (!formData) return;
+        const data = readInstallmentForm('edit');
+        if (!data) return;
 
-        Object.assign(purchase, formData, {
-            installments: buildInstallmentsArray(formData.totalCount, formData.regularAmount, formData.finalAmount, formData.firstDate, purchase.installments)
+        Object.assign(purchase, data, {
+            installments: buildInstallmentsArray(data.totalCount, data.regularAmount, data.finalAmount, data.firstDate, purchase.installments)
         });
 
         persistInstallments();
@@ -3102,39 +3070,28 @@ function setupEventListeners() {
         renderInstallments();
     });
 
-    $('installmentsList')?.addEventListener('click', (e) => {
-        const actionEl = e.target.closest('[data-action]');
-        if (!actionEl) return;
-
-        const action = actionEl.dataset.action;
-        const purchaseId = actionEl.dataset.purchaseId;
-
-        if (action === 'toggle-inst-accordion') {
-            if (e.target.closest('button')) return;
-            toggleInstallmentAccordion(purchaseId);
-        } else if (action === 'edit-inst-purchase') {
-            e.stopPropagation();
-            editInstallmentPurchase(purchaseId);
-        } else if (action === 'toggle-inst-paid') {
-            if (e.target.type !== 'checkbox') e.stopPropagation();
-            toggleInstallmentPaid(purchaseId, Number(actionEl.dataset.instNumber));
-        }
+    $('deleteInstallmentBtn')?.addEventListener('click', () => {
+        if (!confirm('¿Eliminar esta compra y todas sus cuotas?')) return;
+        installmentsPurchases = installmentsPurchases.filter(p => p.id !== editingInstallmentId);
+        persistInstallments();
+        closeModal($('installmentEditDlg'));
+        renderInstallments();
     });
 
-    // --- Utilidad 3: Contador de días trabajados ---
     $('cancelNewDayCounterMonth')?.addEventListener('click', () => closeModal($('dayCounterMonthNewDlg')));
-    $('cancelEditDayCounterMonth')?.addEventListener('click', () => closeModal($('dayCounterMonthEditDlg')));
-
     $('dayCounterMonthNewForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!validateRequiredFields($('dayCounterMonthNewForm'), [$('newMonthName'), $('newMonthTarget')])) return;
+        const nameInput = $('newMonthName');
+        const targetInput = $('newMonthTarget');
+
+        if (!validateRequiredFields($('dayCounterMonthNewForm'), [nameInput, targetInput])) return;
 
         const newId = crypto.randomUUID();
         dayCounterMonths.forEach(m => { m.expanded = false; });
         dayCounterMonths.unshift({
             id: newId,
-            name: $('newMonthName').value.trim(),
-            targetDays: parseInt($('newMonthTarget').value) || 15,
+            name: nameInput.value.trim(),
+            targetDays: parseInt(targetInput.value) || 15,
             expanded: true,
             days: []
         });
@@ -3142,132 +3099,152 @@ function setupEventListeners() {
         persistDayCounter();
         closeModal($('dayCounterMonthNewDlg'));
         renderDayCounter();
-        scrollCardIntoView($(`dc_month_${newId}`));
+        scrollCardIntoView($(`dc_month_box_${newId}`), true);
     });
 
+    $('cancelEditDayCounterMonth')?.addEventListener('click', () => closeModal($('dayCounterMonthEditDlg')));
     $('dayCounterMonthEditForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!validateRequiredFields($('dayCounterMonthEditForm'), [$('editMonthName'), $('editMonthTarget')])) return;
+        const nameInput = $('editMonthName');
+        const targetInput = $('editMonthTarget');
+
+        if (!validateRequiredFields($('dayCounterMonthEditForm'), [nameInput, targetInput])) return;
 
         const month = dayCounterMonths.find(m => m.id === editingMonthId);
         if (month) {
-            month.name = $('editMonthName').value.trim();
-            month.targetDays = parseInt($('editMonthTarget').value) || 15;
+            month.name = nameInput.value.trim();
+            month.targetDays = parseInt(targetInput.value) || 15;
+            persistDayCounter();
         }
-        persistDayCounter();
+
         closeModal($('dayCounterMonthEditDlg'));
         renderDayCounter();
     });
 
+    $('copyPreviousDayBtn')?.addEventListener('click', copyLastDayData);
     $('dayDate')?.addEventListener('change', (e) => {
         $('dayNameDisplay').value = getDayNameFromDate(e.target.value);
     });
     $('dayEntryTime')?.addEventListener('change', (e) => {
-        $('dayExitTime').value = calculateExitTime(e.target.value);
+        if (e.target.value) $('dayExitTime').value = calculateExitTime(e.target.value);
     });
 
-    $('copyPreviousDayBtn')?.addEventListener('click', () => {
+    const closeDayModal = () => closeModal($('dayCounterDayDlg'));
+    $('cancelDayCounterDay')?.addEventListener('click', closeDayModal);
+    $('cancelDayCounterDayNormal')?.addEventListener('click', closeDayModal);
+
+    $('deleteDayModalBtn')?.addEventListener('click', () => {
+        if (!confirm('¿Eliminar este registro de día?')) return;
         const month = dayCounterMonths.find(m => m.id === editingDayMonthId);
-        const lastDay = month?.days?.[0];
-        if (!lastDay) return;
-
-        const [y, m, d] = lastDay.date.split('-').map(Number);
-        const nextDateObj = new Date(y, m - 1, d + 1);
-        const nextDateStr = `${nextDateObj.getFullYear()}-${pad(nextDateObj.getMonth() + 1)}-${pad(nextDateObj.getDate())}`;
-
-        $('dayDate').value = nextDateStr;
-        $('dayNameDisplay').value = getDayNameFromDate(nextDateStr);
-        $('dayEntryTime').value = lastDay.entryTime;
-        $('dayExitTime').value = lastDay.exitTime;
-        $('dayLocation').value = lastDay.location;
-        clearValidationErrors($('dayCounterDayForm'));
+        if (month && editingDayIndex !== null) {
+            month.days.splice(editingDayIndex, 1);
+            persistDayCounter();
+            renderDayCounter();
+        }
+        closeModal($('dayCounterDayDlg'));
     });
-
-    $('cancelDayCounterDay')?.addEventListener('click', () => closeModal($('dayCounterDayDlg')));
-    $('cancelDayCounterDayNormal')?.addEventListener('click', () => closeModal($('dayCounterDayDlg')));
 
     $('dayCounterDayForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!validateRequiredFields($('dayCounterDayForm'), [$('dayDate'), $('dayEntryTime'), $('dayExitTime'), $('dayLocation')])) return;
+        const dateInput = $('dayDate');
+        const entryInput = $('dayEntryTime');
+        const exitInput = $('dayExitTime');
+        const locInput = $('dayLocation');
+
+        if (!validateRequiredFields($('dayCounterDayForm'), [dateInput, entryInput, exitInput, locInput])) return;
 
         const month = dayCounterMonths.find(m => m.id === editingDayMonthId);
         if (!month) return;
 
-        const selectedDate = $('dayDate').value;
-
-        // Comprobar si la fecha ya está registrada (ignorando el mismo registro si se está editando)
-        const alreadyExists = month.days.some((d, idx) => d.date === selectedDate && idx !== editingDayIndex);
-        if (alreadyExists) {
-            const proceed = confirm(`El día ${formatDateEs(selectedDate)} ya ha sido registrado. ¿Deseas registrarlo nuevamente?`);
-            if (!proceed) return;
-        }
-
-        const dayObj = {
-            date: selectedDate,
-            dayName: getDayNameFromDate(selectedDate),
-            entryTime: $('dayEntryTime').value,
-            exitTime: $('dayExitTime').value,
-            location: $('dayLocation').value.trim()
+        const dayData = {
+            date: dateInput.value,
+            dayName: getDayNameFromDate(dateInput.value),
+            entryTime: entryInput.value,
+            exitTime: exitInput.value,
+            location: locInput.value.trim()
         };
 
-        if (editingDayIndex !== null) {
-            month.days[editingDayIndex] = dayObj;
+        if (editingDayIndex !== null && month.days[editingDayIndex]) {
+            const duplicateOnEdit = month.days.some((d, idx) => idx !== editingDayIndex && d.date === dayData.date);
+            if (duplicateOnEdit) {
+                const ok = confirm(`El día ${formatDateEs(dayData.date)} ya está registrado. ¿Deseas registrarlo nuevamente?`);
+                if (!ok) return;
+            }
+            month.days[editingDayIndex] = dayData;
         } else {
-            month.days.push(dayObj);
+            const alreadyRegistered = month.days.some(d => d.date === dayData.date);
+            if (alreadyRegistered) {
+                const ok = confirm(`El día ${formatDateEs(dayData.date)} ya está registrado. ¿Deseas registrarlo nuevamente?`);
+                if (!ok) return;
+            }
+            month.days.push(dayData);
         }
 
-        // Ordenar con el más reciente siempre arriba
         month.days.sort((a, b) => b.date.localeCompare(a.date));
         persistDayCounter();
         closeModal($('dayCounterDayDlg'));
         renderDayCounter();
     });
 
-    $('dayCounterMonthsList')?.addEventListener('click', (e) => {
-        const actionEl = e.target.closest('[data-action]');
-        if (!actionEl) return;
+    $('cancelExportBtn')?.addEventListener('click', () => closeModal($('exportDlg')));
+    $('exportForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        executeCustomExport();
+    });
 
-        const action = actionEl.dataset.action;
-        const monthId = actionEl.dataset.monthId;
+    $('csvFileInput')?.addEventListener('change', importMovementsCsv);
+    $('cancelImportSelect')?.addEventListener('click', () => {
+        pendingParsedSections = null;
+        closeModal($('importSelectDlg'));
+    });
 
-        if (action === 'toggle-month') {
-            if (e.target.closest('button')) return;
-            toggleMonthAccordion(monthId);
-        } else if (action === 'edit-month') {
-            e.stopPropagation();
-            editMonthModal(monthId);
-        } else if (action === 'add-day') {
-            openAddDayModal(monthId);
-        } else if (action === 'edit-day') {
-            openEditDayModal(monthId, Number(actionEl.dataset.dayIndex));
+    $('importSelectForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        applyImportSelection({
+            movements: $('impSelectMovs')?.checked,
+            remittances: $('impSelectRemit')?.checked,
+            installments: $('impSelectInst')?.checked,
+            dayCounter: $('impSelectDays')?.checked
+        });
+    });
+
+    window.addEventListener('resize', () => {
+        if (activeAppSection === 'financeManager') {
+            render();
         }
     });
 
-    // --- Limpieza automática de errores de validación al escribir ---
-    document.addEventListener('input', (e) => {
-        if (e.target.classList?.contains('input-error')) e.target.classList.remove('input-error');
+    document.querySelectorAll('.table-wrapper').forEach(wrapper => {
+        let scrollTimeout;
+        wrapper.addEventListener('scroll', () => {
+            wrapper.classList.add('is-scrolling');
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                wrapper.classList.remove('is-scrolling');
+            }, 800);
+        }, { passive: true });
     });
-    document.addEventListener('change', (e) => {
-        if (e.target.classList?.contains('input-error')) e.target.classList.remove('input-error');
-    });
-
-    // --- Sincronización de tamaño del documento ---
-    const reportSize = () => window.parent?.postMessage({ type: 'resize', height: document.documentElement.scrollHeight }, '*');
-    window.addEventListener('load', reportSize);
-    new ResizeObserver(reportSize).observe(document.documentElement);
 }
 
-// Arranque de la aplicación
-function initApp() {
+function init() {
     activeAppSection = getInitialSectionFromConfig();
-    persistConfig();
+    syncSectionUtilitiesFlag(activeAppSection);
+
+    applyTheme();
+    applyUtilitiesVisibility();
+    updateCurrencyLabels();
     setupCategoryTabs();
-    refreshCategoryUI();
+    renderConfigCategories();
+    updateCategoryOptions('new');
+    updateCategoryOptions('edit');
+    updateFilterButtonIndicator();
+    updateActiveFilterCaption();
+    bindDelegatedEvents();
+    bindEvents();
+    render();
     renderRemittancesList();
     renderInstallments();
     renderDayCounter();
-    setupEventListeners();
-    setFinanceViewMode('movements');
 }
 
-initApp();
+init();
