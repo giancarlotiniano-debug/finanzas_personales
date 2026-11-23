@@ -1022,9 +1022,23 @@ button.cancelarmovimiento {
     stroke: var(--primario);
 }
 
-.copylastday-button,
-.day-newbutton {
+.copylastday-button{
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 25px;
+    font-weight: 650;
+    color: var(--blanco);
+    background-color: var(--primario);
+}
+
+
+.day-newbutton {
+    width: 95%;
+    align-self: center;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1404,7 +1418,25 @@ tr.movement-row:hover {
         #000 calc(100% - 6px),
         transparent 100%
     );
+    scrollbar-width: thin   ;
     scrollbar-color: transparent transparent;
+}
+
+.cat-breakdown-list.is-scrolling {
+    scrollbar-color: var(--primario) transparent;
+}
+
+.cat-breakdown-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.cat-breakdown-list::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 9999px;
+}
+
+.cat-breakdown-list.is-scrolling::-webkit-scrollbar-thumb {
+    background-color: var(--primario);
 }
 
 .cat-breakdown-item {
@@ -1737,12 +1769,18 @@ body.dark-mode .cat-percentage-badge {
 .remit-grand-total-val { font-weight: 750; color: var(--primario); }
 
 /* Compras en cuotas */
+.installment-scroll-shell {
+    padding-right: 12px;
+    background: var(--tarjetas);
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
 .installment-installments-list-compras {
-    padding: 5px 20px 20px 20px;
+    padding: 5px 8px 20px 20px;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    border-top: 1px solid var(--tarjetas);
     max-height: 620px;
     overflow-y: auto !important;
     border-bottom-left-radius: 20px;
@@ -1762,6 +1800,25 @@ body.dark-mode .cat-percentage-badge {
         #000 calc(100% - 6px),
         transparent 100%
     );
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+.installment-installments-list-compras.is-scrolling {
+    scrollbar-color: var(--primario) transparent;
+}
+
+.installment-installments-list-compras::-webkit-scrollbar {
+    width: 6px;
+}
+
+.installment-installments-list-compras::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 9999px;
+}
+
+.installment-installments-list-compras.is-scrolling::-webkit-scrollbar-thumb {
+    background-color: var(--primario);
 }
 
 .installment-row {
@@ -1799,7 +1856,7 @@ body.dark-mode .installment-purchase-header.all-paid {
 
 /* Días trabajados */
 .installment-installments-list-dias {
-    padding: 0 20px 20px 20px;
+    padding: 3px 12px 20px 12px ;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -1816,8 +1873,7 @@ body.dark-mode .installment-purchase-header.all-paid {
     flex-direction: column;
     gap: 16px;
     margin-bottom: 7px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding: 5px 8px 5px 8px;
     max-height: 500px;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -1835,15 +1891,25 @@ body.dark-mode .installment-purchase-header.all-paid {
         #000 calc(100% - 6px),
         transparent 100%
     );
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+.dc-days-wrapper.is-scrolling {
+    scrollbar-color: var(--primario) transparent;
 }
 
 .dc-days-wrapper::-webkit-scrollbar {
-    width: 5px;
+    width: 6px;
 }
 
 .dc-days-wrapper::-webkit-scrollbar-thumb {
-    background: var(--tarjetas);
-    border-radius: 99px;
+    background-color: transparent;
+    border-radius: 9999px;
+}
+
+.dc-days-wrapper.is-scrolling::-webkit-scrollbar-thumb {
+    background-color: var(--primario);
 }
 
 .dc-day-row {
@@ -2376,11 +2442,46 @@ body.dark-mode .filter-cal-day.is-in-week {
 }
 
 .category-manager-list {
+    position: relative;
+    scroll-behavior: smooth;
     max-height: 400px;
     overflow-y: auto;
-    border-radius: 9px;
-    padding: 15px;
+    border-radius: 14px;
+    padding: 12px 15px;
     background-color: var(--fondo);
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        #000 3px,
+        #000 calc(100% - 6px),
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        #000 3px,
+        #000 calc(100% - 6px),
+        transparent 100%
+    );
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+.category-manager-list.is-scrolling {
+    scrollbar-color: var(--primario) transparent;
+}
+
+.category-manager-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.category-manager-list::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 9999px;
+}
+
+.category-manager-list.is-scrolling::-webkit-scrollbar-thumb {
+    background-color: var(--primario);
 }
 
 .category-item-row {

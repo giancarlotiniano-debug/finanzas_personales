@@ -2132,8 +2132,10 @@ function renderInstallments() {
                         <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
                 </div>
-                <div id="purchase_details_${purchase.id}" class="installment-installments-list-compras" style="display: ${purchase.expanded ? 'flex' : 'none'};">
-                    ${installmentsHtml}
+                <div class="installment-scroll-shell">
+                    <div id="purchase_details_${purchase.id}" class="installment-installments-list-compras" style="display: ${purchase.expanded ? 'flex' : 'none'};">
+                        ${installmentsHtml}
+                    </div>
                 </div>
             </div>
         `;
@@ -2699,6 +2701,117 @@ function bindEvents() {
         });
     });
 
+    let openTouchStartX = 0;
+    let openTouchStartY = 0;
+    let isSwipingToOpenDrawer = false;
+    let currentOpenDrawerOffset = 0;
+
+    document.addEventListener('touchstart', (e) => {
+        const navDrawer = $('navDrawer');
+        const navBackdrop = $('navDrawerBackdrop');
+        if (!navDrawer || navDrawer.classList.contains('is-open') || document.querySelector('dialog[open]')) {
+            isSwipingToOpenDrawer = false;
+            return;
+        }
+
+        const touch = e.touches[0];
+        openTouchStartX = touch.clientX;
+        openTouchStartY = touch.clientY;
+        isSwipingToOpenDrawer = false;
+        currentOpenDrawerOffset = 0;
+
+        if (openTouchStartX <= 36) {
+            const drawerWidth = navDrawer.getBoundingClientRect().width || Math.min(340, window.innerWidth * 0.85);
+            navDrawer.classList.add('is-dragging');
+            navDrawer.style.transform = `translateX(${-drawerWidth}px)`;
+            if (navBackdrop) {
+                navBackdrop.classList.remove('is-hidden');
+                navBackdrop.style.opacity = '0';
+            }
+        }
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+        const navDrawer = $('navDrawer');
+        const navBackdrop = $('navDrawerBackdrop');
+        if (!navDrawer || navDrawer.classList.contains('is-open') || openTouchStartX > 36) return;
+
+        const touch = e.touches[0];
+        const dx = touch.clientX - openTouchStartX;
+        const dy = touch.clientY - openTouchStartY;
+
+        if (!isSwipingToOpenDrawer) {
+            if (Math.abs(dy) > 15 && Math.abs(dy) > Math.abs(dx)) {
+                openTouchStartX = 0;
+                navDrawer.classList.remove('is-dragging');
+                navDrawer.style.transform = '';
+                if (navBackdrop) {
+                    navBackdrop.classList.add('is-hidden');
+                    navBackdrop.style.opacity = '';
+                }
+                return;
+            }
+            if (dx > 8 && Math.abs(dx) > Math.abs(dy)) {
+                isSwipingToOpenDrawer = true;
+                lockBodyScroll();
+            }
+        }
+
+        if (isSwipingToOpenDrawer) {
+            const drawerWidth = navDrawer.getBoundingClientRect().width || Math.min(340, window.innerWidth * 0.85);
+            const clampedDx = Math.max(0, Math.min(drawerWidth, dx));
+            currentOpenDrawerOffset = clampedDx - drawerWidth;
+            navDrawer.style.transform = `translateX(${currentOpenDrawerOffset}px)`;
+
+            if (navBackdrop) {
+                const progress = clampedDx / drawerWidth;
+                navBackdrop.style.opacity = String(progress);
+            }
+        }
+    }, { passive: true });
+
+    document.addEventListener('touchend', () => {
+        const navDrawer = $('navDrawer');
+        const navBackdrop = $('navDrawerBackdrop');
+        if (!navDrawer || navDrawer.classList.contains('is-open')) return;
+
+        const wasSwiping = isSwipingToOpenDrawer;
+        const finalOffset = currentOpenDrawerOffset;
+        const drawerWidth = navDrawer.getBoundingClientRect().width || Math.min(340, window.innerWidth * 0.85);
+
+        openTouchStartX = 0;
+        openTouchStartY = 0;
+        isSwipingToOpenDrawer = false;
+        currentOpenDrawerOffset = 0;
+
+        navDrawer.classList.remove('is-dragging');
+        navDrawer.style.transform = '';
+        if (navBackdrop) {
+            navBackdrop.style.opacity = '';
+        }
+
+        if (!wasSwiping) {
+            if (navBackdrop) navBackdrop.classList.add('is-hidden');
+            if (!document.querySelector('dialog[open]')) {
+                document.body.classList.remove('no-scroll');
+            }
+            return;
+        }
+
+        const draggedDistance = drawerWidth + finalOffset;
+        if (draggedDistance > drawerWidth * 0.35 || draggedDistance > 75) {
+            openNavDrawer();
+        } else {
+            if (navBackdrop) {
+                navBackdrop.classList.add('is-hidden');
+                navBackdrop.setAttribute('aria-hidden', 'true');
+            }
+            if (!document.querySelector('dialog[open]')) {
+                document.body.classList.remove('no-scroll');
+            }
+        }
+    }, { passive: true });
+
     $('navMoreBackupBtn')?.addEventListener('click', (e) => {
         e.stopPropagation();
         toggleBackupPopover();
@@ -3214,16 +3327,22 @@ function bindEvents() {
         }
     });
 
-    document.querySelectorAll('.table-wrapper').forEach(wrapper => {
-        let scrollTimeout;
-        wrapper.addEventListener('scroll', () => {
-            wrapper.classList.add('is-scrolling');
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                wrapper.classList.remove('is-scrolling');
-            }, 800);
-        }, { passive: true });
-    });
+    const scrollTimeouts = new WeakMap();
+
+    document.addEventListener('scroll', (e) => {
+        const target = e.target?.closest?.('.table-wrapper, .cat-breakdown-list, .category-manager-list, .installment-installments-list-compras, .dc-days-wrapper');
+        if (!target) return;
+
+        target.classList.add('is-scrolling');
+        if (scrollTimeouts.has(target)) {
+            clearTimeout(scrollTimeouts.get(target));
+        }
+        const timeoutId = setTimeout(() => {
+            target.classList.remove('is-scrolling');
+            scrollTimeouts.delete(target);
+        }, 800);
+        scrollTimeouts.set(target, timeoutId);
+    }, true);
 }
 
 function init() {
