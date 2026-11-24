@@ -1841,9 +1841,13 @@ body.dark-mode .cat-percentage-badge {
     display: none;
     padding: 15px 10px 15px 20px;
     background: var(--fondo);
-    border: 2px solid var(--tarjetas);
+    border: 1px solid var(--primario);
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
+}
+
+.dark-mode .installment-scroll-shell {
+    border: 2px solid var(--tarjetas);
 }
 
 .installment-purchase-card.is-open .installment-scroll-shell {
