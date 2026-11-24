@@ -15,7 +15,7 @@
 }
 
 body.dark-mode {
-    --primario: #2785e2;
+    --primario: #0A66C2;
     --secundario: #29e7d5;
     --fondo: #121212;
     --tarjetas: #1c1e20;
@@ -1030,7 +1030,6 @@ button.cancelarmovimiento {
     border-radius: 10px;
     border: 1px solid var(--primario);
     background: transparent;
-    margin-right: 5px;
 }
 
 .editdaysbutton-xs svg {
@@ -1573,7 +1572,7 @@ body.dark-mode .cat-percentage-badge {
 .card {
     background: var(--fondo);
     border-radius: 25px;
-    padding: 20px 10px;
+    padding: 20px 5px;
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
@@ -1707,7 +1706,7 @@ body.dark-mode .cat-percentage-badge {
     align-items: center;
     padding: 3px 20px 18px 20px;
     margin: 0 -20px 18px -20px;
-    border-bottom: 1px solid var(--primario);
+    border-bottom: 1px solid var(--fondo);
 }
 
 .dark-mode .remit-tc-row {
@@ -1830,7 +1829,7 @@ body.dark-mode .cat-percentage-badge {
     align-items: center;
     font-size: 16px;
     margin: 13px -20px 8px -20px;
-    border-top: 1px solid var(--primario);
+    border-top: 1px solid var(--fondo);
     padding: 18px 20px 0 20px;
 }
 
@@ -1954,7 +1953,7 @@ body.dark-mode .cat-percentage-badge {
     width: 22px;
     height: 22px;
     cursor: pointer;
-    accent-color: var(--primario);
+    accent-color: var(--ingresos-font-card);
 }
 
 /* Días trabajados */
@@ -2029,9 +2028,10 @@ body.dark-mode .cat-percentage-badge {
 }
 
 .dc-day-row {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr) auto;
     align-items: center;
+    gap: 6px;
     padding: 12px 15px;
     background: var(--tarjetas);
     border-radius: 10px;
@@ -2042,11 +2042,29 @@ body.dark-mode .cat-percentage-badge {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    min-width: 0;
+}
+
+.dc-day-middle {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+    min-width: 0;
+}
+
+.dc-day-loc {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primario);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .dc-day-name {
     font-weight: 700;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--primario);
 }
 
@@ -2056,23 +2074,10 @@ body.dark-mode .cat-percentage-badge {
     color: var(--texto);
 }
 
-.dc-day-middle {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    text-align: left;
-}
-
 .dc-day-time {
     font-size: 13px;
     font-weight: 550;
     color: var(--texto);
-}
-
-.dc-day-loc {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--primario);
 }
 
 .dc-day-right {
