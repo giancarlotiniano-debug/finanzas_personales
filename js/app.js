@@ -2215,7 +2215,7 @@ function renderDayCounter() {
     if (!container) return;
 
     if (!dayCounterMonths.length) {
-        container.innerHTML = '<div class="empty empty-compact">Aún no hay meses registrados.</div>';
+        container.innerHTML = '<div class="empty empty-compact">Aún no hay listas registradas.</div>';
         return;
     }
 

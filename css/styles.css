@@ -15,7 +15,7 @@
 }
 
 body.dark-mode {
-    --primario: #2785e2;
+    --primario: #0A66C2;
     --secundario: #29e7d5;
     --fondo: #121212;
     --tarjetas: #1c1e20;
@@ -971,7 +971,7 @@ button.cancelarmovimiento {
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    background: var(--tarjetas);
+    background: transparent;
     border: 1px solid var(--red);
 }
 
@@ -990,15 +990,27 @@ button.cancelarmovimiento {
     margin-right: 2px;
 }
 
+.dark-mode .editbutton-xs {
+    background: var(--tarjetas);
+}
+
 .editbutton-xs svg {
     stroke: var(--blanco);
-    stroke-width: 1;
+    stroke-width: 2;
     height: 22px;
     width: 22px;
 }
 
+.dark-mode .editbutton-xs svg {
+    stroke: var(--primario);
+}
+
 .chevron-icon {
     stroke: var(--blanco);
+}
+
+.dark-mode .chevron-icon {
+    stroke: var(--texto);
 }
 
 .editdaysbutton-xs {
@@ -1035,7 +1047,7 @@ button.cancelarmovimiento {
 
 
 .day-newbutton {
-    width: 45%;
+    width: 55%;
     align-self: center;
     display: flex;
     justify-content: center;
@@ -1553,7 +1565,7 @@ body.dark-mode .cat-percentage-badge {
 .card {
     background: var(--fondo);
     border-radius: 25px;
-    padding: 20px 20px;
+    padding: 20px 10px;
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
@@ -1575,29 +1587,41 @@ body.dark-mode .cat-percentage-badge {
 
 /* Acordeones compartidos de utilidades */
 .installment-purchase-card {
-    border-width: 2px;
-    border-radius: 25px;
+    border: none;
+    border-radius: 0;
     margin-bottom: 16px;
-    background: var(--tarjetas);
-    overflow: hidden !important;
+    background: var(--fondo);
+    overflow: visible;
     scroll-margin-top: calc(78px + env(safe-area-inset-top, 0px));
 }
 
 .installment-purchase-header {
+    height: 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
     background: var(--primario);
-    border: 1px solid var(--primario);
+    border: 2px solid var(--primario);
     cursor: pointer;
     font-weight: 650;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    border-radius: 20px;
     transition: background-color 0.2s ease, border-radius 0.2s ease;
     -webkit-tap-highlight-color: transparent;
+}
+
+.dark-mode .installment-purchase-header {
+    background: var(--tarjetas);
+    border: 2px solid var(--tarjetas);
+}
+
+.installment-purchase-card.is-open .installment-purchase-header {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.installment-purchase-card.is-open .installment-installments-list-dias {
+    border-top: none;
 }
 
 .installment-purchase-header .chevron-icon {
@@ -1612,6 +1636,10 @@ body.dark-mode .cat-percentage-badge {
     color: var(--blanco);
 }
 
+.dark-mode .installment-card-title {
+    color: var(--primario);
+}
+
 .installment-card-subtitle {
     font-size: 12px;
     font-weight: normal;
@@ -1619,24 +1647,35 @@ body.dark-mode .cat-percentage-badge {
     opacity: 0.8;
 }
 
+.dark-mode .installment-card-subtitle {
+    color: var(--texto);
+    opacity: 1;
+}
+
 /* Remesas */
 .installment-installments-list-remesas {
     padding: 15px 20px 20px 20px;
     display: flex;
     flex-direction: column;
+    background: var(--tarjetas);
     border: 1px solid var(--primario);
     max-height: 700px;
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
-    background: var(--tarjetas);
+    
+}
+
+.dark-mode .installment-installments-list-remesas {
+    border: 2px solid var(--tarjetas);
+    background: var(--fondo);
 }
 
 .remit-tc-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 3px 0 18px 0;
-    margin-bottom: 18px;
+    padding: 3px 20px 18px 20px;
+    margin: 0 -20px 18px -20px;
     border-bottom: 1px solid var(--primario);
 }
 
@@ -1650,17 +1689,26 @@ body.dark-mode .cat-percentage-badge {
     height: 32px;
     text-align: right;
     padding: 4px 6px;
-    border: 1px solid var(--fondo);
     border-radius: 8px;
+    border: 1px solid var(--fondo);
     background: var(--fondo);
     color: var(--texto);
     font-weight: 500;
     font-size: 16px;
 }
 
+.dark-mode .remit-input-num {
+    border: 1px solid var(--tarjetas);
+    background: var(--tarjetas);
+}
+
 .remit-recv-input,
 .remit-comm-input {
     background: var(--fondo);
+}
+
+.dark-mode .remit-recv-input {
+    background: var(--tarjetas);
 }
 
 .remit-items-wrapper {
@@ -1677,7 +1725,6 @@ body.dark-mode .cat-percentage-badge {
     justify-content: space-between;
     gap: 8px;
     padding: 0;
-    border-bottom: 2px solid var(--tarjetas);
 }
 
 .remit-item-row.is-last {
@@ -1708,14 +1755,19 @@ body.dark-mode .cat-percentage-badge {
     height: 40px;
     width: 60%;
     padding: 6px 8px;
+    background: var(--fondo);
     border: 1px solid var(--fondo);
     border-top-left-radius: 16px;
     border-bottom-left-radius: 16px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    background: var(--fondo);
     color: var(--texto);
     font-size: 16px;
+}
+
+.dark-mode .remit-new-input {
+    background: var(--tarjetas);
+    border: 1px solid var(--tarjetas);
 }
 
 .remit-add-btn {
@@ -1742,10 +1794,9 @@ body.dark-mode .cat-percentage-badge {
     justify-content: space-between;
     align-items: center;
     font-size: 16px;
-    margin-top: 13px;
-    margin-bottom: 8px;
+    margin: 13px -20px 8px -20px;
     border-top: 1px solid var(--primario);
-    padding-top: 18px;
+    padding: 18px 20px 0 20px;
 }
 
 .remit-total-label { font-weight: 550; color: var(--texto); }
@@ -1781,8 +1832,8 @@ body.dark-mode .cat-percentage-badge {
 .installment-scroll-shell {
     display: none;
     padding: 15px 10px 15px 20px;
-    background: var(--tarjetas);
-    border: 1px solid var(--primario);
+    background: var(--fondo);
+    border: 2px solid var(--tarjetas);
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
 }
@@ -1798,7 +1849,6 @@ body.dark-mode .cat-percentage-badge {
     gap: 16px;
     max-height: 620px;
     overflow-y: auto;
-    background: var(--tarjetas);
     -webkit-mask-image: linear-gradient(
         to bottom,
         transparent 0%,
@@ -1840,7 +1890,7 @@ body.dark-mode .cat-percentage-badge {
     align-items: center;
     padding: 12px 15px;
     border-radius: 15px;
-    background: var(--fondo);
+    background: var(--tarjetas);
     font-size: 14px;
     cursor: pointer;
     height: 65px;
@@ -1870,7 +1920,11 @@ body.dark-mode .cat-percentage-badge {
     border: 1px solid var(--primario);
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
-    background: var(--tarjetas);
+    background: var(--fondo);
+}
+
+.dark-mode .installment-installments-list-dias {
+    border: 2px solid var(--tarjetas);
 }
 
 .dc-days-wrapper {
@@ -1922,7 +1976,7 @@ body.dark-mode .cat-percentage-badge {
     justify-content: space-between;
     align-items: center;
     padding: 12px 15px;
-    background: var(--fondo);
+    background: var(--tarjetas);
     border-radius: 10px;
     font-size: 14px;
 }
