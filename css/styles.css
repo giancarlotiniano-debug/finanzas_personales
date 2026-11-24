@@ -1679,6 +1679,10 @@ body.dark-mode .cat-percentage-badge {
     border-bottom: 1px solid var(--primario);
 }
 
+.dark-mode .remit-tc-row {
+    border-bottom: 2px solid var(--tarjetas);
+}
+
 .remit-tc-label {
     font-weight: 550;
     font-size: 16px;
@@ -1797,6 +1801,10 @@ body.dark-mode .cat-percentage-badge {
     margin: 13px -20px 8px -20px;
     border-top: 1px solid var(--primario);
     padding: 18px 20px 0 20px;
+}
+
+.dark-mode .remit-total-line {
+    border-top: 2px solid var(--tarjetas);
 }
 
 .remit-total-label { font-weight: 550; color: var(--texto); }
