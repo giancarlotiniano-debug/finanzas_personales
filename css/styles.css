@@ -986,26 +986,34 @@ button.cancelarmovimiento {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--primario);
+    background: transparent;
     margin-right: 2px;
 }
 
-.dark-mode .editbutton-xs {
-    background: var(--tarjetas);
-}
-
 .editbutton-xs svg {
-    stroke: var(--blanco);
+    stroke: var(--primario);
     stroke-width: 2;
     height: 22px;
     width: 22px;
+}
+
+.installment-purchase-card.is-open .editbutton-xs svg {
+    stroke: var(--blanco);
 }
 
 .dark-mode .editbutton-xs svg {
     stroke: var(--primario);
 }
 
+.dark-mode .installment-purchase-card.is-open .editbutton-xs svg {
+    stroke: var(--blanco);
+}
+
 .chevron-icon {
+    stroke: var(--texto);
+}
+
+.installment-purchase-card.is-open .chevron-icon {
     stroke: var(--blanco);
 }
 
@@ -1601,8 +1609,8 @@ body.dark-mode .cat-percentage-badge {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background: var(--primario);
-    border: 2px solid var(--primario);
+    background: var(--tarjetas);
+    border: 2px solid var(--tarjetas);
     cursor: pointer;
     font-weight: 650;
     border-radius: 20px;
@@ -1615,9 +1623,16 @@ body.dark-mode .cat-percentage-badge {
     border: 2px solid var(--tarjetas);
 }
 
+.dark-mode .installment-purchase-card.is-open .installment-purchase-header {
+    background-color: var(--primario);
+    border: 1px solid var(--primario);
+}
+
 .installment-purchase-card.is-open .installment-purchase-header {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
+    background: var(--primario);
+    border: 2px solid var(--primario);
 }
 
 .installment-purchase-card.is-open .installment-installments-list-dias {
@@ -1633,6 +1648,10 @@ body.dark-mode .cat-percentage-badge {
 }
 
 .installment-card-title {
+    color: var(--primario);
+}
+
+.installment-purchase-card.is-open .installment-card-title {
     color: var(--blanco);
 }
 
@@ -1640,11 +1659,19 @@ body.dark-mode .cat-percentage-badge {
     color: var(--primario);
 }
 
+.dark-mode .installment-purchase-card.is-open .installment-card-title {
+    color: var(--blanco);
+}
+
 .installment-card-subtitle {
     font-size: 12px;
     font-weight: normal;
-    color: var(--blanco);
+    color: var(--texto);
     opacity: 0.8;
+}
+
+.installment-purchase-card.is-open .installment-card-subtitle {
+    color: var(--blanco);
 }
 
 .dark-mode .installment-card-subtitle {
@@ -1668,6 +1695,10 @@ body.dark-mode .cat-percentage-badge {
 .dark-mode .installment-installments-list-remesas {
     border: 2px solid var(--tarjetas);
     background: var(--fondo);
+}
+
+.dark-mode .installment-purchase-card.is-open .installment-installments-list-remesas {
+    border: 1px solid var(--primario);
 }
 
 .remit-tc-row {
@@ -1850,8 +1881,14 @@ body.dark-mode .cat-percentage-badge {
     border: 2px solid var(--tarjetas);
 }
 
+.dark-mode .installment-purchase-card.is-open .installment-scroll-shell {
+    display: block;
+    border: 1px solid var(--primario);   
+}
+
 .installment-purchase-card.is-open .installment-scroll-shell {
     display: block;
+    border: 1px solid var(--primario);   
 }
 
 .installment-installments-list-compras {
@@ -1935,8 +1972,16 @@ body.dark-mode .cat-percentage-badge {
     background: var(--fondo);
 }
 
+.installment-purchase-card.is-open .installment-installments-list-dias {
+    border: 1px solid var(--primario);
+}
+
 .dark-mode .installment-installments-list-dias {
     border: 2px solid var(--tarjetas);
+}
+
+.dark-mode .installment-purchase-card.is-open .installment-installments-list-dias {
+    border: 1px solid var(--primario);
 }
 
 .dc-days-wrapper {
