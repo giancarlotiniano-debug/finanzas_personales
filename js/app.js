@@ -276,6 +276,7 @@ function lockBodyScroll() {
 
 function openModal(dialogEl) {
     if (!dialogEl) return;
+    resetOpenDrawerGesture();
     lockBodyScroll();
     dialogEl.showModal();
 }
@@ -1219,7 +1220,7 @@ function formatActiveFilterLabel(filters = movementFilters) {
 
     const mode = filters.dateMode || 'all';
     if (mode === 'day' && filters.startDate) {
-        parts.push(`Día ${formatDateEs(filters.startDate)}`);
+        parts.push(`Día: ${formatDateEs(filters.startDate)}`);
     } else if (mode === 'week' && filters.startDate && filters.endDate) {
         parts.push(`Semana: ${formatDateEs(filters.startDate)} al ${formatDateEs(filters.endDate)}`);
     } else if (mode === 'month' && filters.startDate) {
@@ -1231,7 +1232,7 @@ function formatActiveFilterLabel(filters = movementFilters) {
     } else if (mode === 'custom' && (filters.startDate || filters.endDate)) {
         const fromStr = filters.startDate ? formatDateEs(filters.startDate) : '...';
         const toStr = filters.endDate ? formatDateEs(filters.endDate) : '...';
-        parts.push(`Rango ${fromStr} al ${toStr}`);
+        parts.push(`Rango: ${fromStr} al ${toStr}`);
     }
 
     if (filters.kind === 'expense') {
@@ -1755,7 +1756,7 @@ function renderConfigCategories() {
                     </div>
                     <div class="category-item-controls">
                         <button type="button" class="edit-category-button" data-action="open-edit-category" data-kind="${kind}" data-index="${originalIndex}" title="Editar categoría" aria-label="Editar categoría">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 4.2a2.5 2.5 0 0 1 3.5 3.5L7.6 20.1 3.2 21l.9-4.4L16.5 4.2zM14.3 6.4l3.5 3.5"/></svg>
                         </button>
                     </div>
                 </div>
@@ -1916,7 +1917,7 @@ function renderRemittancesList() {
                     </div>
                     <div class="flex-center-gap">
                         <button type="button" class="editbutton-xs" data-action="edit-remit" data-remit-id="${rem.id}" title="Detalles de la remesa" aria-label="Detalles de la remesa">
-                            <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
+                            <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 4.2a2.5 2.5 0 0 1 3.5 3.5L7.6 20.1 3.2 21l.9-4.4L16.5 4.2zM14.3 6.4l3.5 3.5"/></svg>
                         </button>
                         <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
@@ -2127,7 +2128,7 @@ function renderInstallments() {
                     </div>
                     <div class="flex-center-gap">
                         <button type="button" class="editbutton-xs" data-action="edit-purchase" data-purchase-id="${purchase.id}" title="Detalles de la compra" aria-label="Detalles de la compra">
-                            <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
+                            <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 4.2a2.5 2.5 0 0 1 3.5 3.5L7.6 20.1 3.2 21l.9-4.4L16.5 4.2zM14.3 6.4l3.5 3.5"/></svg>
                         </button>
                         <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
@@ -2158,9 +2159,21 @@ function toggleInstallmentPaid(purchaseId, instNumber) {
     const inst = purchase?.installments.find(i => i.number === instNumber);
     if (!inst) return;
 
+    const detailsEl = $(`purchase_details_${purchaseId}`);
+    const savedScrollTop = detailsEl ? detailsEl.scrollTop : 0;
+    const savedWindowScrollY = window.scrollY;
+
     inst.paid = !inst.paid;
     persistInstallments();
     renderInstallments();
+
+    requestAnimationFrame(() => {
+        const updatedDetailsEl = $(`purchase_details_${purchaseId}`);
+        if (updatedDetailsEl) {
+            updatedDetailsEl.scrollTop = savedScrollTop;
+        }
+        window.scrollTo({ top: savedWindowScrollY, behavior: 'instant' });
+    });
 }
 
 function editPurchase(purchaseId) {
@@ -2223,7 +2236,7 @@ function renderDayCounter() {
                 </div>
                 <div class="dc-day-right">
                     <button type="button" class="editdaysbutton-xs" data-action="edit-day" data-month-id="${month.id}" data-day-index="${idx}" title="Editar día" aria-label="Editar día">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primario)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 4.2a2.5 2.5 0 0 1 3.5 3.5L7.6 20.1 3.2 21l.9-4.4L16.5 4.2zM14.3 6.4l3.5 3.5"/></svg>
                     </button>
                 </div>
             </div>
@@ -2238,7 +2251,7 @@ function renderDayCounter() {
                     </div>
                     <div class="flex-center-gap">
                         <button type="button" class="editbutton-xs" data-action="edit-dc-month" data-month-id="${month.id}" title="Editar mes" aria-label="Editar mes">
-                            <svg width="14" height="14" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"><circle cx="96" cy="112" r="64"></circle><circle cx="96" cy="256" r="64"></circle><circle cx="96" cy="400" r="64"></circle><line x1="256" y1="112" x2="448" y2="112"></line><line x1="256" y1="256" x2="448" y2="256"></line><line x1="256" y1="400" x2="448" y2="400"></line></svg>
+                            <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 4.2a2.5 2.5 0 0 1 3.5 3.5L7.6 20.1 3.2 21l.9-4.4L16.5 4.2zM14.3 6.4l3.5 3.5"/></svg>
                         </button>
                         <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primario)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
@@ -2687,6 +2700,25 @@ function bindFilterEvents() {
     });
 }
 
+function resetOpenDrawerGesture() {
+    const navDrawer = $('navDrawer');
+    const navBackdrop = $('navDrawerBackdrop');
+    openTouchStartX = 0;
+    openTouchStartY = 0;
+    isSwipingToOpenDrawer = false;
+    currentOpenDrawerOffset = 0;
+
+    if (navDrawer && !navDrawer.classList.contains('is-open')) {
+        navDrawer.classList.remove('is-dragging');
+        navDrawer.style.transform = '';
+    }
+    if (navBackdrop && !navDrawer?.classList.contains('is-open')) {
+        navBackdrop.classList.add('is-hidden');
+        navBackdrop.setAttribute('aria-hidden', 'true');
+        navBackdrop.style.opacity = '';
+    }
+}
+
 function bindEvents() {
     $('openNavDrawerBtn')?.addEventListener('click', openNavDrawer);
     $('closeNavDrawerBtn')?.addEventListener('click', closeNavDrawer);
@@ -2708,9 +2740,13 @@ function bindEvents() {
 
     document.addEventListener('touchstart', (e) => {
         const navDrawer = $('navDrawer');
-        const navBackdrop = $('navDrawerBackdrop');
-        if (!navDrawer || navDrawer.classList.contains('is-open') || document.querySelector('dialog[open]')) {
-            isSwipingToOpenDrawer = false;
+        if (
+            !navDrawer ||
+            navDrawer.classList.contains('is-open') ||
+            document.querySelector('dialog[open]') ||
+            e.target.closest('dialog')
+        ) {
+            resetOpenDrawerGesture();
             return;
         }
 
@@ -2721,6 +2757,7 @@ function bindEvents() {
         currentOpenDrawerOffset = 0;
 
         if (openTouchStartX <= 2) {
+            const navBackdrop = $('navDrawerBackdrop');
             const drawerWidth = navDrawer.getBoundingClientRect().width || Math.min(340, window.innerWidth * 0.85);
             navDrawer.classList.add('is-dragging');
             navDrawer.style.transform = `translateX(${-drawerWidth}px)`;
@@ -2732,6 +2769,11 @@ function bindEvents() {
     }, { passive: true });
 
     document.addEventListener('touchmove', (e) => {
+        if (document.querySelector('dialog[open]')) {
+            resetOpenDrawerGesture();
+            return;
+        }
+
         const navDrawer = $('navDrawer');
         const navBackdrop = $('navDrawerBackdrop');
         if (!navDrawer || navDrawer.classList.contains('is-open') || openTouchStartX > 36) return;
@@ -2742,13 +2784,7 @@ function bindEvents() {
 
         if (!isSwipingToOpenDrawer) {
             if (Math.abs(dy) > 15 && Math.abs(dy) > Math.abs(dx)) {
-                openTouchStartX = 0;
-                navDrawer.classList.remove('is-dragging');
-                navDrawer.style.transform = '';
-                if (navBackdrop) {
-                    navBackdrop.classList.add('is-hidden');
-                    navBackdrop.style.opacity = '';
-                }
+                resetOpenDrawerGesture();
                 return;
             }
             if (dx > 8 && Math.abs(dx) > Math.abs(dy)) {
@@ -2771,6 +2807,12 @@ function bindEvents() {
     }, { passive: true });
 
     document.addEventListener('touchend', () => {
+        if (document.querySelector('dialog[open]')) {
+            resetOpenDrawerGesture();
+            document.body.classList.remove('no-scroll');
+            return;
+        }
+
         const navDrawer = $('navDrawer');
         const navBackdrop = $('navDrawerBackdrop');
         if (!navDrawer || navDrawer.classList.contains('is-open')) return;

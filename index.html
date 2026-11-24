@@ -441,9 +441,9 @@
                 <div id="detailContent"></div>
                 <div class="modal-actions modal-actions-split detail-modal-actions">
                     <button type="button" class="detail-edit-btn" id="detailEditBtn" title="Editar movimiento" aria-label="Editar movimiento">
-                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 4.2a2.5 2.5 0 0 1 3.5 3.5L7.6 20.1 3.2 21l.9-4.4L16.5 4.2zM14.3 6.4l3.5 3.5"/></svg>
                     </button>
-                    <button type="button" id="closeDetailBtn" class="aceptarmovimiento btn-modal-wide">Aceptar</button>
+                    <button type="button" id="closeDetailBtn" class="aceptarmovimiento">Aceptar</button>
                 </div>
             </div>
         </div>
@@ -462,10 +462,12 @@
                     Nueva
                 </button>
             </div>
-            <div id="categoryManagerList" class="category-manager-list"></div>
-            <div class="categories-add-row" style="margin-top: 15px;">
+            <div class="contenedor-lista-categorias">
+                <div id="categoryManagerList" class="category-manager-list"></div>
             </div>
-            <div class="modal-actions" style="margin-top: 15px;">
+            <div class="categories-add-row">
+            </div>
+            <div class="modal-actions" style="margin-top: 20px;">
                 <button type="button" class="aceptarmovimiento" id="closeCategoriesDlg">Aceptar</button>
             </div>
         </div>
@@ -619,12 +621,12 @@
                 </div>
                 
                 <div class="field">
-                    <label for="newInstFinancedAmount">Importe financiado</label>
+                    <label for="newInstFinancedAmount">Importe a financiar</label>
                     <input id="newInstFinancedAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
                 <div class="field">
-                    <label for="newInstInterestAmount">Intereses (opcional)</label>
-                    <input id="newInstInterestAmount" type="text" inputmode="decimal" placeholder="0,00">
+                    <label for="newInstInterestAmount">Intereses</label>
+                    <input id="newInstInterestAmount" type="text" inputmode="decimal" placeholder="Opcional">
                 </div>
                 <div class="field">
                     <label for="newInstTotalAmount">Importe total</label>
@@ -639,11 +641,11 @@
                     <input id="newInstRegularAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
                 <div class="field">
-                    <label for="newInstFinalAmount">Cuota final (opcional)</label>
-                    <input id="newInstFinalAmount" type="text" inputmode="decimal" placeholder="0,00">
+                    <label for="newInstFinalAmount">Cuota final</label>
+                    <input id="newInstFinalAmount" type="text" inputmode="decimal" placeholder="Opcional">
                 </div>
                 <div class="field">
-                    <label for="newInstFirstDate">Fecha del primer pago</label>
+                    <label for="newInstFirstDate">Fecha de pago</label>
                     <input id="newInstFirstDate" type="date">
                 </div>
                 <div class="field">
@@ -673,20 +675,12 @@
                     <input id="editInstName" placeholder="Ej. Televisor">
                 </div>
                 <div class="field">
-                    <label for="editInstCurrency">Moneda</label>
-                    <select id="editInstCurrency">
-                        <option value="EUR" selected>Euros (€)</option>
-                        <option value="USD">Dólares ($)</option>
-                        <option value="PEN">Soles (S/)</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label for="editInstFinancedAmount">Importe financiado</label>
+                    <label for="editInstFinancedAmount">Importe a financiar</label>
                     <input id="editInstFinancedAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
                 <div class="field">
-                    <label for="editInstInterestAmount">Intereses (opcional)</label>
-                    <input id="editInstInterestAmount" type="text" inputmode="decimal" placeholder="0,00">
+                    <label for="editInstInterestAmount">Intereses</label>
+                    <input id="editInstInterestAmount" type="text" inputmode="decimal" placeholder="Opcional">
                 </div>
                 <div class="field">
                     <label for="editInstTotalAmount">Importe total</label>
@@ -701,19 +695,27 @@
                     <input id="editInstRegularAmount" type="text" inputmode="decimal" placeholder="0,00">
                 </div>
                 <div class="field">
-                    <label for="editInstFinalAmount">Cuota final (opcional)</label>
-                    <input id="editInstFinalAmount" type="text" inputmode="decimal" placeholder="0,00">
+                    <label for="editInstFinalAmount">Cuota final</label>
+                    <input id="editInstFinalAmount" type="text" inputmode="decimal" placeholder="Opcional">
                 </div>
                 <div class="field">
-                    <label for="editInstFirstDate">Fecha del primer pago</label>
+                    <label for="editInstFirstDate">Fecha de pago</label>
                     <input id="editInstFirstDate" type="date">
+                </div>
+                <div class="field">
+                    <label for="editInstCurrency">Moneda</label>
+                    <select id="editInstCurrency">
+                        <option value="EUR" selected>Euros (€)</option>
+                        <option value="USD">Dólares ($)</option>
+                        <option value="PEN">Soles (S/)</option>
+                    </select>
                 </div>
             </div>
             <div class="modal-actions modal-actions-split">
                 <button type="button" class="large-delete-button" id="deleteInstallmentBtn" title="Eliminar compra" aria-label="Eliminar compra">
                     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
-                <button class="aceptarmovimiento btn-modal-wide" type="submit">Aceptar</button>
+                <button class="aceptarmovimiento" type="submit">Aceptar</button>
             </div>
         </form>
     </dialog>
@@ -721,14 +723,14 @@
     <!-- Modal: Nuevo Mes de Trabajo -->
     <dialog id="dayCounterMonthNewDlg">
         <form class="modal" id="dayCounterMonthNewForm" tabindex="-1">
-            <h2>Nuevo mes de trabajo</h2>
+            <h2>Nueva lista</h2>
             <div class="formgrid">
                 <div class="field full">
-                    <label for="newMonthName">Nombre del mes</label>
+                    <label for="newMonthName">Nombre</label>
                     <input id="newMonthName" placeholder="Ej. Noviembre 2026">
                 </div>
                 <div class="field full">
-                    <label for="newMonthTarget">Días obligatorios a trabajar</label>
+                    <label for="newMonthTarget">Días a trabajar</label>
                     <input id="newMonthTarget" type="number" min="1" placeholder="Ej. 15">
                 </div>
             </div>
@@ -745,11 +747,11 @@
             <h2>Editar lista</h2>
             <div class="formgrid">
                 <div class="field full">
-                    <label for="editMonthName">Nombre del mes</label>
+                    <label for="editMonthName">Nombre</label>
                     <input id="editMonthName" placeholder="Ej. Noviembre 2026">
                 </div>
                 <div class="field full">
-                    <label for="editMonthTarget">Días obligatorios a trabajar</label>
+                    <label for="editMonthTarget">Días a trabajar</label>
                     <input id="editMonthTarget" type="number" min="1" placeholder="Ej. 15">
                 </div>
             </div>
