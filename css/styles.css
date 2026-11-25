@@ -2464,6 +2464,12 @@ body.dark-mode .filter-cal-day.is-in-week {
     line-height: 1.2;
 }
 
+@media (max-width: 375px) {
+    .dc-cal-month-title {
+        font-size: 1.1rem;
+    }   
+}
+
 .dc-gear-btn {
     background: transparent;
     border: none;
