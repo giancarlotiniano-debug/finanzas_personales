@@ -12,6 +12,7 @@
     --gastos-font-card: #FF5A5F;
     --balance-font-card: #1f6dff;
     --red: #FF5A5F;
+    --calendarline: #0000000e;
 }
 
 body.dark-mode {
@@ -20,6 +21,7 @@ body.dark-mode {
     --fondo: #121212;
     --tarjetas: #1c1e20;
     --texto: #e2e2e2;
+    --calendarline: #ffffff07;
 }
 
 /* ==========================================
@@ -107,7 +109,67 @@ input[type="number"] {
 }
 
 /* ==========================================
-   3. CABECERA Y MENÚ DESPLEGABLE LATERAL
+   3. SCROLLBARS PERSONALIZADOS Y MÁSCARAS
+   ========================================== */
+.table-wrapper,
+.cat-breakdown-list,
+.category-manager-list,
+.installment-installments-list-compras {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+.table-wrapper.is-scrolling,
+.cat-breakdown-list.is-scrolling,
+.category-manager-list.is-scrolling,
+.installment-installments-list-compras.is-scrolling {
+    scrollbar-color: var(--primario) transparent;
+}
+
+.table-wrapper::-webkit-scrollbar,
+.cat-breakdown-list::-webkit-scrollbar,
+.category-manager-list::-webkit-scrollbar,
+.installment-installments-list-compras::-webkit-scrollbar {
+    width: 6px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb,
+.cat-breakdown-list::-webkit-scrollbar-thumb,
+.category-manager-list::-webkit-scrollbar-thumb,
+.installment-installments-list-compras::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 9999px;
+}
+
+.table-wrapper.is-scrolling::-webkit-scrollbar-thumb,
+.cat-breakdown-list.is-scrolling::-webkit-scrollbar-thumb,
+.category-manager-list.is-scrolling::-webkit-scrollbar-thumb,
+.installment-installments-list-compras.is-scrolling::-webkit-scrollbar-thumb {
+    background-color: var(--primario);
+}
+
+.cat-breakdown-list,
+.category-manager-list,
+.installment-installments-list-compras {
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        #000 3px,
+        #000 calc(100% - 6px),
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        #000 3px,
+        #000 calc(100% - 6px),
+        transparent 100%
+    );
+}
+
+/* ==========================================
+   4. CABECERA Y MENÚ DESPLEGABLE LATERAL
    ========================================== */
 header {
     position: fixed;
@@ -156,10 +218,9 @@ header {
     color: var(--primario);
     display: inline-flex;
     align-items: center;
-    justify-content: left;
+    justify-content: flex-start;
     padding: 0;
     flex-shrink: 0;
-    -webkit-tap-highlight-color: transparent;
     transition: background-color 0.15s ease;
 }
 
@@ -176,14 +237,12 @@ header {
     justify-content: center;
     gap: 2px;
     height: 42px;
-    width: auto;
     padding: 0 12px;
     border-radius: 20px;
     background: var(--primario);
     color: var(--blanco);
     white-space: nowrap;
     flex-shrink: 0;
-    -webkit-tap-highlight-color: transparent;
 }
 
 .header-new-btn svg {
@@ -242,7 +301,6 @@ header {
     align-items: center;
     justify-content: center;
     padding: 0;
-    -webkit-tap-highlight-color: transparent;
 }
 
 .nav-drawer-links {
@@ -265,7 +323,6 @@ header {
     font-weight: 550;
     line-height: 1.3;
     transition: background-color 0.15s ease, color 0.15s ease;
-    -webkit-tap-highlight-color: transparent;
 }
 
 .nav-section-item:hover {
@@ -362,12 +419,6 @@ header {
     justify-content: center;
     padding: 0;
     flex-shrink: 0;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.nav-more-btn.is-active,
-.nav-more-btn:hover {
-    color: var(--primario);
 }
 
 .nav-currency-wrapper {
@@ -404,7 +455,6 @@ header {
 }
 
 .nav-theme-btn {
-    width: auto;
     min-width: 34px;
     height: 36px;
     padding: 0 8px;
@@ -451,12 +501,12 @@ header {
 }
 
 /* ==========================================
-   4. LAYOUT PRINCIPAL Y GESTOR FINANCIERO
+   5. LAYOUT PRINCIPAL Y GESTOR FINANCIERO
    ========================================== */
 main {
     max-width: 1120px;
     margin: calc(60px + env(safe-area-inset-top, 0px)) auto 28px;
-    padding: 0 20px;
+    padding: 0 30px;
 }
 
 .finance-stack {
@@ -549,7 +599,6 @@ main {
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     outline: none;
 }
@@ -658,15 +707,10 @@ main {
     margin-left: auto;
 }
 
-.dark-mode .view-mode-switch {
-    background: var(--tarjetas);
-}
-
 .view-mode-option {
-    width: auto;
     min-width: 34px;
     height: 40px;
-    padding: 0 8px 0 8px;
+    padding: 0 8px;
     border-radius: 25px;
     background: transparent;
     color: var(--texto);
@@ -707,11 +751,6 @@ main {
     background: var(--primario);
     color: var(--blanco);
     opacity: 1;
-}
-
-.dark-mode .view-mode-option.active {
-    background: var(--primario);
-    color: var(--blanco);
 }
 
 .view-mode-option.active .view-mode-label {
@@ -783,7 +822,6 @@ main {
 }
 
 .cat-top-type-btn {
-    width: auto;
     min-width: 34px;
     height: 36px;
     padding: 0 8px;
@@ -800,7 +838,6 @@ main {
     transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease, padding 0.2s ease;
     flex-shrink: 0;
     white-space: nowrap;
-    -webkit-tap-highlight-color: transparent;
 }
 
 .cat-top-type-btn svg {
@@ -841,7 +878,6 @@ main {
     justify-content: center;
     gap: 5px;
     height: 40px;
-    width: auto;
     padding: 0 16px;
     border-radius: 25px;
     background: var(--primario);
@@ -865,7 +901,6 @@ main {
     font-size: 14px;
     gap: 2px;
     height: 40px;
-    width: auto;
     padding: 0 16px;
     border-radius: 25px;
     background: var(--primario);
@@ -884,7 +919,7 @@ main {
 }
 
 /* ==========================================
-   5. BOTONES Y CONTROLES DE ACCIÓN
+   6. BOTONES Y CONTROLES DE ACCIÓN
    ========================================== */
 button {
     border: 0;
@@ -910,7 +945,7 @@ button.cancelarmovimiento {
     color: var(--texto);
     width: 97px;
     height: 42px;
-}   
+}
 
 .large-delete-button {
     width: 42px;
@@ -928,23 +963,6 @@ button.cancelarmovimiento {
     height: 20px;
     stroke: var(--blanco);
     stroke-width: 2px;
-}
-
-.editar-movimiento {
-    width: 34px;
-    height: 34px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    background: transparent;
-}
-
-.editar-movimiento svg {
-    color: var(--primario);
-    width: 20px;
-    height: 20px;
 }
 
 .edit-category-button {
@@ -981,8 +999,6 @@ button.cancelarmovimiento {
 }
 
 .editbutton-xs {
-    width: auto;
-    height: auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1001,14 +1017,6 @@ button.cancelarmovimiento {
     stroke: var(--blanco);
 }
 
-.dark-mode .editbutton-xs svg {
-    stroke: var(--primario);
-}
-
-.dark-mode .installment-purchase-card.is-open .editbutton-xs svg {
-    stroke: var(--blanco);
-}
-
 .chevron-icon {
     stroke: var(--texto);
 }
@@ -1017,29 +1025,7 @@ button.cancelarmovimiento {
     stroke: var(--blanco);
 }
 
-.dark-mode .chevron-icon {
-    stroke: var(--texto);
-}
-
-.editdaysbutton-xs {
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    border: 1px solid var(--primario);
-    background: transparent;
-}
-
-.editdaysbutton-xs svg {
-    width: 16px;
-    height: 16px;
-    stroke: var(--primario);
-    stroke-width: 1.5;
-}
-
-.copylastday-button{
+.copylastday-button {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -1052,29 +1038,7 @@ button.cancelarmovimiento {
     background-color: var(--primario);
 }
 
-
-.day-newbutton {
-    width: 55%;
-    align-self: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 3px;
-    padding: 12px;
-    border-radius: 25px;
-    font-weight: 650;
-    color: var(--blanco);
-    background-color: var(--primario);
-}
-
-.day-newbutton svg {
-    stroke-width: 3;
-    width: 16px;
-    height: 16px;
-}
-
 .category-newbutton {
-    width: auto;
     height: 42px;
     display: flex;
     justify-content: center;
@@ -1106,30 +1070,10 @@ button.cancelarmovimiento {
 }
 
 /* ==========================================
-   6. TABLA DE MOVIMIENTOS Y ESTADOS VACÍOS
+   7. TABLA DE MOVIMIENTOS Y ESTADOS VACÍOS
    ========================================== */
 .table-wrapper {
     max-height: 500px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-}
-
-.table-wrapper.is-scrolling {
-  scrollbar-color: var(--primario) transparent;
-}
-
-.table-wrapper::-webkit-scrollbar {
-  width: 6px;
-}
-
-.table-wrapper::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  border-radius: 9999px;
-}
-
-.table-wrapper.is-scrolling::-webkit-scrollbar-thumb {
-  background-color: var(--primario);
 }
 
 .table-wrapper thead th {
@@ -1151,11 +1095,11 @@ th {
     color: var(--primario);
     font-size: 12px;
     font-weight: 650;
-    padding: 16px 0px 8px 0px;
+    padding: 16px 0 8px 0;
 }
 
 td {
-    padding: 8px 8px;
+    padding: 8px;
     vertical-align: middle;
 }
 
@@ -1171,12 +1115,6 @@ tr:last-child td {
     font-weight: 700;
     white-space: nowrap;
     text-align: right;
-}
-
-.actions {
-    display: flex;
-    gap: 5px;
-    justify-content: center;
 }
 
 .movement-name-wrapper {
@@ -1239,43 +1177,6 @@ tr.no-border td {
     border-bottom: none !important;
 }
 
-tr.movement-row {
-    display: grid;
-    grid-template-columns: 52% 26% 22%;
-    align-items: center;
-    cursor: pointer;
-    border-radius: 14px;
-    transition: background-color 0.15s ease;
-}
-
-.movement-row td:first-child {
-    border-top-left-radius: 14px;
-    border-bottom-left-radius: 14px;
-}
-
-.movement-row td:last-child {
-    border-top-right-radius: 14px;
-    border-bottom-right-radius: 14px;
-}
-
-.empty {
-    text-align: center;
-    padding: 28px;
-    color: var(--texto);
-}
-
-.empty-compact {
-    padding: 15px;
-    text-align: center;
-    color: var(--texto);
-}
-
-.empty-mini {
-    padding: 20px 8px;
-    text-align: center;
-    color: var(--texto);
-}
-
 .finance-stack table,
 .finance-stack table thead,
 .finance-stack table tbody,
@@ -1292,6 +1193,22 @@ tr.movement-row {
     width: 100%;
 }
 
+tr.movement-row {
+    cursor: pointer;
+    border-radius: 14px;
+    transition: background-color 0.15s ease;
+}
+
+.movement-row td:first-child {
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+}
+
+.movement-row td:last-child {
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
+}
+
 .finance-stack table thead th:nth-child(2),
 .finance-stack table thead th:nth-child(3) {
     text-align: right;
@@ -1306,14 +1223,22 @@ tr.movement-row td:nth-child(4) {
     padding: 16px 8px 8px 8px;
 }
 
-tr.movement-row {
-    cursor: pointer;
-    border-radius: 14px;
-    transition: background-color 0.15s ease;
+.empty {
+    text-align: center;
+    padding: 28px;
+    color: var(--texto);
+}
+
+.empty-compact {
+    padding: 15px;
+}
+
+.empty-mini {
+    padding: 20px 8px;
 }
 
 /* ==========================================
-   7. GRÁFICO Y DESGLOSE POR CATEGORÍAS
+   8. GRÁFICO Y DESGLOSE POR CATEGORÍAS
    ========================================== */
 .cat-chart-container {
     display: flex;
@@ -1421,41 +1346,7 @@ tr.movement-row {
     flex-direction: column;
     gap: 5px;
     max-height: 250px;
-    overflow-y: auto;
     padding: 3px 5px;
-    -webkit-mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        #000 3px,
-        #000 calc(100% - 6px),
-        transparent 100%
-    );
-    mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        #000 3px,
-        #000 calc(100% - 6px),
-        transparent 100%
-    );
-    scrollbar-width: thin   ;
-    scrollbar-color: transparent transparent;
-}
-
-.cat-breakdown-list.is-scrolling {
-    scrollbar-color: var(--primario) transparent;
-}
-
-.cat-breakdown-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.cat-breakdown-list::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    border-radius: 9999px;
-}
-
-.cat-breakdown-list.is-scrolling::-webkit-scrollbar-thumb {
-    background-color: var(--primario);
 }
 
 .cat-breakdown-item {
@@ -1466,7 +1357,6 @@ tr.movement-row {
     border-radius: 14px;
     padding: 6px;
     transition: background-color 0.15s ease, outline-color 0.15s ease;
-    -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     user-select: none;
     touch-action: manipulation;
@@ -1483,7 +1373,8 @@ tr.movement-row {
     gap: 10px;
 }
 
-.category-icon-wrapper {
+.category-icon-wrapper,
+.editcategory-icon-wrapper {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1494,7 +1385,12 @@ tr.movement-row {
     flex-shrink: 0;
 }
 
-.category-icon-wrapper svg {
+.editcategory-icon-wrapper {
+    border-radius: 10px;
+}
+
+.category-icon-wrapper svg,
+.editcategory-icon-wrapper svg {
     width: 18px;
     height: 18px;
     stroke: var(--blanco);
@@ -1502,28 +1398,7 @@ tr.movement-row {
     flex-shrink: 0;
 }
 
-.category-icon-wrapper svg circle {
-    fill: var(--blanco);
-    stroke: none;
-}
-
-.editcategory-icon-wrapper {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    background: currentColor;
-    flex-shrink: 0;
-}
-
-.editcategory-icon-wrapper svg {
-    stroke: var(--blanco);
-    height: 18px;
-    width: 18px;
-}
-
+.category-icon-wrapper svg circle,
 .editcategory-icon-wrapper svg circle {
     fill: var(--blanco);
     stroke: none;
@@ -1567,7 +1442,7 @@ body.dark-mode .cat-percentage-badge {
 }
 
 /* ==========================================
-   8. UTILIDADES (REMESAS, CUOTAS Y DÍAS)
+   9. UTILIDADES (REMESAS, CUOTAS Y DÍAS)
    ========================================== */
 .card {
     background: var(--fondo);
@@ -1586,10 +1461,6 @@ body.dark-mode .cat-percentage-badge {
 .utilities-layout.single-utility-view {
     grid-template-columns: minmax(0, 1fr);
     margin-top: 0;
-}
-
-.utility-footer-action {
-    text-align: center;
 }
 
 /* Acordeones compartidos de utilidades */
@@ -1614,28 +1485,17 @@ body.dark-mode .cat-percentage-badge {
     font-weight: 650;
     border-radius: 20px;
     transition: background-color 0.2s ease, border-radius 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.dark-mode .installment-purchase-header {
-    background: var(--tarjetas);
-    border: 2px solid var(--tarjetas);
-}
-
-.dark-mode .installment-purchase-card.is-open .installment-purchase-header {
-    background-color: var(--primario);
-    border: 1px solid var(--primario);
 }
 
 .installment-purchase-card.is-open .installment-purchase-header {
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
     background: var(--primario);
     border: 2px solid var(--primario);
 }
 
-.installment-purchase-card.is-open .installment-installments-list-dias {
-    border-top: none;
+.dark-mode .installment-purchase-card.is-open .installment-purchase-header {
+    border: 1px solid var(--primario);
 }
 
 .installment-purchase-header .chevron-icon {
@@ -1650,15 +1510,8 @@ body.dark-mode .cat-percentage-badge {
     color: var(--primario);
 }
 
-.installment-purchase-card.is-open .installment-card-title {
-    color: var(--blanco);
-}
-
-.dark-mode .installment-card-title {
-    color: var(--primario);
-}
-
-.dark-mode .installment-purchase-card.is-open .installment-card-title {
+.installment-purchase-card.is-open .installment-card-title,
+.installment-purchase-card.is-open .installment-card-subtitle {
     color: var(--blanco);
 }
 
@@ -1669,12 +1522,7 @@ body.dark-mode .cat-percentage-badge {
     opacity: 0.8;
 }
 
-.installment-purchase-card.is-open .installment-card-subtitle {
-    color: var(--blanco);
-}
-
 .dark-mode .installment-card-subtitle {
-    color: var(--texto);
     opacity: 1;
 }
 
@@ -1688,7 +1536,6 @@ body.dark-mode .cat-percentage-badge {
     max-height: 700px;
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
-    
 }
 
 .dark-mode .installment-installments-list-remesas {
@@ -1736,15 +1583,6 @@ body.dark-mode .cat-percentage-badge {
     background: var(--tarjetas);
 }
 
-.remit-recv-input,
-.remit-comm-input {
-    background: var(--fondo);
-}
-
-.dark-mode .remit-recv-input {
-    background: var(--tarjetas);
-}
-
 .remit-items-wrapper {
     display: flex;
     flex-direction: column;
@@ -1761,10 +1599,6 @@ body.dark-mode .cat-percentage-badge {
     padding: 0;
 }
 
-.remit-item-row.is-last {
-    border-bottom: none;
-}
-
 .remit-item-concept {
     font-weight: 600;
     font-size: 14px;
@@ -1779,8 +1613,7 @@ body.dark-mode .cat-percentage-badge {
 
 .remit-new-row {
     display: flex;
-    margin-top: 12px;
-    margin-bottom: 12px;
+    margin: 12px 0;
     padding: 0 12px;
 }
 
@@ -1791,10 +1624,7 @@ body.dark-mode .cat-percentage-badge {
     padding: 6px 8px;
     background: var(--fondo);
     border: 1px solid var(--fondo);
-    border-top-left-radius: 16px;
-    border-bottom-left-radius: 16px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    border-radius: 16px 0 0 16px;
     color: var(--texto);
     font-size: 16px;
 }
@@ -1810,10 +1640,7 @@ body.dark-mode .cat-percentage-badge {
     font-weight: 500;
     height: 40px;
     padding: 6px 12px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;
+    border-radius: 0 16px 16px 0;
     cursor: pointer;
 }
 
@@ -1880,56 +1707,17 @@ body.dark-mode .cat-percentage-badge {
     border: 2px solid var(--tarjetas);
 }
 
-.dark-mode .installment-purchase-card.is-open .installment-scroll-shell {
-    display: block;
-    border: 1px solid var(--primario);   
-}
-
 .installment-purchase-card.is-open .installment-scroll-shell {
     display: block;
-    border: 1px solid var(--primario);   
+    border: 1px solid var(--primario);
 }
 
 .installment-installments-list-compras {
-    padding: 5px 10px 5px 0px;
+    padding: 5px 10px 5px 0;
     display: flex;
     flex-direction: column;
     gap: 16px;
     max-height: 620px;
-    overflow-y: auto;
-    -webkit-mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        #000 3px,
-        #000 calc(100% - 6px),
-        transparent 100%
-    );
-    mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        #000 3px,
-        #000 calc(100% - 6px),
-        transparent 100%
-    );
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-}
-
-.installment-installments-list-compras.is-scrolling {
-    scrollbar-color: var(--primario) transparent;
-}
-
-.installment-installments-list-compras::-webkit-scrollbar {
-    width: 6px;
-}
-
-.installment-installments-list-compras::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    border-radius: 9999px;
-}
-
-.installment-installments-list-compras.is-scrolling::-webkit-scrollbar-thumb {
-    background-color: var(--primario);
 }
 
 .installment-row {
@@ -1956,138 +1744,8 @@ body.dark-mode .cat-percentage-badge {
     accent-color: var(--ingresos-font-card);
 }
 
-/* Días trabajados */
-.installment-installments-list-dias {
-    padding: 15px 10px 20px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 700px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    border: 1px solid var(--primario);
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
-    background: var(--fondo);
-}
-
-.installment-purchase-card.is-open .installment-installments-list-dias {
-    border: 1px solid var(--primario);
-}
-
-.dark-mode .installment-installments-list-dias {
-    border: 2px solid var(--tarjetas);
-}
-
-.dark-mode .installment-purchase-card.is-open .installment-installments-list-dias {
-    border: 1px solid var(--primario);
-}
-
-.dc-days-wrapper {
-    padding: 5px 10px 5px 0px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 7px;
-    max-height: 500px;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    -webkit-mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        #000 3px,
-        #000 calc(100% - 6px),
-        transparent 100%
-    );
-    mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        #000 3px,
-        #000 calc(100% - 6px),
-        transparent 100%
-    );
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-}
-
-.dc-days-wrapper.is-scrolling {
-    scrollbar-color: var(--primario) transparent;
-}
-
-.dc-days-wrapper::-webkit-scrollbar {
-    width: 6px;
-}
-
-.dc-days-wrapper::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    border-radius: 9999px;
-}
-
-.dc-days-wrapper.is-scrolling::-webkit-scrollbar-thumb {
-    background-color: var(--primario);
-}
-
-.dc-day-row {
-    display: grid;
-    grid-template-columns: 80px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 6px;
-    padding: 12px 15px;
-    background: var(--tarjetas);
-    border-radius: 10px;
-    font-size: 14px;
-}
-
-.dc-day-left {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-}
-
-.dc-day-middle {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    text-align: left;
-    min-width: 0;
-}
-
-.dc-day-loc {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--primario);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.dc-day-name {
-    font-weight: 700;
-    font-size: 14px;
-    color: var(--primario);
-}
-
-.dc-day-date {
-    font-size: 13px;
-    font-weight: 550;
-    color: var(--texto);
-}
-
-.dc-day-time {
-    font-size: 13px;
-    font-weight: 550;
-    color: var(--texto);
-}
-
-.dc-day-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
 /* ==========================================
-   9. MODALES, FORMULARIOS Y FILTROS
+   10. MODALES, FORMULARIOS Y FILTROS
    ========================================== */
 dialog {
     border: 0;
@@ -2558,15 +2216,9 @@ body.dark-mode .filter-cal-day.is-in-week {
 }
 
 /* Gestión de Categorías (Modales) */
-.categories-add-row {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 15px;
-}
-
 .contenedor-lista-categorias {
     display: block;
-    padding: 0px 5px 0px 10px;
+    padding: 0 5px 0 10px;
     border-radius: 25px;
 }
 
@@ -2574,41 +2226,7 @@ body.dark-mode .filter-cal-day.is-in-week {
     position: relative;
     scroll-behavior: smooth;
     max-height: 400px;
-    overflow-y: auto;
-    padding: 0px 5px 0px 0px;
-    -webkit-mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        #000 3px,
-        #000 calc(100% - 6px),
-        transparent 100%
-    );
-    mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        #000 3px,
-        #000 calc(100% - 6px),
-        transparent 100%
-    );
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-}
-
-.category-manager-list.is-scrolling {
-    scrollbar-color: var(--primario) transparent;
-}
-
-.category-manager-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.category-manager-list::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    border-radius: 9999px;
-}
-
-.category-manager-list.is-scrolling::-webkit-scrollbar-thumb {
-    background-color: var(--primario);
+    padding: 0 5px 0 0;
 }
 
 .category-item-row {
@@ -2685,23 +2303,6 @@ body.dark-mode .filter-cal-day.is-in-week {
 .detail-modal {
     text-align: center;
     padding: 0 !important;
-}
-
-.detail-modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 20px 24px 16px 24px;
-    border-bottom: 1px solid var(--fondo);
-}
-
-.detail-modal-header h2 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 650;
-    color: var(--texto);
-    text-align: left;
 }
 
 .detail-edit-btn {
@@ -2813,8 +2414,365 @@ body.dark-mode .filter-cal-day.is-in-week {
     accent-color: var(--primario);
 }
 
+/* =========================================================
+   11. DÍAS TRABAJADOS (VISTA CALENDARIO MENSUAL)
+   ========================================================= */
+.dc-section-shell {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.dc-cal-card,
+.dc-detail-card {
+    background: var(--tarjetas);
+    border: none;
+    border-radius: 22px;
+    padding: 20px;
+}
+
+.dc-cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 4px;
+    margin-bottom: 20px;
+}
+
+.dc-cal-title-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.dc-cal-title-row {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.dc-cal-month-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primario);
+    line-height: 1.2;
+}
+
+.dc-gear-btn {
+    background: transparent;
+    border: none;
+    padding: 3px;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primario);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.15s ease;
+}
+
+.dc-gear-btn:hover,
+.dc-gear-btn:active {
+    background-color: var(--tarjetas);
+}
+
+.dc-extra-toggle {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    padding: 4px;
+    border-radius: 15px;
+    background: var(--fondo);
+}
+
+.dc-extra-btn {
+    height: 40px;
+    border-radius: 11px;
+    background: transparent;
+    color: var(--texto);
+    font-size: 14px;
+    font-weight: 650;
+    opacity: 0.72;
+    transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+.dc-extra-btn.active {
+    background: var(--primario);
+    color: var(--blanco);
+    opacity: 1;
+}
+
+#targetDaysFieldGroup.is-disabled {
+    opacity: 0.45;
+}
+
+#targetDaysFieldGroup.is-disabled input {
+    cursor: not-allowed;
+}
+
+.dc-cal-stats {
+    font-size: 0.84rem;
+    font-weight: 450;
+    color: var(--texto);
+    opacity: 0.5;
+}
+
+.dc-cal-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.dc-nav-circle-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--primario);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.12s ease, opacity 0.15s ease;
+}
+
+.dc-nav-circle-btn:active {
+    transform: scale(0.94);
+    opacity: 0.9;
+}
+
+.dc-weekdays-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    padding-bottom: 8px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--calendarline);
+}
+
+.dc-weekday-cell {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--texto);
+    opacity: 0.5;
+    padding: 2px 0;
+}
+
+.dc-weekday-cell.is-sunday {
+    color: var(--red);
+    opacity: 1;
+}
+
+.dc-weeks-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.dc-week-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 6px 2px;
+    border-bottom: 1px solid var(--calendarline);
+}
+
+.dc-week-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.dc-week-row.is-first-week {
+    background: transparent;
+    padding: 4px 2px 6px;
+}
+
+.dc-day-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 2px 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.dc-week-row:last-child .dc-day-cell:not(.is-empty) {
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--calendarline);
+    border-radius: 0;
+}
+
+.dc-day-cell.is-empty {
+    pointer-events: none;
+}
+
+.dc-day-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--texto);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dc-day-cell.is-sunday .dc-day-num {
+    color: var(--red);
+}
+
+.dc-day-cell.is-today:not(.is-selected) .dc-day-num {
+    box-shadow: inset 0 0 0 1.5px var(--primario);
+}
+
+.dc-day-cell.is-selected .dc-day-num {
+    background: var(--primario);
+    color: var(--blanco) !important;
+}
+
+.dc-day-bar {
+    width: 22px;
+    height: 3.5px;
+    border-radius: 99px;
+    background: transparent;
+}
+
+.dc-day-cell.has-shift .dc-day-bar {
+    background: var(--primario);
+}
+
+.dc-selected-card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dc-detail-card {
+    padding: 12px;
+}
+
+.dc-shift-detail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--fondo);
+    border-radius: 14px;
+    padding: 12px 14px;
+}
+
+.dc-shift-detail-row + .dc-shift-detail-row {
+    margin-top: 8px;
+}
+
+.dc-shift-left {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    min-width: 0;
+}
+
+.dc-shift-accent-bar {
+    width: 5px;
+    height: 35px;
+    border-radius: 99px;
+    background: var(--primario);
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.dc-shift-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.dc-shift-location {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--texto);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dc-shift-date-sub {
+    font-size: 0.8rem;
+    color: var(--texto);
+    opacity: 0.5;
+    margin-top: -1px;
+}
+
+.dc-shift-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.dc-shift-times {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.dc-time-entry {
+    color: var(--texto);
+}
+
+.dc-time-exit {
+    color: var(--texto);
+    opacity: 0.5;
+}
+
+.dc-shift-edit-btn {
+    background: transparent;
+    border: none;
+    padding: 6px;
+    color: var(--primario);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.dc-shift-edit-btn:active {
+    background: var(--fondo);
+}
+
+.dc-empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--fondo);
+    min-height: 68px;
+    border-radius: 14px;
+    padding: 14px 12px;
+    font-size: 0.86rem;
+    color: var(--texto);
+    opacity: 0.7;
+}
+
 /* ==========================================
-   10. RESPONSIVE DESIGN
+   12. RESPONSIVE DESIGN
    ========================================== */
 @media (min-width: 761px) {
     .finance-panels-row {
@@ -2824,54 +2782,48 @@ body.dark-mode .filter-cal-day.is-in-week {
         align-items: start;
     }
 
-    .finance-panels-row .view-mode-switch {
+    .view-mode-switch {
         display: none;
     }
 
-    .view-mode-switch {
-    display: none;
-    }
-
     .finance-panels-row #movementsCard,
-    .finance-panels-row #categoriesCard {
-        display: flex !important;
-    }
-
+    .finance-panels-row #categoriesCard,
     .finance-panels-row #categoriesCard.is-hidden {
         display: flex !important;
     }
 
     .finance-panels-row #movementsContainer.is-hidden,
-    .finance-panels-row #categoriesContainer.is-hidden,
-    .finance-panels-row #catTopTypeSwitch.is-hidden,
-    .finance-panels-row #editCategoriesBtn.is-hidden,
-    .finance-panels-row #addBtn.is-hidden {
+    .finance-panels-row #categoriesContainer.is-hidden {
         display: revert !important;
     }
 
-    .finance-panels-row #catTopTypeSwitch.is-hidden {
-        display: inline-flex !important;
-    }
-
+    .finance-panels-row #catTopTypeSwitch.is-hidden,
     .finance-panels-row #editCategoriesBtn.is-hidden,
     .finance-panels-row #addBtn.is-hidden {
         display: inline-flex !important;
     }
 
-    /* columna movimiento */
     .finance-stack table th:nth-child(1),
-    .finance-stack table td:nth-child(1) { /*width: 52%;*/ font-size: 15px; font-weight: 650; }
-
-    /* columna categorias */
+    .finance-stack table td:nth-child(1),
     .finance-stack table th:nth-child(2),
-    .finance-stack table td:nth-child(2) { /*width: 26%;*/ text-align: right; font-size: 15px; font-weight: 650;  }
-
-    /* columna importe*/
+    .finance-stack table td:nth-child(2),
     .finance-stack table th:nth-child(3),
-    .finance-stack table td:nth-child(3) { /*width: 22%;*/ text-align: right; font-size: 15px; font-weight: 650; }
+    .finance-stack table td:nth-child(3) {
+        font-size: 15px;
+        font-weight: 650;
+    }
+
+    .finance-stack table th:nth-child(2),
+    .finance-stack table td:nth-child(2),
+    .finance-stack table th:nth-child(3),
+    .finance-stack table td:nth-child(3) {
+        text-align: right;
+    }
 
     .finance-stack table th:nth-child(4),
-    .finance-stack table td:nth-child(4) { display: none; }
+    .finance-stack table td:nth-child(4) {
+        display: none;
+    }
 }
 
 @media (max-width: 760px) {
@@ -2884,14 +2836,7 @@ body.dark-mode .filter-cal-day.is-in-week {
         line-height: 1.25;
     }
 
-    .header-content { padding: 0 20px; }
-
-    .nav-drawer {
-        width: min(340px, 85vw);
-    }
-
     .nav-currency-select {
-        height: 44px;
         font-size: 13px;
     }
 
@@ -2901,7 +2846,7 @@ body.dark-mode .filter-cal-day.is-in-week {
     }
 
     .finance-subcard {
-        padding: 15px 15px;
+        padding: 15px;
         border-radius: 25px;
     }
 
@@ -2915,11 +2860,6 @@ body.dark-mode .filter-cal-day.is-in-week {
     .finance-controls-row {
         padding: 12px 0 0 0;
         gap: 8px;
-        background: var(--fondo);
-    }
-
-    .view-mode-option .view-mode-label {
-        font-size: 14px;
     }
 
     .finance-view-title {
@@ -2928,18 +2868,6 @@ body.dark-mode .filter-cal-day.is-in-week {
 
     .finance-active-filter-caption {
         font-size: 12px;
-    }
-
-    .filter-date-tabs {
-        grid-template-columns: repeat(5, 1fr);
-    }
-
-    .finance-view-actions {
-        gap: 2px;
-    }
-
-    .cat-top-type-btn .cat-top-type-label {
-        font-size: 14px;
     }
 
     .edit-cats-pill-btn {
@@ -2962,16 +2890,14 @@ body.dark-mode .filter-cal-day.is-in-week {
         width: 100%;
     }
 
-    .finance-stack table thead { display: none; }
+    .finance-stack table thead {
+        display: none;
+    }
 
     tr.movement-row {
-        display: grid;
         grid-template-columns: 1fr auto;
-        align-items: center;
         gap: 12px;
         padding: 10px 16px 10px 10px;
-        cursor: pointer;
-        transition: background-color 0.15s ease;
     }
 
     tr.date-header-row td {
@@ -3006,8 +2932,6 @@ body.dark-mode .filter-cal-day.is-in-week {
 
     .table-wrapper {
         margin-top: 18px;
-        max-height: 500px;
-        overflow-y: auto;
         -webkit-mask-image: linear-gradient(
             to bottom,
             transparent 0%,
@@ -3026,9 +2950,7 @@ body.dark-mode .filter-cal-day.is-in-week {
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .cat-breakdown-item:hover {
-        background: var(--fondo);
-    }
+    .cat-breakdown-item:hover,
     tr.movement-row:hover {
         background-color: var(--fondo);
     }
