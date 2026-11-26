@@ -2898,11 +2898,11 @@ body.dark-mode .filter-cal-day.is-in-week {
 .dc-place-summary-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 4px;
 }
 
 .dc-place-summary-grid.is-four-items {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 25% 25% 20% 26%;
 }
 
 .dc-place-metric {

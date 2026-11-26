@@ -319,7 +319,7 @@ function renderHoursInfoModalContent() {
             </div>
             <div class="dc-place-summary-grid">
                 <div class="dc-place-metric">
-                    <span class="dc-place-metric-label">Total ganado</span>
+                    <span class="dc-place-metric-label">Total bruto</span>
                     <span class="dc-place-metric-val">${formatMoney(summary.totalEarnings)}</span>
                 </div>
                 <div class="dc-place-metric">
@@ -327,7 +327,7 @@ function renderHoursInfoModalContent() {
                     <span class="dc-place-metric-val ${summary.irpfAmount > 0 ? 'is-expense' : ''}">${irpfValueStr}</span>
                 </div>
                 <div class="dc-place-metric">
-                    <span class="dc-place-metric-label">Total neto</span>
+                    <span class="dc-place-metric-label">Total estimado</span>
                     <span class="dc-place-metric-val is-money">${formatMoney(summary.netEarnings)}</span>
                 </div>
             </div>
