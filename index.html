@@ -826,6 +826,13 @@
                     <label for="dcWorkPlaceRateInput" id="dcWorkPlaceRateLabel">Pago por hora (opcional)</label>
                     <input id="dcWorkPlaceRateInput" type="text" inputmode="decimal" placeholder="Sin tarifa">
                 </div>
+                <div class="field full">
+                    <span class="filter-section-label">Aplicar plus nocturnidad</span>
+                    <div class="dc-extra-toggle" role="group" aria-label="Aplicar plus nocturnidad">
+                        <button type="button" class="dc-extra-btn active" data-place-opt="applyNightSurcharge" data-val="yes">Sí</button>
+                        <button type="button" class="dc-extra-btn" data-place-opt="applyNightSurcharge" data-val="no">No</button>
+                    </div>
+                </div>
             </div>
             <div class="modal-actions modal-actions-split" id="dcPlaceModalActionsSplit" style="display: none;">
                 <button type="button" class="large-delete-button" id="deleteWorkPlaceBtn" title="Eliminar lugar" aria-label="Eliminar lugar">
@@ -848,19 +855,23 @@
         <form class="modal" id="dayCounterDayForm">
             <h2 id="dayDlgTitle">Registrar día</h2>
             <div class="formgrid">
-                <div class="field full" id="copyPreviousDayWrapper" style="display: none;">
-                    <button type="button" class="copylastday-button" id="copyPreviousDayBtn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4v5h-5M3 20v-5h5"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L21 9M20.49 15a9 9 0 0 1-14.85 3.36L3 15"/><rect x="8.5" y="8" width="7" height="8" rx="2"/><circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/></svg>
-                        Copiar el último turno
-                    </button>
+                <div class="field">
+                    <label for="dayNameDisplay">Día</label>
+                    <input id="dayNameDisplay" readonly type="text" class="input-readonly" placeholder="Automático">
                 </div>
                 <div class="field">
                     <label for="dayDate">Fecha</label>
                     <input id="dayDate" type="date">
                 </div>
-                <div class="field">
-                    <label for="dayNameDisplay">Día</label>
-                    <input id="dayNameDisplay" readonly type="text" class="input-readonly" placeholder="Automático">
+                <div class="field full">
+                    <label for="dayLocationSelect">Lugar</label>
+                    <div class="dc-location-input-row">
+                        <select id="dayLocationSelect" class="is-hidden"></select>
+                        <input id="dayLocation" placeholder="Ej. Parking Azuaga">
+                        <button type="button" class="dc-open-settings-inline-btn" id="openPlacesSettingsFromDayBtn" title="Ajustes de lugares y tarifas" aria-label="Ajustes de lugares y tarifas">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19.5V5a2.5 2.5 0 0 1 2.5-2.5H19v19H7.5A2.5 2.5 0 0 1 5 19.5zm0 0A2.5 2.5 0 0 1 7.5 17H19"/><path d="M12 13.5s3.5-2.6 3.5-5.3a3.5 3.5 0 1 0-7 0c0 2.7 3.5 5.3 3.5 5.3z"/><circle cx="12" cy="8.2" r="1" fill="currentColor" stroke="none"/></svg>
+                        </button>
+                    </div>
                 </div>
                 <div class="field">
                     <label for="dayEntryTime">Hora de entrada</label>
@@ -869,11 +880,6 @@
                 <div class="field">
                     <label for="dayExitTime">Hora de salida</label>
                     <input id="dayExitTime" type="time">
-                </div>
-                <div class="field full">
-                    <label for="dayLocationSelect">Lugar</label>
-                    <select id="dayLocationSelect" class="is-hidden"></select>
-                    <input id="dayLocation" placeholder="Ej. Parking Azuaga">
                 </div>
             </div>
             <div class="modal-actions modal-actions-split" id="dayModalActionsSplit">
@@ -885,9 +891,16 @@
                     <button class="aceptarmovimiento" type="submit">Guardar</button>
                 </div>
             </div>
-            <div class="modal-actions" id="dayModalActionsNormal" style="display: none;">
-                <button type="button" class="cancelarmovimiento" id="cancelDayCounterDayNormal">Cancelar</button>
-                <button class="aceptarmovimiento" type="submit">Guardar</button>
+            <div class="modal-actions modal-actions-split" id="dayModalActionsNormal" style="display: none;">
+                <div>
+                    <button type="button" class="copylastday-button" id="copyPreviousDayBtn" title="Copiar datos del último turno" aria-label="Copiar datos del último turno">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4v5h-5M3 20v-5h5"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L21 9M20.49 15a9 9 0 0 1-14.85 3.36L3 15"/><rect x="8.5" y="8" width="7" height="8" rx="2"/><circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/></svg>
+                    </button>
+                </div>
+                <div class="flex-center-gap">
+                    <button type="button" class="cancelarmovimiento" id="cancelDayCounterDayNormal">Cancelar</button>
+                    <button class="aceptarmovimiento" type="submit">Guardar</button>
+                </div>
             </div>
         </form>
     </dialog>

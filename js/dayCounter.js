@@ -218,20 +218,31 @@ function calculateMonthHoursSummary(days = []) {
     const placesMap = new Map();
 
     days.forEach((shift) => {
-        const breakdown = calculateShiftHoursBreakdown(shift.entryTime, shift.exitTime);
-        normalMinutes += breakdown.normalMinutes;
-        nightMinutes += breakdown.nightMinutes;
-        totalMinutes += breakdown.totalMinutes;
+        const rawBreakdown = calculateShiftHoursBreakdown(shift.entryTime, shift.exitTime);
 
         const displayLoc = (shift.location || 'Sin especificar').trim();
         const groupKey = displayLoc.toLowerCase();
         const configuredPlace = findWorkPlaceByName(displayLoc);
         const hourlyRate = configuredPlace && configuredPlace.hourlyRate > 0 ? configuredPlace.hourlyRate : null;
+        const appliesNight = configuredPlace ? configuredPlace.applyNightSurcharge !== false : true;
+
+        const breakdown = appliesNight
+            ? rawBreakdown
+            : {
+                normalMinutes: rawBreakdown.totalMinutes,
+                nightMinutes: 0,
+                totalMinutes: rawBreakdown.totalMinutes
+            };
+
+        normalMinutes += breakdown.normalMinutes;
+        nightMinutes += breakdown.nightMinutes;
+        totalMinutes += breakdown.totalMinutes;
 
         if (!placesMap.has(groupKey)) {
             placesMap.set(groupKey, {
                 name: configuredPlace ? configuredPlace.name : displayLoc,
                 hourlyRate,
+                appliesNight,
                 normalMinutes: 0,
                 nightMinutes: 0,
                 totalMinutes: 0,
@@ -338,6 +349,9 @@ function renderHoursInfoModalContent() {
         const rateLabel = place.hourlyRate !== null
             ? `${formatMoney(place.hourlyRate)}/h`
             : 'Sin tarifa';
+        const nightDisplay = place.appliesNight !== false
+            ? formatHoursDuration(place.nightMinutes)
+            : 'No aplica';
         const earningsDisplay = place.earnings !== null
             ? `<span class="dc-place-metric-val is-money">${formatMoney(place.earnings)}</span>`
             : `<span class="dc-place-metric-val">—</span>`;
@@ -355,7 +369,7 @@ function renderHoursInfoModalContent() {
                     </div>
                     <div class="dc-place-metric">
                         <span class="dc-place-metric-label">Nocturnas</span>
-                        <span class="dc-place-metric-val">${formatHoursDuration(place.nightMinutes)}</span>
+                        <span class="dc-place-metric-val">${nightDisplay}</span>
                     </div>
                     <div class="dc-place-metric">
                         <span class="dc-place-metric-label">Total</span>
@@ -376,7 +390,7 @@ function renderHoursInfoModalContent() {
             <div class="dc-breakdown-section-label is-second">Por lugar:</div>
             ${cardsHtml}
         </div>
-        <p class="dc-hours-note">Nocturnas: 10:00 PM a 6:00 AM (+${summary.surchargePercent}%).</p>
+        <p class="dc-hours-note">Nocturnidad: 10:00 PM a 6:00 AM (+${summary.surchargePercent}%).</p>
     `;
 }
 
@@ -402,9 +416,11 @@ function renderDraftWorkPlacesList() {
     }
 
     listEl.innerHTML = draftWorkPlaces.map((place, idx) => {
-        const rateText = place.hourlyRate !== null && place.hourlyRate > 0
-            ? `${formatMoney(place.hourlyRate)} / hora`
-            : 'Sin pago por hora configurado';
+        const hasRate = place.hourlyRate !== null && place.hourlyRate > 0;
+        const appliesNight = place.applyNightSurcharge !== false;
+        const rateText = hasRate
+            ? `${formatMoney(place.hourlyRate)} / hora • ${appliesNight ? 'Con nocturnidad' : 'Sin nocturnidad'}`
+            : `Sin tarifa • ${appliesNight ? 'Con nocturnidad' : 'Sin nocturnidad'}`;
 
         return `
             <div class="dc-place-row">
@@ -437,6 +453,18 @@ export function openDayCounterSettingsModal() {
     openModal($('dayCounterSettingsDlg'));
 }   
 
+function setPlaceToggleState(enabled) {
+    $('dcWorkPlaceEditForm')?.querySelectorAll('[data-place-opt="applyNightSurcharge"]').forEach((btn) => {
+        const isActive = (btn.dataset.val === 'yes') === enabled;
+        btn.classList.toggle('active', isActive);
+    });
+}
+
+function getPlaceToggleState() {
+    const activeBtn = $('dcWorkPlaceEditForm')?.querySelector('[data-place-opt="applyNightSurcharge"].active');
+    return activeBtn ? activeBtn.dataset.val === 'yes' : true;
+}
+
 function openWorkPlaceFormModal(placeIndex = null) {
     editingWorkPlaceIndex = placeIndex;
     clearValidationErrors($('dcWorkPlaceEditForm'));
@@ -454,12 +482,14 @@ function openWorkPlaceFormModal(placeIndex = null) {
         $('dcWorkPlaceRateInput').value = place.hourlyRate !== null && place.hourlyRate > 0
             ? formatPlainInputValue(place.hourlyRate, state.appConfig.currency)
             : '';
+        setPlaceToggleState(place.applyNightSurcharge !== false);
         $('dcPlaceModalActionsSplit').style.display = 'flex';
         $('dcPlaceModalActionsNormal').style.display = 'none';
     } else {
         $('dcWorkPlaceDlgTitle').textContent = 'Nuevo lugar';
         $('dcWorkPlaceNameInput').value = '';
         $('dcWorkPlaceRateInput').value = '';
+        setPlaceToggleState(true);
         $('dcPlaceModalActionsSplit').style.display = 'none';
         $('dcPlaceModalActionsNormal').style.display = 'flex';
     }
@@ -594,7 +624,7 @@ export function renderDayCounter() {
         if (showHours && hoursSummary) {
             rows.push(`
                 <div class="dc-cal-stats-row">
-                    <span class="dc-cal-stats">Horas: ${formatHoursDuration(hoursSummary.totalMinutes)}</span>
+                    <span class="dc-cal-stats">Total horas: ${formatHoursDuration(hoursSummary.totalMinutes)}</span>
                     <button type="button" class="dc-info-btn" data-action="open-hours-info" title="Ver desglose de horas" aria-label="Ver desglose de horas">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                     </button>
@@ -751,7 +781,7 @@ function openDayCounterDayModal(monthId, dayIndex = null, prefillDate = null) {
     clearValidationErrors($('dayCounterDayForm'));
 
     const isEditing = dayIndex !== null && month?.days[dayIndex];
-    const copyWrapper = $('copyPreviousDayWrapper');
+    const copyBtn = $('copyPreviousDayBtn');
 
     if (isEditing) {
         const day = month.days[dayIndex];
@@ -762,7 +792,7 @@ function openDayCounterDayModal(monthId, dayIndex = null, prefillDate = null) {
         $('dayExitTime').value = day.exitTime;
         setupLocationFieldForModal(day.location);
 
-        if (copyWrapper) copyWrapper.style.display = 'none';
+        if (copyBtn) copyBtn.style.display = 'none';
         $('dayModalActionsSplit').style.display = 'flex';
         $('dayModalActionsNormal').style.display = 'none';
     } else {
@@ -775,7 +805,7 @@ function openDayCounterDayModal(monthId, dayIndex = null, prefillDate = null) {
         setupLocationFieldForModal('');
 
         const hasAnyPreviousShift = state.dayCounterMonths.some(rec => rec.days?.length > 0);
-        if (copyWrapper) copyWrapper.style.display = hasAnyPreviousShift ? 'block' : 'none';
+        if (copyBtn) copyBtn.style.display = hasAnyPreviousShift ? 'inline-flex' : 'none';
         $('dayModalActionsSplit').style.display = 'none';
         $('dayModalActionsNormal').style.display = 'flex';
     }
@@ -831,6 +861,11 @@ export function initDayCounter() {
     /* Modal de desglose de horas (pestañas General / Por lugar) */
     $('closeHoursInfoBtn')?.addEventListener('click', () => closeModal($('dayCounterHoursInfoDlg')));
 
+    /* Abrir ajustes de lugares directamente desde Nuevo / Editar turno */
+    $('openPlacesSettingsFromDayBtn')?.addEventListener('click', () => {
+        openDayCounterSettingsModal();
+    });
+
     /* Modal de configuración general de Turnos trabajados */
     $('openNewWorkPlaceBtn')?.addEventListener('click', () => openWorkPlaceFormModal(null));
     $('dcWorkPlacesList')?.addEventListener('click', (e) => {
@@ -868,6 +903,16 @@ export function initDayCounter() {
 
         persistConfigRaw();
         closeModal($('dayCounterSettingsDlg'));
+
+        if ($('dayCounterDayDlg')?.open) {
+            const locSelect = $('dayLocationSelect');
+            const locInput = $('dayLocation');
+            const currentLoc = (locSelect && !locSelect.classList.contains('is-hidden') && locSelect.value !== CUSTOM_LOCATION_VALUE)
+                ? locSelect.value
+                : locInput?.value || '';
+            setupLocationFieldForModal(currentLoc);
+        }
+
         renderDayCounter();
     });
 
@@ -875,6 +920,13 @@ export function initDayCounter() {
     const closeWorkPlaceModal = () => closeModal($('dcWorkPlaceEditDlg'));
     $('cancelWorkPlaceBtn')?.addEventListener('click', closeWorkPlaceModal);
     $('cancelWorkPlaceBtnSplit')?.addEventListener('click', closeWorkPlaceModal);
+
+    /* Botones Sí/No de nocturnidad en el modal de lugar */
+    $('dcWorkPlaceEditForm')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-place-opt="applyNightSurcharge"]');
+        if (!btn) return;
+        setPlaceToggleState(btn.dataset.val === 'yes');
+    });
 
     $('deleteWorkPlaceBtn')?.addEventListener('click', () => {
         if (editingWorkPlaceIndex === null) return;
@@ -919,7 +971,8 @@ export function initDayCounter() {
                 ? draftWorkPlaces[editingWorkPlaceIndex].id
                 : crypto.randomUUID(),
             name: cleanName,
-            hourlyRate
+            hourlyRate,
+            applyNightSurcharge: getPlaceToggleState()
         };
 
         if (editingWorkPlaceIndex !== null) {

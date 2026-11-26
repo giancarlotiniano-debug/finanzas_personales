@@ -1026,16 +1026,16 @@ button.cancelarmovimiento {
 }
 
 .copylastday-button {
-    width: 100%;
-    display: flex;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 16px;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    padding: 12px;
-    border-radius: 25px;
-    font-weight: 650;
     color: var(--blanco);
     background-color: var(--primario);
+    flex-shrink: 0;
 }
 
 .category-newbutton {
@@ -3000,6 +3000,43 @@ body.dark-mode .filter-cal-day.is-in-week {
 
 .dc-place-metric-val.is-expense {
     color: var(--gastos-font-card);
+}
+
+.dc-location-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.dc-location-input-row select,
+.dc-location-input-row input {
+    flex: 1 1 90%;
+    min-width: 0;
+}
+
+.dc-open-settings-inline-btn {
+    flex: 0 0 54px;
+    width: 54px;
+    height: 54px;
+    border-radius: 15px;
+    background: var(--primario);
+    color: var(--blanco);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dc-open-settings-inline-btn svg {
+    height: 30px;
+    width: 30px;
+}
+
+.dc-open-settings-inline-btn:hover {
+    background: var(--primario);
+    color: var(--blanco);
 }
 
 /* ==========================================
