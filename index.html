@@ -717,22 +717,38 @@
         </form>
     </dialog>
 
-    <!-- Modal: Configurar Días Objetivo -->
-    <!-- Modal: Configurar Días Objetivo -->
+     <!-- Modal: Configurar Vista y Objetivo del Mes -->
     <dialog id="dayCounterTargetDlg">
         <form class="modal" id="dayCounterTargetForm">
-            <h2 id="targetDlgTitle">Objetivo</h2>
+            <h2 id="targetDlgTitle">Configuración del mes</h2>
             <div class="formgrid">
                 <div class="field full">
-                    <span class="filter-section-label">¿Registrar días extras?</span>
-                    <div class="dc-extra-toggle" role="group" aria-label="¿Registrar días extras?">
-                        <button type="button" class="dc-extra-btn" data-register-extras="yes">Sí</button>
-                        <button type="button" class="dc-extra-btn active" data-register-extras="no">No</button>
+                    <span class="filter-section-label">Mostrar días trabajados</span>
+                    <div class="dc-extra-toggle" role="group" aria-label="Mostrar días trabajados">
+                        <button type="button" class="dc-extra-btn active" data-dc-opt="showWorkedDays" data-val="yes">Sí</button>
+                        <button type="button" class="dc-extra-btn" data-dc-opt="showWorkedDays" data-val="no">No</button>
                     </div>
                 </div>
-                <div class="field full" id="targetDaysFieldGroup">
+
+                <div class="field full">
+                    <span class="filter-section-label">Mostrar días extras</span>
+                    <div class="dc-extra-toggle" role="group" aria-label="Mostrar días extras">
+                        <button type="button" class="dc-extra-btn" data-dc-opt="registerExtras" data-val="yes">Sí</button>
+                        <button type="button" class="dc-extra-btn active" data-dc-opt="registerExtras" data-val="no">No</button>
+                    </div>
+                </div>
+
+                <div class="field full is-hidden" id="targetDaysFieldGroup">
                     <label for="monthTargetDaysInput">Turnos obligatorios</label>
                     <input type="number" id="monthTargetDaysInput" min="0" max="31" placeholder="0">
+                </div>
+
+                <div class="field full">
+                    <span class="filter-section-label">Mostrar horas trabajadas</span>
+                    <div class="dc-extra-toggle" role="group" aria-label="Mostrar horas trabajadas">
+                        <button type="button" class="dc-extra-btn" data-dc-opt="showHours" data-val="yes">Sí</button>
+                        <button type="button" class="dc-extra-btn active" data-dc-opt="showHours" data-val="no">No</button>
+                    </div>
                 </div>
             </div>
             <div class="modal-actions">
@@ -740,6 +756,19 @@
                 <button class="aceptarmovimiento" type="submit">Guardar</button>
             </div>
         </form>
+    </dialog>
+
+    <!-- Modal: Desglose de Horas Trabajadas -->
+    <dialog id="dayCounterHoursInfoDlg">
+        <div class="modal detail-modal">
+            <div class="detail-modal-body">
+                <p id="hoursInfoMonthTitle" class="detail-concept-title">Horas del mes</p>
+                <div id="hoursInfoContent"></div>
+                <div class="modal-actions">
+                    <button type="button" id="closeHoursInfoBtn" class="aceptarmovimiento">Aceptar</button>
+                </div>
+            </div>
+        </div>
     </dialog>
 
     <!-- Modal: Registrar / Editar Día Trabajado -->

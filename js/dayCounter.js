@@ -28,7 +28,7 @@ function parseKeyFromMonthName(name) {
     return `${year}-${pad(monthIndex + 1)}`;
 }
 
-/* Normaliza y migra datos antiguos (acordeones) al formato indexado por YYYY-MM */
+/* Normaliza y migra datos antiguos al formato indexado por YYYY-MM */
 function ensureNormalizedDayCounterData() {
     if (!Array.isArray(state.dayCounterMonths)) {
         state.dayCounterMonths = [];
@@ -48,14 +48,19 @@ function ensureNormalizedDayCounterData() {
 
         const [y, m] = key.split('-').map(Number);
         const canonicalName = `${SPANISH_MONTH_NAMES[m - 1]} ${y}`;
+
+        const hasShowWorked = typeof entry.showWorkedDays === 'boolean';
         const hasRegisterFlag = typeof entry.registerExtras === 'boolean';
-        if (!hasRegisterFlag) changed = true;
+        const hasShowHours = typeof entry.showHours === 'boolean';
+        if (!hasShowWorked || !hasRegisterFlag || !hasShowHours) changed = true;
 
         if (!byKey.has(key)) {
             byKey.set(key, {
                 id: key,
                 name: canonicalName,
+                showWorkedDays: hasShowWorked ? entry.showWorkedDays : true,
                 registerExtras: hasRegisterFlag ? entry.registerExtras : false,
+                showHours: hasShowHours ? entry.showHours : false,
                 targetDays: Number(entry.targetDays) || 0,
                 days: Array.isArray(entry.days) ? [...entry.days] : []
             });
@@ -65,11 +70,11 @@ function ensureNormalizedDayCounterData() {
             changed = true;
         }
     });
-    
+
     byKey.forEach((rec) => rec.days.sort(sortShiftsChronologically));
     state.dayCounterMonths = Array.from(byKey.values());
 
-    if (changed) {    
+    if (changed) {
         persistDayCounter();
     }
 }
@@ -87,7 +92,9 @@ function getOrCreateMonthRecord(year, monthZeroBased, createIfMissing = false) {
         record = {
             id: key,
             name: `${SPANISH_MONTH_NAMES[monthZeroBased]} ${year}`,
+            showWorkedDays: true,
             registerExtras: false,
+            showHours: false,
             targetDays: 0,
             days: []
         };
@@ -111,6 +118,107 @@ function formatTime12h(time24) {
     return `${h12}:${mStr} ${period}`;
 }
 
+/* =========================================================
+   CÁLCULO DE HORAS NORMALES Y NOCTURNAS (22:00 - 06:00)
+   ========================================================= */
+function parseTimeToMinutes(timeStr) {
+    if (!timeStr || !timeStr.includes(':')) return null;
+    const [h, m] = timeStr.split(':').map(Number);
+    if (isNaN(h) || isNaN(m)) return null;
+    return h * 60 + m;
+}
+
+function calculateShiftHoursBreakdown(entryTime, exitTime) {
+    const startMin = parseTimeToMinutes(entryTime);
+    let endMin = parseTimeToMinutes(exitTime);
+    if (startMin === null || endMin === null) {
+        return { normalMinutes: 0, nightMinutes: 0, totalMinutes: 0 };
+    }
+
+    // Si la salida es igual o menor que la entrada, el turno cruza la medianoche
+    if (endMin <= startMin) {
+        endMin += 1440;
+    }
+
+    let nightMinutes = 0;
+    for (let m = startMin; m < endMin; m++) {
+        const minuteOfDay = m % 1440;
+        // Nocturno: desde las 22:00 (1320) hasta las 06:00 (360)
+        if (minuteOfDay >= 1320 || minuteOfDay < 360) {
+            nightMinutes++;
+        }
+    }
+
+    const totalMinutes = endMin - startMin;
+    const normalMinutes = totalMinutes - nightMinutes;
+    return { normalMinutes, nightMinutes, totalMinutes };
+}
+
+function calculateMonthHoursSummary(days = []) {
+    let normalMinutes = 0;
+    let nightMinutes = 0;
+    let totalMinutes = 0;
+    const byLocation = {}; // Preparado para cálculo futuro de ganancias por lugar
+
+    days.forEach((shift) => {
+        const breakdown = calculateShiftHoursBreakdown(shift.entryTime, shift.exitTime);
+        normalMinutes += breakdown.normalMinutes;
+        nightMinutes += breakdown.nightMinutes;
+        totalMinutes += breakdown.totalMinutes;
+
+        const locKey = (shift.location || 'Sin especificar').trim();
+        if (!byLocation[locKey]) {
+            byLocation[locKey] = { normalMinutes: 0, nightMinutes: 0, totalMinutes: 0 };
+        }
+        byLocation[locKey].normalMinutes += breakdown.normalMinutes;
+        byLocation[locKey].nightMinutes += breakdown.nightMinutes;
+        byLocation[locKey].totalMinutes += breakdown.totalMinutes;
+    });
+
+    return { normalMinutes, nightMinutes, totalMinutes, byLocation };
+}
+
+function formatHoursDuration(totalMinutes) {
+    const mins = Math.max(0, Math.round(totalMinutes));
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return m === 0 ? `${h} h` : `${h} h ${m} min`;
+}
+
+function openHoursInfoModal() {
+    const record = getOrCreateMonthRecord(viewYear, viewMonth, false);
+    const monthTitle = `${SPANISH_MONTH_NAMES[viewMonth]} ${viewYear}`;
+    const summary = calculateMonthHoursSummary(record?.days || []);
+
+    if ($('hoursInfoMonthTitle')) {
+        $('hoursInfoMonthTitle').textContent = `Horas • ${monthTitle}`;
+    }
+
+    if ($('hoursInfoContent')) {
+        $('hoursInfoContent').innerHTML = `
+            <table class="detail-table">
+                <tbody>
+                    <tr>
+                        <th>Horas normales</th>
+                        <td><strong>${formatHoursDuration(summary.normalMinutes)}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Horas nocturnas</th>
+                        <td><strong>${formatHoursDuration(summary.nightMinutes)}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Total de horas</th>
+                        <td style="color: var(--primario);"><strong>${formatHoursDuration(summary.totalMinutes)}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="dc-hours-note">Horario nocturno contabilizado de 10:00 PM a 6:00 AM.</p>
+        `;
+    }
+
+    openModal($('dayCounterHoursInfoDlg'));
+}
+
 /* Llamada por el botón "+ Nuevo" de la cabecera superior */
 export function openNewDayCounterMonthModal() {
     const monthKey = getMonthKey(viewYear, viewMonth);
@@ -120,32 +228,44 @@ export function openNewDayCounterMonthModal() {
     openDayCounterDayModal(monthKey, null, defaultDate);
 }
 
-function setRegisterExtrasState(enabled) {
+function setToggleOptionState(optionKey, enabled) {
     const form = $('dayCounterTargetForm');
-    const fieldGroup = $('targetDaysFieldGroup');
-    const targetInput = $('monthTargetDaysInput');
-
-    form?.querySelectorAll('[data-register-extras]').forEach((btn) => {
-        const isActive = (btn.dataset.registerExtras === 'yes') === enabled;
+    form?.querySelectorAll(`[data-dc-opt="${optionKey}"]`).forEach((btn) => {
+        const isActive = (btn.dataset.val === 'yes') === enabled;
         btn.classList.toggle('active', isActive);
     });
 
-    if (fieldGroup) fieldGroup.classList.toggle('is-disabled', !enabled);
-    if (targetInput) {
-        targetInput.disabled = !enabled;
-        if (!enabled) targetInput.classList.remove('input-error');
+    if (optionKey === 'registerExtras') {
+        const fieldGroup = $('targetDaysFieldGroup');
+        const targetInput = $('monthTargetDaysInput');
+        if (fieldGroup) fieldGroup.classList.toggle('is-hidden', !enabled);
+        if (targetInput) {
+            targetInput.disabled = !enabled;
+            if (!enabled) targetInput.classList.remove('input-error');
+        }
     }
+}
+
+function getToggleOptionState(optionKey, fallback = false) {
+    const activeBtn = $('dayCounterTargetForm')?.querySelector(`[data-dc-opt="${optionKey}"].active`);
+    return activeBtn ? activeBtn.dataset.val === 'yes' : fallback;
 }
 
 function openTargetConfigModal() {
     const record = getOrCreateMonthRecord(viewYear, viewMonth, false);
     const monthTitle = `${SPANISH_MONTH_NAMES[viewMonth]} ${viewYear}`;
+    const showWorkedDays = record ? record.showWorkedDays !== false : true;
     const registerExtras = record?.registerExtras === true;
+    const showHours = record?.showHours === true;
 
-    if ($('targetDlgTitle')) $('targetDlgTitle').textContent = `${monthTitle}`;
+    if ($('targetDlgTitle')) $('targetDlgTitle').textContent = monthTitle;
     if ($('monthTargetDaysInput')) $('monthTargetDaysInput').value = record?.targetDays ?? 0;
     clearValidationErrors($('dayCounterTargetForm'));
-    setRegisterExtrasState(registerExtras);
+
+    setToggleOptionState('showWorkedDays', showWorkedDays);
+    setToggleOptionState('registerExtras', registerExtras);
+    setToggleOptionState('showHours', showHours);
+
     openModal($('dayCounterTargetDlg'));
 }
 
@@ -159,13 +279,39 @@ export function renderDayCounter() {
     const monthKey = getMonthKey(viewYear, viewMonth);
     const record = getOrCreateMonthRecord(viewYear, viewMonth, false);
     const monthDays = record?.days || [];
+
+    const showWorkedDays = record ? record.showWorkedDays !== false : true;
     const registerExtras = record?.registerExtras === true;
+    const showHours = record?.showHours === true;
+
     const targetDays = Number(record?.targetDays) || 0;
     const workedCount = monthDays.length;
     const extraCount = targetDays > 0 ? Math.max(0, workedCount - targetDays) : 0;
-    const statsText = registerExtras
-        ? `Trabajados: ${workedCount} • Extras: ${extraCount}`
-        : `Trabajados: ${workedCount}`;
+
+    const dayParts = [];
+    if (showWorkedDays) dayParts.push(`Trabajados: ${workedCount}`);
+    if (registerExtras) dayParts.push(`Extras: ${extraCount}`);
+
+    const hoursSummary = showHours ? calculateMonthHoursSummary(monthDays) : null;
+
+    let statsHtml = '';
+    if (dayParts.length > 0 || showHours) {
+        const rows = [];
+        if (dayParts.length > 0) {
+            rows.push(`<div class="dc-cal-stats-row"><span class="dc-cal-stats">${dayParts.join(' • ')}</span></div>`);
+        }
+        if (showHours && hoursSummary) {
+            rows.push(`
+                <div class="dc-cal-stats-row">
+                    <span class="dc-cal-stats">Horas: ${formatHoursDuration(hoursSummary.totalMinutes)}</span>
+                    <button type="button" class="dc-info-btn" data-action="open-hours-info" title="Ver desglose de horas" aria-label="Ver desglose de horas">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    </button>
+                </div>
+            `);
+        }
+        statsHtml = `<div class="dc-cal-stats-list">${rows.join('')}</div>`;
+    }
 
     if (!selectedIsoDate.startsWith(monthKey)) {
         const todayIso = toIsoDateLocal(today);
@@ -239,11 +385,11 @@ export function renderDayCounter() {
                 <div class="dc-cal-title-group">
                     <div class="dc-cal-title-row">
                         <h2 class="dc-cal-month-title">${SPANISH_MONTH_NAMES[viewMonth]} ${viewYear}</h2>
-                        <button type="button" class="dc-gear-btn" data-action="open-target-config" title="Configurar días objetivo" aria-label="Configurar días objetivo">
+                        <button type="button" class="dc-gear-btn" data-action="open-target-config" title="Configurar vista del mes" aria-label="Configurar vista del mes">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="7.5" cy="12" r="1.25" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.25" fill="currentColor" stroke="none"/><circle cx="16.5" cy="12" r="1.25" fill="currentColor" stroke="none"/></svg>
                         </button>
                     </div>
-                    <span class="dc-cal-stats">${statsText}</span>
+                    ${statsHtml}
                 </div>
                 <div class="dc-cal-nav">
                     <button type="button" class="dc-nav-circle-btn" data-action="prev-month" aria-label="Mes anterior">
@@ -375,27 +521,35 @@ export function initDayCounter() {
             renderDayCounter();
         } else if (action === 'open-target-config') {
             openTargetConfigModal();
+        } else if (action === 'open-hours-info') {
+            openHoursInfoModal();
         } else if (action === 'edit-day') {
             openDayCounterDayModal(monthId, Number(dayIndex));
         }
     });
 
-    /* Diálogo de días objetivo */
+    /* Modal de desglose de horas */
+    $('closeHoursInfoBtn')?.addEventListener('click', () => closeModal($('dayCounterHoursInfoDlg')));
+
+    /* Diálogo de configuración del mes */
     $('dayCounterTargetForm')?.addEventListener('click', (e) => {
-        const btn = e.target.closest('[data-register-extras]');
+        const btn = e.target.closest('[data-dc-opt]');
         if (!btn) return;
-        setRegisterExtrasState(btn.dataset.registerExtras === 'yes');
+        setToggleOptionState(btn.dataset.dcOpt, btn.dataset.val === 'yes');
     });
 
     $('cancelTargetDlg')?.addEventListener('click', () => closeModal($('dayCounterTargetDlg')));
     $('dayCounterTargetForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
         const targetInput = $('monthTargetDaysInput');
-        const activeBtn = $('dayCounterTargetForm')?.querySelector('[data-register-extras].active');
-        const registerExtras = activeBtn ? activeBtn.dataset.registerExtras === 'yes' : false;
+        const showWorkedDays = getToggleOptionState('showWorkedDays', true);
+        const registerExtras = getToggleOptionState('registerExtras', false);
+        const showHours = getToggleOptionState('showHours', false);
 
         const record = getOrCreateMonthRecord(viewYear, viewMonth, true);
+        record.showWorkedDays = showWorkedDays;
         record.registerExtras = registerExtras;
+        record.showHours = showHours;
 
         if (registerExtras) {
             if (!validateRequiredFields($('dayCounterTargetForm'), [targetInput])) return;
@@ -485,7 +639,6 @@ export function initDayCounter() {
 
         targetRecord.days.sort(sortShiftsChronologically);
 
-        // Navega automáticamente al mes y día recién guardado
         viewYear = targetParts.y;
         viewMonth = targetParts.m - 1;
         selectedIsoDate = dayData.date;
