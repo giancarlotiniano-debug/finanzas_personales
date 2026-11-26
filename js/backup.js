@@ -1,7 +1,7 @@
 import {
     $, state, today, persist, persistRemittancesList,
-    persistInstallments, persistDayCounter, formatDateEs,
-    openModal, closeModal
+    persistInstallments, persistDayCounter, persistConfigRaw,
+    formatDateEs, openModal, closeModal
 } from './shared.js';
 import { renderFinance } from './finance.js';
 import { renderRemittancesList } from './remittances.js';
@@ -87,15 +87,35 @@ function executeCustomExport() {
     }
 
     if (includeDays) {
-        csvRows.push('--- SECCION: CONTADOR DE DIAS TRABAJADOS ---', 'MES,REGISTRAR_EXTRAS,DIAS_OBJETIVO,FECHA_DIA,DIA_SEMANA,ENTRADA,SALIDA,LUGAR');
+        const dcCfg = state.appConfig.dayCounterSettings || { nightSurchargePercent: 0, irpfDiscountPercent: 0, places: [] };
+        const surcharge = Number(dcCfg.nightSurchargePercent) || 0;
+        const irpf = Number(dcCfg.irpfDiscountPercent) || 0;
+        const places = Array.isArray(dcCfg.places) ? dcCfg.places : [];
+
+        csvRows.push('--- SECCION: CONTADOR DE DIAS TRABAJADOS ---', 'MES,MOSTRAR_DIAS,REGISTRAR_EXTRAS,DIAS_OBJETIVO,MOSTRAR_HORAS,FECHA_DIA,DIA_SEMANA,ENTRADA,SALIDA,LUGAR');
         state.dayCounterMonths.forEach(m => {
+            const showWorked = m.showWorkedDays !== false ? 'SI' : 'NO';
             const regExtras = m.registerExtras === true ? 'SI' : 'NO';
-            if (!m.days?.length) csvRows.push(`${csvQuote(m.name)},${regExtras},${m.targetDays || 0},"" ,"" ,"" ,"" ,""`);
-            else m.days.forEach(d => {
-                const formattedDate = d.date?.includes('-') ? formatDateEs(d.date) : d.date;
-                csvRows.push(`${csvQuote(m.name)},${regExtras},${m.targetDays || 0},${formattedDate},${csvQuote(d.dayName)},${csvQuote(d.entryTime)},${csvQuote(d.exitTime)},${csvQuote(d.location)}`);
-            });
+            const showHours = m.showHours === true ? 'SI' : 'NO';
+            if (!m.days?.length) {
+                csvRows.push(`${csvQuote(m.name)},${showWorked},${regExtras},${m.targetDays || 0},${showHours},"" ,"" ,"" ,"" ,""`);
+            } else {
+                m.days.forEach(d => {
+                    const formattedDate = d.date?.includes('-') ? formatDateEs(d.date) : d.date;
+                    csvRows.push(`${csvQuote(m.name)},${showWorked},${regExtras},${m.targetDays || 0},${showHours},${formattedDate},${csvQuote(d.dayName)},${csvQuote(d.entryTime)},${csvQuote(d.exitTime)},${csvQuote(d.location)}`);
+                });
+            }
         });
+
+        csvRows.push('--- CONFIG_TURNOS ---', 'RECARGO_NOCTURNO_PCT,IRPF_PCT,LUGAR_TRABAJO,TARIFA_HORA');
+        if (!places.length) {
+            csvRows.push(`${surcharge},${irpf},"",""`);
+        } else {
+            places.forEach(p => {
+                const rateVal = (p.hourlyRate !== null && p.hourlyRate > 0) ? p.hourlyRate : '';
+                csvRows.push(`${surcharge},${irpf},${csvQuote(p.name)},${rateVal}`);
+            });
+        }
     }
 
     const url = URL.createObjectURL(new Blob(['\uFEFF' + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' }));
@@ -121,6 +141,7 @@ function importMovementsCsv(event) {
 
             let currentSection = 'MOVIMIENTOS';
             const rawRemitMap = {}, rawInstMap = {}, rawDaysMap = {}, tempMovements = [], detectedSections = new Set();
+            let parsedDayCounterSettings = null;
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
@@ -133,7 +154,12 @@ function importMovementsCsv(event) {
                     else if (line.includes('CONTADOR DE DIAS')) { currentSection = 'DIAS'; detectedSections.add('DIAS'); }
                     continue;
                 }
-                if (/^(FECHA|NOMBRE_REMESA|COMPRA|MES),/.test(line)) continue;
+                if (line.startsWith('--- CONFIG_TURNOS ---')) {
+                    currentSection = 'CONFIG_TURNOS';
+                    detectedSections.add('DIAS');
+                    continue;
+                }
+                if (/^(FECHA|NOMBRE_REMESA|COMPRA|MES|RECARGO_NOCTURNO_PCT),/.test(line)) continue;
 
                 const row = parseCsvLine(line);
                 if (currentSection === 'MOVIMIENTOS' && row.length >= 5) {
@@ -180,15 +206,29 @@ function importMovementsCsv(event) {
                         date: normalizeDateToIso(instDate), paid: paidStr.toUpperCase().includes('SI')
                     });
                 } else if (currentSection === 'DIAS' && row.length >= 7) {
-                    const [rawMName, regExtrasStr, targetStr, dDate, dName, entryT, exitT, loc] =
-                        row.length >= 8 ? row : [row[0], 'NO', row[1], row[2], row[3], row[4], row[5], row[6]];
+                    let rawMName, showWorkedStr, regExtrasStr, targetStr, showHoursStr, dDate, dName, entryT, exitT, loc;
+                    if (row.length >= 10) {
+                        [rawMName, showWorkedStr, regExtrasStr, targetStr, showHoursStr, dDate, dName, entryT, exitT, loc] = row;
+                    } else if (row.length >= 8) {
+                        [rawMName, regExtrasStr, targetStr, dDate, dName, entryT, exitT, loc] = row;
+                        showWorkedStr = 'SI';
+                        showHoursStr = 'NO';
+                    } else {
+                        [rawMName, targetStr, dDate, dName, entryT, exitT, loc] = row;
+                        showWorkedStr = 'SI';
+                        regExtrasStr = 'NO';
+                        showHoursStr = 'NO';
+                    }
+
                     const mName = unquoteCsv(rawMName);
                     if (!mName) continue;
                     if (!rawDaysMap[mName]) {
                         rawDaysMap[mName] = {
                             id: crypto.randomUUID(),
                             name: mName,
+                            showWorkedDays: !showWorkedStr.toUpperCase().includes('NO'),
                             registerExtras: regExtrasStr.toUpperCase().includes('SI'),
+                            showHours: showHoursStr.toUpperCase().includes('SI'),
                             targetDays: parseInt(targetStr, 10) || 0,
                             days: []
                         };
@@ -201,6 +241,24 @@ function importMovementsCsv(event) {
                             entryTime: unquoteCsv(entryT),
                             exitTime: unquoteCsv(exitT),
                             location: unquoteCsv(loc)
+                        });
+                    }
+                } else if (currentSection === 'CONFIG_TURNOS' && row.length >= 2) {
+                    const [surchargeStr, irpfStr, rawPlaceName = '', rawRateStr = ''] = row;
+                    if (!parsedDayCounterSettings) {
+                        parsedDayCounterSettings = {
+                            nightSurchargePercent: Math.max(0, parseFloat(surchargeStr.replace(',', '.')) || 0),
+                            irpfDiscountPercent: Math.max(0, parseFloat(irpfStr.replace(',', '.')) || 0),
+                            places: []
+                        };
+                    }
+                    const cleanPlace = unquoteCsv(rawPlaceName).trim();
+                    if (cleanPlace) {
+                        const parsedRate = parseFloat(unquoteCsv(rawRateStr).replace(',', '.'));
+                        parsedDayCounterSettings.places.push({
+                            id: crypto.randomUUID(),
+                            name: cleanPlace,
+                            hourlyRate: (!isNaN(parsedRate) && parsedRate > 0) ? Math.round(parsedRate * 100) / 100 : null
                         });
                     }
                 }
@@ -224,7 +282,13 @@ function importMovementsCsv(event) {
                 return m;
             });
 
-            pendingParsedSections = { movements: tempMovements, remittances: parsedRemit, installments: parsedInst, dayCounter: parsedDays };
+            pendingParsedSections = {
+                movements: tempMovements,
+                remittances: parsedRemit,
+                installments: parsedInst,
+                dayCounter: parsedDays,
+                dayCounterSettings: parsedDayCounterSettings
+            };
 
             if (detectedSections.size > 1) {
                 if ($('impMovCount')) $('impMovCount').textContent = tempMovements.length;
@@ -263,10 +327,16 @@ function applyImportSelection(selection) {
         persistInstallments();
         importedSummary.push(`• Gestores de cuotas: ${state.installmentsPurchases.length}`);
     }
-    if (selection.dayCounter && pendingParsedSections.dayCounter.length > 0) {
-        state.dayCounterMonths = pendingParsedSections.dayCounter;
-        persistDayCounter();
-        importedSummary.push(`• Contadores de días: ${state.dayCounterMonths.length}`);
+    if (selection.dayCounter && (pendingParsedSections.dayCounter.length > 0 || pendingParsedSections.dayCounterSettings)) {
+        if (pendingParsedSections.dayCounter.length > 0) {
+            state.dayCounterMonths = pendingParsedSections.dayCounter;
+            persistDayCounter();
+        }
+        if (pendingParsedSections.dayCounterSettings) {
+            state.appConfig.dayCounterSettings = pendingParsedSections.dayCounterSettings;
+            persistConfigRaw();
+        }
+        importedSummary.push(`• Turnos trabajados: ${state.dayCounterMonths.length}`);
     }
 
     renderFinance();

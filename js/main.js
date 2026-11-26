@@ -4,14 +4,17 @@ import {
 import { initFinance, renderFinance, updateFinanceCurrencyLabels } from './finance.js';
 import { initRemittances, renderRemittancesList, openNewRemittanceModal } from './remittances.js';
 import { initInstallments, renderInstallments, openNewInstallmentPurchaseModal } from './installments.js';
-import { initDayCounter, renderDayCounter, openNewDayCounterMonthModal } from './dayCounter.js';
+import {
+    initDayCounter, renderDayCounter,
+    openNewDayCounterMonthModal, openDayCounterSettingsModal
+} from './dayCounter.js';
 import { initBackup } from './backup.js';
 
 const SECTION_LABELS = {
     financeManager: 'Gestor financiero',
     remittances: 'Calcular remesas',
     installments: 'Compras en cuotas',
-    dayCounter: 'Días trabajados'
+    dayCounter: 'Turnos trabajados'
 };
 
 let openTouchStartX = 0;
@@ -88,7 +91,11 @@ function updateUserDisplay() {
     if (btn) {
         const showForSection = ['remittances', 'installments', 'dayCounter'].includes(state.activeAppSection);
         btn.classList.toggle('is-hidden', !showForSection);
-        const ariaMap = { remittances: 'Nueva remesa', installments: 'Nueva compra en cuotas', dayCounter: 'Nuevo mes de trabajo' };
+        const ariaMap = {
+            remittances: 'Nueva remesa',
+            installments: 'Nueva compra en cuotas',
+            dayCounter: 'Nuevo turno'
+        };
         btn.setAttribute('aria-label', ariaMap[state.activeAppSection] || 'Nuevo');
     }
 }
@@ -144,8 +151,14 @@ function closeNavDrawer() {
 
 function toggleBackupPopover(forceState) {
     const popover = $('navBackupPopover'), backdrop = $('navBackupBackdrop'), moreBtn = $('navMoreBackupBtn');
+    const dcConfigSection = $('navDayCounterConfigSection');
     if (!popover) return;
     const shouldOpen = typeof forceState === 'boolean' ? forceState : popover.classList.contains('is-hidden');
+
+    if (dcConfigSection) {
+        dcConfigSection.classList.toggle('is-hidden', state.activeAppSection !== 'dayCounter');
+    }
+
     popover.classList.toggle('is-hidden', !shouldOpen);
     popover.setAttribute('aria-hidden', String(!shouldOpen));
     if (backdrop) { backdrop.classList.toggle('is-hidden', !shouldOpen); backdrop.setAttribute('aria-hidden', String(!shouldOpen)); }
@@ -287,12 +300,19 @@ function bindShellEvents() {
         openModal($('exportDlg'));
     });
 
+    $('openDayCounterSettingsBtn')?.addEventListener('click', () => {
+        toggleBackupPopover(false);
+        closeNavDrawer();
+        openDayCounterSettingsModal();
+    });
+
     $('currencySelect')?.addEventListener('change', (e) => {
         state.appConfig.currency = e.target.value;
         persistConfig();
         renderFinance();
         renderRemittancesList();
         renderInstallments();
+        renderDayCounter();
     });
 
     document.querySelectorAll('[data-theme-value]').forEach(btn => {

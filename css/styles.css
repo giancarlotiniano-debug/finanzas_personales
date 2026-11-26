@@ -2328,7 +2328,7 @@ body.dark-mode .filter-cal-day.is-in-week {
 }
 
 .detail-modal-body {
-    padding: 24px;
+    padding: 24px 20px;
 }
 
 .detail-concept-title {
@@ -2366,7 +2366,7 @@ body.dark-mode .filter-cal-day.is-in-week {
     background: var(--fondo);
     color: var(--primario);
     font-weight: 600;
-    width: 32%;
+    width: 50%;
     text-align: right;
 }
 
@@ -2689,11 +2689,23 @@ body.dark-mode .filter-cal-day.is-in-week {
     color: var(--blanco) !important;
 }
 
-.dc-day-bar {
+.dc-day-bars {
     width: 22px;
     height: 3.5px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.dc-day-bar {
+    flex: 1;
+    height: 100%;
     border-radius: 99px;
     background: transparent;
+}
+
+.dc-day-cell.has-shift .dc-day-bar {
+    background: var(--primario);
 }
 
 .dc-day-cell.has-shift .dc-day-bar {
@@ -2815,6 +2827,179 @@ body.dark-mode .filter-cal-day.is-in-week {
     font-size: 0.86rem;
     color: var(--texto);
     opacity: 0.7;
+}
+
+/* Popover: sección adicional en 3 puntos */
+.nav-popover-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 1px solid var(--tarjetas);
+}
+
+.nav-backup-btn {
+    width: 100%;
+}
+
+/* Pestañas y tarjetas de detalle de horas */
+
+.dc-places-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 55vh;
+    overflow-y: auto;
+    text-align: left;
+}
+
+.dc-breakdown-section-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--texto);
+    opacity: 0.75;
+    padding: 0 2px;
+    margin-bottom: -4px;
+}
+
+.dc-breakdown-section-label.is-second {
+    margin-top: 4px;
+}
+
+.dc-place-summary-card {
+    background: var(--fondo);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dc-place-summary-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.dc-place-summary-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primario);
+}
+
+.dc-place-summary-rate {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--texto);
+    opacity: 0.65;
+}
+
+.dc-place-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.dc-place-summary-grid.is-four-items {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.dc-place-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dc-place-metric-label {
+    font-size: 11.5px;
+    color: var(--texto);
+    opacity: 0.65;
+}
+
+.dc-place-metric-val {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--texto);
+}
+
+.dc-place-metric-val.is-money {
+    color: var(--ingresos-font-card);
+}
+
+/* Modal configuración de lugares de trabajo */
+.dc-places-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.dc-place-add-btn {
+    height: 36px;
+    padding: 0 12px;
+    font-size: 14px;
+    border-radius: 18px;
+}
+
+.dc-places-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 230px;
+    overflow-y: auto;
+    padding: 8px;
+    border-radius: 15px;
+    background: var(--fondo);
+    margin-bottom: 15px;
+}
+
+.dc-place-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--tarjetas);
+}
+
+.dc-place-row-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.dc-place-row-name {
+    font-size: 14.5px;
+    font-weight: 650;
+    color: var(--texto);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dc-place-row-rate {
+    font-size: 12.5px;
+    color: var(--texto);
+    opacity: 0.65;
+}
+
+.dc-places-empty {
+    text-align: center;
+    padding: 18px 10px;
+    font-size: 13.5px;
+    color: var(--texto);
+    opacity: 0.65;
+}
+
+.dc-place-summary-grid + .dc-place-summary-grid {
+    padding-top: 8px;
+    border-top: 1px solid var(--tarjetas);
+}
+
+.dc-place-metric-val.is-expense {
+    color: var(--gastos-font-card);
 }
 
 /* ==========================================

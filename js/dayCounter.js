@@ -1,11 +1,13 @@
 import {
     $, state, today, pad, currentMonth, SPANISH_MONTH_NAMES,
-    persistDayCounter, formatDateEs, toIsoDateLocal, parseIsoParts,
-    escapeHtml, clearValidationErrors, validateRequiredFields,
+    persistDayCounter, persistConfigRaw, formatDateEs, toIsoDateLocal,
+    parseIsoParts, escapeHtml, clearValidationErrors, validateRequiredFields,
+    formatMoney, formatPlainInputValue, parseInputNumber, getCurrencySymbol,
     openModal, closeModal
 } from './shared.js';
 
 const WEEKDAY_INITIALS = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+const CUSTOM_LOCATION_VALUE = '__custom__';
 
 let viewYear = today.getFullYear();
 let viewMonth = today.getMonth(); // 0-11
@@ -14,9 +16,59 @@ let selectedIsoDate = toIsoDateLocal(today);
 let editingDayMonthId = null;
 let editingDayIndex = null;
 
+let draftNightSurchargePercent = 0;
+let draftIrpfDiscountPercent = 0;
+let draftWorkPlaces = [];
+let editingWorkPlaceIndex = null;
+
 const sortShiftsChronologically = (a, b) =>
     b.date.localeCompare(a.date) || (a.entryTime || '').localeCompare(b.entryTime || '');
 
+/* =========================================================
+   CONFIGURACIÓN DE TURNOS (LUGARES Y RECARGO NOCTURNO %)
+   ========================================================= */
+function ensureDayCounterSettings() {
+    if (!state.appConfig.dayCounterSettings || typeof state.appConfig.dayCounterSettings !== 'object') {
+        state.appConfig.dayCounterSettings = {
+            nightSurchargePercent: 0,
+            irpfDiscountPercent: 0,
+            places: []
+        };
+    }
+    const cfg = state.appConfig.dayCounterSettings;
+    if (typeof cfg.nightSurchargePercent !== 'number' || isNaN(cfg.nightSurchargePercent)) {
+        cfg.nightSurchargePercent = 0;
+    }
+    if (typeof cfg.irpfDiscountPercent !== 'number' || isNaN(cfg.irpfDiscountPercent)) {
+        cfg.irpfDiscountPercent = 0;
+    }
+    if (!Array.isArray(cfg.places)) {
+        cfg.places = [];
+    }
+    return cfg;
+}
+
+function getIrpfDiscountPercent() {
+    return ensureDayCounterSettings().irpfDiscountPercent;
+}
+
+function getWorkPlaces() {
+    return ensureDayCounterSettings().places;
+}
+
+function getNightSurchargePercent() {
+    return ensureDayCounterSettings().nightSurchargePercent;
+}
+
+function findWorkPlaceByName(name) {
+    const clean = String(name || '').trim().toLowerCase();
+    if (!clean) return null;
+    return getWorkPlaces().find(p => p.name.trim().toLowerCase() === clean) || null;
+}
+
+/* =========================================================
+   NORMALIZACIÓN DE DATOS MENSUALES
+   ========================================================= */
 function parseKeyFromMonthName(name) {
     if (!name || typeof name !== 'string') return null;
     const parts = name.trim().split(/\s+/);
@@ -28,8 +80,9 @@ function parseKeyFromMonthName(name) {
     return `${year}-${pad(monthIndex + 1)}`;
 }
 
-/* Normaliza y migra datos antiguos al formato indexado por YYYY-MM */
 function ensureNormalizedDayCounterData() {
+    ensureDayCounterSettings();
+
     if (!Array.isArray(state.dayCounterMonths)) {
         state.dayCounterMonths = [];
     }
@@ -119,7 +172,7 @@ function formatTime12h(time24) {
 }
 
 /* =========================================================
-   CÁLCULO DE HORAS NORMALES Y NOCTURNAS (22:00 - 06:00)
+   CÁLCULO DE HORAS NORMALES, NOCTURNAS Y GANANCIAS POR LUGAR
    ========================================================= */
 function parseTimeToMinutes(timeStr) {
     if (!timeStr || !timeStr.includes(':')) return null;
@@ -135,7 +188,6 @@ function calculateShiftHoursBreakdown(entryTime, exitTime) {
         return { normalMinutes: 0, nightMinutes: 0, totalMinutes: 0 };
     }
 
-    // Si la salida es igual o menor que la entrada, el turno cruza la medianoche
     if (endMin <= startMin) {
         endMin += 1440;
     }
@@ -143,7 +195,6 @@ function calculateShiftHoursBreakdown(entryTime, exitTime) {
     let nightMinutes = 0;
     for (let m = startMin; m < endMin; m++) {
         const minuteOfDay = m % 1440;
-        // Nocturno: desde las 22:00 (1320) hasta las 06:00 (360)
         if (minuteOfDay >= 1320 || minuteOfDay < 360) {
             nightMinutes++;
         }
@@ -155,10 +206,16 @@ function calculateShiftHoursBreakdown(entryTime, exitTime) {
 }
 
 function calculateMonthHoursSummary(days = []) {
+    const surchargePercent = getNightSurchargePercent();
+    const nightMultiplier = 1 + (surchargePercent / 100);
+
     let normalMinutes = 0;
     let nightMinutes = 0;
     let totalMinutes = 0;
-    const byLocation = {}; // Preparado para cálculo futuro de ganancias por lugar
+    let totalEarnings = 0;
+    let hasAnyRatedPlace = false;
+
+    const placesMap = new Map();
 
     days.forEach((shift) => {
         const breakdown = calculateShiftHoursBreakdown(shift.entryTime, shift.exitTime);
@@ -166,16 +223,54 @@ function calculateMonthHoursSummary(days = []) {
         nightMinutes += breakdown.nightMinutes;
         totalMinutes += breakdown.totalMinutes;
 
-        const locKey = (shift.location || 'Sin especificar').trim();
-        if (!byLocation[locKey]) {
-            byLocation[locKey] = { normalMinutes: 0, nightMinutes: 0, totalMinutes: 0 };
+        const displayLoc = (shift.location || 'Sin especificar').trim();
+        const groupKey = displayLoc.toLowerCase();
+        const configuredPlace = findWorkPlaceByName(displayLoc);
+        const hourlyRate = configuredPlace && configuredPlace.hourlyRate > 0 ? configuredPlace.hourlyRate : null;
+
+        if (!placesMap.has(groupKey)) {
+            placesMap.set(groupKey, {
+                name: configuredPlace ? configuredPlace.name : displayLoc,
+                hourlyRate,
+                normalMinutes: 0,
+                nightMinutes: 0,
+                totalMinutes: 0,
+                earnings: hourlyRate !== null ? 0 : null
+            });
         }
-        byLocation[locKey].normalMinutes += breakdown.normalMinutes;
-        byLocation[locKey].nightMinutes += breakdown.nightMinutes;
-        byLocation[locKey].totalMinutes += breakdown.totalMinutes;
+
+        const entry = placesMap.get(groupKey);
+        entry.normalMinutes += breakdown.normalMinutes;
+        entry.nightMinutes += breakdown.nightMinutes;
+        entry.totalMinutes += breakdown.totalMinutes;
+
+        if (hourlyRate !== null) {
+            hasAnyRatedPlace = true;
+            const shiftPay = ((breakdown.normalMinutes / 60) * hourlyRate)
+                + ((breakdown.nightMinutes / 60) * hourlyRate * nightMultiplier);
+            entry.earnings = (entry.earnings || 0) + shiftPay;
+            totalEarnings += shiftPay;
+        }
     });
 
-    return { normalMinutes, nightMinutes, totalMinutes, byLocation };
+    const irpfPercent = getIrpfDiscountPercent();
+    const irpfAmount = totalEarnings * (irpfPercent / 100);
+    const netEarnings = Math.max(0, totalEarnings - irpfAmount);
+
+    const placesList = Array.from(placesMap.values()).sort((a, b) => b.totalMinutes - a.totalMinutes);
+
+    return {
+        normalMinutes,
+        nightMinutes,
+        totalMinutes,
+        totalEarnings,
+        irpfPercent,
+        irpfAmount,
+        netEarnings,
+        hasAnyRatedPlace,
+        surchargePercent,
+        placesList
+    };
 }
 
 function formatHoursDuration(totalMinutes) {
@@ -185,38 +280,234 @@ function formatHoursDuration(totalMinutes) {
     return m === 0 ? `${h} h` : `${h} h ${m} min`;
 }
 
-function openHoursInfoModal() {
+function renderHoursInfoModalContent() {
     const record = getOrCreateMonthRecord(viewYear, viewMonth, false);
-    const monthTitle = `${SPANISH_MONTH_NAMES[viewMonth]} ${viewYear}`;
     const summary = calculateMonthHoursSummary(record?.days || []);
+    const contentEl = $('hoursInfoContent');
+    if (!contentEl) return;
 
-    if ($('hoursInfoMonthTitle')) {
-        $('hoursInfoMonthTitle').textContent = `Horas • ${monthTitle}`;
+    if (!summary.placesList.length) {
+        contentEl.innerHTML = `<div class="dc-empty-state">No hay turnos registrados en este mes.</div>`;
+        return;
     }
 
-    if ($('hoursInfoContent')) {
-        $('hoursInfoContent').innerHTML = `
-            <table class="detail-table">
-                <tbody>
-                    <tr>
-                        <th>Horas normales</th>
-                        <td><strong>${formatHoursDuration(summary.normalMinutes)}</strong></td>
-                    </tr>
-                    <tr>
-                        <th>Horas nocturnas</th>
-                        <td><strong>${formatHoursDuration(summary.nightMinutes)}</strong></td>
-                    </tr>
-                    <tr>
-                        <th>Total de horas</th>
-                        <td style="color: var(--primario);"><strong>${formatHoursDuration(summary.totalMinutes)}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-            <p class="dc-hours-note">Horario nocturno contabilizado de 10:00 PM a 6:00 AM.</p>
+    const monthTitle = `${SPANISH_MONTH_NAMES[viewMonth]} ${viewYear}`;
+    const irpfLabel = `IRPF (-${summary.irpfPercent}%)`;
+    const irpfValueStr = summary.irpfAmount > 0
+        ? `-${formatMoney(summary.irpfAmount)}`
+        : formatMoney(0);
+
+    const totalGeneralCardHtml = `
+        <div class="dc-breakdown-section-label">Total general:</div>
+        <div class="dc-place-summary-card">
+            <div class="dc-place-summary-head">
+                <span class="dc-place-summary-name">${monthTitle}</span>
+            </div>
+            <div class="dc-place-summary-grid">
+                <div class="dc-place-metric">
+                    <span class="dc-place-metric-label">Normales</span>
+                    <span class="dc-place-metric-val">${formatHoursDuration(summary.normalMinutes)}</span>
+                </div>
+                <div class="dc-place-metric">
+                    <span class="dc-place-metric-label">Nocturnas</span>
+                    <span class="dc-place-metric-val">${formatHoursDuration(summary.nightMinutes)}</span>
+                </div>
+                <div class="dc-place-metric">
+                    <span class="dc-place-metric-label">Total horas</span>
+                    <span class="dc-place-metric-val">${formatHoursDuration(summary.totalMinutes)}</span>
+                </div>
+            </div>
+            <div class="dc-place-summary-grid">
+                <div class="dc-place-metric">
+                    <span class="dc-place-metric-label">Total ganado</span>
+                    <span class="dc-place-metric-val">${formatMoney(summary.totalEarnings)}</span>
+                </div>
+                <div class="dc-place-metric">
+                    <span class="dc-place-metric-label">${irpfLabel}</span>
+                    <span class="dc-place-metric-val ${summary.irpfAmount > 0 ? 'is-expense' : ''}">${irpfValueStr}</span>
+                </div>
+                <div class="dc-place-metric">
+                    <span class="dc-place-metric-label">Total neto</span>
+                    <span class="dc-place-metric-val is-money">${formatMoney(summary.netEarnings)}</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const cardsHtml = summary.placesList.map((place) => {
+        const rateLabel = place.hourlyRate !== null
+            ? `${formatMoney(place.hourlyRate)}/h`
+            : 'Sin tarifa';
+        const earningsDisplay = place.earnings !== null
+            ? `<span class="dc-place-metric-val is-money">${formatMoney(place.earnings)}</span>`
+            : `<span class="dc-place-metric-val">—</span>`;
+
+        return `
+            <div class="dc-place-summary-card">
+                <div class="dc-place-summary-head">
+                    <span class="dc-place-summary-name">${escapeHtml(place.name)}</span>
+                    <span class="dc-place-summary-rate">${rateLabel}</span>
+                </div>
+                <div class="dc-place-summary-grid is-four-items">
+                    <div class="dc-place-metric">
+                        <span class="dc-place-metric-label">Normales</span>
+                        <span class="dc-place-metric-val">${formatHoursDuration(place.normalMinutes)}</span>
+                    </div>
+                    <div class="dc-place-metric">
+                        <span class="dc-place-metric-label">Nocturnas</span>
+                        <span class="dc-place-metric-val">${formatHoursDuration(place.nightMinutes)}</span>
+                    </div>
+                    <div class="dc-place-metric">
+                        <span class="dc-place-metric-label">Total</span>
+                        <span class="dc-place-metric-val">${formatHoursDuration(place.totalMinutes)}</span>
+                    </div>
+                    <div class="dc-place-metric">
+                        <span class="dc-place-metric-label">Ganado</span>
+                        ${earningsDisplay}
+                    </div>
+                </div>
+            </div>
         `;
+    }).join('');
+
+    contentEl.innerHTML = `
+        <div class="dc-places-breakdown">
+            ${totalGeneralCardHtml}
+            <div class="dc-breakdown-section-label is-second">Por lugar:</div>
+            ${cardsHtml}
+        </div>
+        <p class="dc-hours-note">Nocturnas: 10:00 PM a 6:00 AM (+${summary.surchargePercent}%).</p>
+    `;
+}
+
+function openHoursInfoModal() {
+    const monthTitle = `${SPANISH_MONTH_NAMES[viewMonth]} ${viewYear}`;
+    if ($('hoursInfoMonthTitle')) {
+        $('hoursInfoMonthTitle').textContent = `Detalle por horas`;
+    }
+    renderHoursInfoModalContent();
+    openModal($('dayCounterHoursInfoDlg'));
+}
+
+/* =========================================================
+   MODAL DE CONFIGURACIÓN GENERAL DE TURNOS TRABAJADOS
+   ========================================================= */
+function renderDraftWorkPlacesList() {
+    const listEl = $('dcWorkPlacesList');
+    if (!listEl) return;
+
+    if (!draftWorkPlaces.length) {
+        listEl.innerHTML = `<div class="dc-places-empty">Aún no has agregado lugares de trabajo.</div>`;
+        return;
     }
 
-    openModal($('dayCounterHoursInfoDlg'));
+    listEl.innerHTML = draftWorkPlaces.map((place, idx) => {
+        const rateText = place.hourlyRate !== null && place.hourlyRate > 0
+            ? `${formatMoney(place.hourlyRate)} / hora`
+            : 'Sin pago por hora configurado';
+
+        return `
+            <div class="dc-place-row">
+                <div class="dc-place-row-info">
+                    <span class="dc-place-row-name">${escapeHtml(place.name)}</span>
+                    <span class="dc-place-row-rate">${rateText}</span>
+                </div>
+                <button type="button" class="edit-category-button" data-action="edit-work-place" data-place-index="${idx}" title="Editar lugar" aria-label="Editar lugar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </button>
+            </div>
+        `;
+    }).join('');
+}
+
+export function openDayCounterSettingsModal() {
+    const cfg = ensureDayCounterSettings();
+    draftNightSurchargePercent = cfg.nightSurchargePercent;
+    draftIrpfDiscountPercent = cfg.irpfDiscountPercent;
+    draftWorkPlaces = cfg.places.map(p => ({ ...p }));
+
+    clearValidationErrors($('dayCounterSettingsForm'));
+    if ($('dcNightSurchargeInput')) {
+        $('dcNightSurchargeInput').value = draftNightSurchargePercent > 0 ? draftNightSurchargePercent : '';
+    }
+    if ($('dcIrpfDiscountInput')) {
+        $('dcIrpfDiscountInput').value = draftIrpfDiscountPercent > 0 ? draftIrpfDiscountPercent : '';
+    }
+    renderDraftWorkPlacesList();
+    openModal($('dayCounterSettingsDlg'));
+}   
+
+function openWorkPlaceFormModal(placeIndex = null) {
+    editingWorkPlaceIndex = placeIndex;
+    clearValidationErrors($('dcWorkPlaceEditForm'));
+
+    const currSymbol = getCurrencySymbol(state.appConfig.currency);
+    if ($('dcWorkPlaceRateLabel')) {
+        $('dcWorkPlaceRateLabel').textContent = `Pago por hora en ${currSymbol} (opcional)`;
+    }
+
+    const isEditing = placeIndex !== null && draftWorkPlaces[placeIndex];
+    if (isEditing) {
+        const place = draftWorkPlaces[placeIndex];
+        $('dcWorkPlaceDlgTitle').textContent = 'Editar lugar';
+        $('dcWorkPlaceNameInput').value = place.name;
+        $('dcWorkPlaceRateInput').value = place.hourlyRate !== null && place.hourlyRate > 0
+            ? formatPlainInputValue(place.hourlyRate, state.appConfig.currency)
+            : '';
+        $('dcPlaceModalActionsSplit').style.display = 'flex';
+        $('dcPlaceModalActionsNormal').style.display = 'none';
+    } else {
+        $('dcWorkPlaceDlgTitle').textContent = 'Nuevo lugar';
+        $('dcWorkPlaceNameInput').value = '';
+        $('dcWorkPlaceRateInput').value = '';
+        $('dcPlaceModalActionsSplit').style.display = 'none';
+        $('dcPlaceModalActionsNormal').style.display = 'flex';
+    }
+
+    openModal($('dcWorkPlaceEditDlg'));
+}
+
+/* =========================================================
+   SELECTOR DE LUGAR EN EL MODAL DE TURNO
+   ========================================================= */
+function setupLocationFieldForModal(currentValue = '') {
+    const selectEl = $('dayLocationSelect');
+    const inputEl = $('dayLocation');
+    if (!selectEl || !inputEl) return;
+
+    const places = getWorkPlaces();
+    const trimmedVal = String(currentValue || '').trim();
+
+    if (!places.length) {
+        selectEl.classList.add('is-hidden');
+        inputEl.classList.remove('is-hidden');
+        inputEl.value = trimmedVal;
+        return;
+    }
+
+    const optionsHtml = [
+        `<option value="">Selecciona un lugar...</option>`,
+        ...places.map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.name)}</option>`),
+        `<option value="${CUSTOM_LOCATION_VALUE}">Otro lugar...</option>`
+    ].join('');
+
+    selectEl.innerHTML = optionsHtml;
+    selectEl.classList.remove('is-hidden');
+
+    const matchedPlace = places.find(p => p.name.toLowerCase() === trimmedVal.toLowerCase());
+    if (matchedPlace) {
+        selectEl.value = matchedPlace.name;
+        inputEl.value = matchedPlace.name;
+        inputEl.classList.add('is-hidden');
+    } else if (trimmedVal) {
+        selectEl.value = CUSTOM_LOCATION_VALUE;
+        inputEl.value = trimmedVal;
+        inputEl.classList.remove('is-hidden');
+    } else {
+        selectEl.value = '';
+        inputEl.value = '';
+        inputEl.classList.add('is-hidden');
+    }
 }
 
 /* Llamada por el botón "+ Nuevo" de la cabecera superior */
@@ -289,7 +580,7 @@ export function renderDayCounter() {
     const extraCount = targetDays > 0 ? Math.max(0, workedCount - targetDays) : 0;
 
     const dayParts = [];
-    if (showWorkedDays) dayParts.push(`Trabajados: ${workedCount}`);
+    if (showWorkedDays) dayParts.push(`Turnos: ${workedCount}`);
     if (registerExtras) dayParts.push(`Extras: ${extraCount}`);
 
     const hoursSummary = showHours ? calculateMonthHoursSummary(monthDays) : null;
@@ -325,7 +616,10 @@ export function renderDayCounter() {
         }
     }
 
-    const workedDatesSet = new Set(monthDays.map(d => d.date));
+    const shiftsCountByDate = new Map();
+    monthDays.forEach(d => {
+        shiftsCountByDate.set(d.date, (shiftsCountByDate.get(d.date) || 0) + 1);
+    });
     const todayIso = toIsoDateLocal(today);
 
     const firstWeekdayOffset = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7;
@@ -340,7 +634,8 @@ export function renderDayCounter() {
         const iso = `${monthKey}-${pad(dayNum)}`;
         const colIndex = (firstWeekdayOffset + dayNum - 1) % 7;
         const isSunday = colIndex === 6;
-        const hasShift = workedDatesSet.has(iso);
+        const shiftCount = shiftsCountByDate.get(iso) || 0;
+        const hasShift = shiftCount > 0;
         const isSelected = iso === selectedIsoDate;
         const isToday = iso === todayIso;
 
@@ -352,10 +647,15 @@ export function renderDayCounter() {
             isToday ? 'is-today' : ''
         ].filter(Boolean).join(' ');
 
+        const barsHtml = Array.from(
+            { length: Math.max(1, shiftCount) },
+            () => '<span class="dc-day-bar"></span>'
+        ).join('');
+
         allCells.push(`
             <button type="button" class="${classes}" data-action="select-cal-day" data-iso="${iso}" aria-label="${dayNum} de ${SPANISH_MONTH_NAMES[viewMonth]}">
                 <span class="dc-day-num">${dayNum}</span>
-                <span class="dc-day-bar"></span>
+                <span class="dc-day-bars">${barsHtml}</span>
             </button>
         `);
     }
@@ -460,7 +760,7 @@ function openDayCounterDayModal(monthId, dayIndex = null, prefillDate = null) {
         $('dayNameDisplay').value = day.dayName;
         $('dayEntryTime').value = day.entryTime;
         $('dayExitTime').value = day.exitTime;
-        $('dayLocation').value = day.location;
+        setupLocationFieldForModal(day.location);
 
         if (copyWrapper) copyWrapper.style.display = 'none';
         $('dayModalActionsSplit').style.display = 'flex';
@@ -472,7 +772,7 @@ function openDayCounterDayModal(monthId, dayIndex = null, prefillDate = null) {
         $('dayNameDisplay').value = getDayNameFromDate(defaultDate);
         $('dayEntryTime').value = '18:00';
         $('dayExitTime').value = '06:00';
-        $('dayLocation').value = '';
+        setupLocationFieldForModal('');
 
         const hasAnyPreviousShift = state.dayCounterMonths.some(rec => rec.days?.length > 0);
         if (copyWrapper) copyWrapper.style.display = hasAnyPreviousShift ? 'block' : 'none';
@@ -493,7 +793,7 @@ function copyLastDayData() {
 
     $('dayEntryTime').value = lastDay.entryTime || '';
     $('dayExitTime').value = lastDay.exitTime || '';
-    $('dayLocation').value = lastDay.location || '';
+    setupLocationFieldForModal(lastDay.location || '');
     clearValidationErrors($('dayCounterDayForm'));
 }
 
@@ -528,8 +828,124 @@ export function initDayCounter() {
         }
     });
 
-    /* Modal de desglose de horas */
+    /* Modal de desglose de horas (pestañas General / Por lugar) */
     $('closeHoursInfoBtn')?.addEventListener('click', () => closeModal($('dayCounterHoursInfoDlg')));
+
+    /* Modal de configuración general de Turnos trabajados */
+    $('openNewWorkPlaceBtn')?.addEventListener('click', () => openWorkPlaceFormModal(null));
+    $('dcWorkPlacesList')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-action="edit-work-place"]');
+        if (!btn) return;
+        openWorkPlaceFormModal(Number(btn.dataset.placeIndex));
+    });
+
+    $('cancelDayCounterSettingsBtn')?.addEventListener('click', () => closeModal($('dayCounterSettingsDlg')));
+    $('dayCounterSettingsForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const surchargeInput = $('dcNightSurchargeInput');
+        const irpfInput = $('dcIrpfDiscountInput');
+
+        const rawSurcharge = surchargeInput?.value.trim() ?? '';
+        const surchargeVal = rawSurcharge === '' ? 0 : parseFloat(rawSurcharge);
+        if (isNaN(surchargeVal) || surchargeVal < 0) {
+            surchargeInput?.classList.add('input-error');
+            surchargeInput?.focus();
+            return;
+        }
+
+        const rawIrpf = irpfInput?.value.trim() ?? '';
+        const irpfVal = rawIrpf === '' ? 0 : parseFloat(rawIrpf);
+        if (isNaN(irpfVal) || irpfVal < 0 || irpfVal > 100) {
+            irpfInput?.classList.add('input-error');
+            irpfInput?.focus();
+            return;
+        }
+
+        const cfg = ensureDayCounterSettings();
+        cfg.nightSurchargePercent = Math.round(surchargeVal * 100) / 100;
+        cfg.irpfDiscountPercent = Math.round(irpfVal * 100) / 100;
+        cfg.places = draftWorkPlaces.map(p => ({ ...p }));
+
+        persistConfigRaw();
+        closeModal($('dayCounterSettingsDlg'));
+        renderDayCounter();
+    });
+
+    /* Modal de crear / editar lugar de trabajo */
+    const closeWorkPlaceModal = () => closeModal($('dcWorkPlaceEditDlg'));
+    $('cancelWorkPlaceBtn')?.addEventListener('click', closeWorkPlaceModal);
+    $('cancelWorkPlaceBtnSplit')?.addEventListener('click', closeWorkPlaceModal);
+
+    $('deleteWorkPlaceBtn')?.addEventListener('click', () => {
+        if (editingWorkPlaceIndex === null) return;
+        if (!confirm('¿Eliminar este lugar de trabajo?')) return;
+        draftWorkPlaces.splice(editingWorkPlaceIndex, 1);
+        renderDraftWorkPlacesList();
+        closeWorkPlaceModal();
+    });
+
+    $('dcWorkPlaceEditForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nameInput = $('dcWorkPlaceNameInput');
+        const rateInput = $('dcWorkPlaceRateInput');
+
+        if (!validateRequiredFields($('dcWorkPlaceEditForm'), [nameInput])) return;
+
+        const cleanName = nameInput.value.trim();
+        const duplicate = draftWorkPlaces.some((p, idx) =>
+            idx !== editingWorkPlaceIndex && p.name.trim().toLowerCase() === cleanName.toLowerCase()
+        );
+        if (duplicate) {
+            alert('Ya existe un lugar de trabajo con ese nombre.');
+            nameInput.classList.add('input-error');
+            nameInput.focus();
+            return;
+        }
+
+        const rawRateStr = rateInput.value.trim();
+        let hourlyRate = null;
+        if (rawRateStr !== '') {
+            const parsed = parseInputNumber(rawRateStr);
+            if (isNaN(parsed) || parsed <= 0) {
+                rateInput.classList.add('input-error');
+                rateInput.focus();
+                return;
+            }
+            hourlyRate = Math.round(parsed * 100) / 100;
+        }
+
+        const placeObj = {
+            id: editingWorkPlaceIndex !== null && draftWorkPlaces[editingWorkPlaceIndex]?.id
+                ? draftWorkPlaces[editingWorkPlaceIndex].id
+                : crypto.randomUUID(),
+            name: cleanName,
+            hourlyRate
+        };
+
+        if (editingWorkPlaceIndex !== null) {
+            draftWorkPlaces[editingWorkPlaceIndex] = placeObj;
+        } else {
+            draftWorkPlaces.push(placeObj);
+        }
+
+        renderDraftWorkPlacesList();
+        closeWorkPlaceModal();
+    });
+
+    /* Cambio en el desplegable de lugar dentro del modal de turno */
+    $('dayLocationSelect')?.addEventListener('change', (e) => {
+        const val = e.target.value;
+        const inputEl = $('dayLocation');
+        e.target.classList.remove('input-error');
+        if (val === CUSTOM_LOCATION_VALUE) {
+            inputEl.value = '';
+            inputEl.classList.remove('is-hidden');
+            inputEl.focus();
+        } else {
+            inputEl.value = val;
+            inputEl.classList.add('is-hidden');
+        }
+    });
 
     /* Diálogo de configuración del mes */
     $('dayCounterTargetForm')?.addEventListener('click', (e) => {
@@ -594,16 +1010,32 @@ export function initDayCounter() {
         const dateInput = $('dayDate');
         const entryInput = $('dayEntryTime');
         const exitInput = $('dayExitTime');
+        const locSelect = $('dayLocationSelect');
         const locInput = $('dayLocation');
 
-        if (!validateRequiredFields($('dayCounterDayForm'), [dateInput, entryInput, exitInput, locInput])) return;
+        const usingSelect = locSelect && !locSelect.classList.contains('is-hidden');
+        if (usingSelect && !locSelect.value) {
+            locSelect.classList.add('input-error');
+            locSelect.focus();
+            return;
+        }
+
+        const fieldsToValidate = [dateInput, entryInput, exitInput];
+        if (!usingSelect || locSelect.value === CUSTOM_LOCATION_VALUE) {
+            fieldsToValidate.push(locInput);
+        }
+        if (!validateRequiredFields($('dayCounterDayForm'), fieldsToValidate)) return;
+
+        const locationValue = (usingSelect && locSelect.value !== CUSTOM_LOCATION_VALUE)
+            ? locSelect.value.trim()
+            : locInput.value.trim();
 
         const dayData = {
             date: dateInput.value,
             dayName: getDayNameFromDate(dateInput.value),
             entryTime: entryInput.value,
             exitTime: exitInput.value,
-            location: locInput.value.trim()
+            location: locationValue
         };
 
         const targetParts = parseIsoParts(dayData.date);

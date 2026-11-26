@@ -59,13 +59,13 @@
                 Compras en cuotas
             </button>
             <button type="button" class="nav-section-item" data-nav-section="dayCounter">
-                Días trabajados
+                Turnos trabajados
             </button>
         </nav>
 
-        <!-- Popover de Copia de Seguridad -->
+        <!-- Popover de Copia de Seguridad y Configuración -->
         <div class="nav-backup-backdrop is-hidden" id="navBackupBackdrop" aria-hidden="true"></div>
-        <div class="nav-drawer-backup-card is-hidden" id="navBackupPopover" role="dialog" aria-modal="true" aria-label="Copia de seguridad">
+        <div class="nav-drawer-backup-card is-hidden" id="navBackupPopover" role="dialog" aria-modal="true" aria-label="Opciones">
             <div class="nav-backup-title">Copia de seguridad</div>
             <div class="nav-backup-actions">
                 <button type="button" class="nav-backup-btn" id="importCsvBtn">
@@ -76,6 +76,16 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                     <span>Exportar</span>
                 </button>
+            </div>
+
+            <div class="nav-popover-section is-hidden" id="navDayCounterConfigSection">
+                <div class="nav-backup-title">Turnos trabajados</div>
+                <div class="nav-backup-actions">
+                    <button type="button" class="nav-backup-btn" id="openDayCounterSettingsBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <span>Configurar</span>
+                    </button>
+                </div>
             </div>
         </div>
         <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
@@ -536,7 +546,7 @@
     </dialog>
 
     <!-- ==========================================
-         6. MODALES DE UTILIDADES (REMESAS, CUOTAS, DÍAS)
+         6. MODALES DE UTILIDADES (REMESAS, CUOTAS, TURNOS)
          ========================================== -->
     <!-- Modal: Nueva Remesa -->
     <dialog id="remitNewDlg">
@@ -717,13 +727,13 @@
         </form>
     </dialog>
 
-     <!-- Modal: Configurar Vista y Objetivo del Mes -->
+    <!-- Modal: Configurar Vista y Objetivo del Mes -->
     <dialog id="dayCounterTargetDlg">
         <form class="modal" id="dayCounterTargetForm">
             <h2 id="targetDlgTitle">Configuración del mes</h2>
             <div class="formgrid">
                 <div class="field full">
-                    <span class="filter-section-label">Mostrar días trabajados</span>
+                    <span class="filter-section-label">Mostrar turnos trabajados</span>
                     <div class="dc-extra-toggle" role="group" aria-label="Mostrar días trabajados">
                         <button type="button" class="dc-extra-btn active" data-dc-opt="showWorkedDays" data-val="yes">Sí</button>
                         <button type="button" class="dc-extra-btn" data-dc-opt="showWorkedDays" data-val="no">No</button>
@@ -731,7 +741,7 @@
                 </div>
 
                 <div class="field full">
-                    <span class="filter-section-label">Mostrar días extras</span>
+                    <span class="filter-section-label">Mostrar turnos extras</span>
                     <div class="dc-extra-toggle" role="group" aria-label="Mostrar días extras">
                         <button type="button" class="dc-extra-btn" data-dc-opt="registerExtras" data-val="yes">Sí</button>
                         <button type="button" class="dc-extra-btn active" data-dc-opt="registerExtras" data-val="no">No</button>
@@ -771,6 +781,68 @@
         </div>
     </dialog>
 
+    <!-- Modal: Configuración General de Turnos Trabajados -->
+    <dialog id="dayCounterSettingsDlg">
+        <form class="modal" id="dayCounterSettingsForm">
+            <h2>Configurar turnos</h2>
+            <div class="field full">
+                    <div class="dc-places-header">
+                        <label>Lugares de trabajo</label>
+                        <button type="button" class="category-newbutton dc-place-add-btn" id="openNewWorkPlaceBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Nuevo</span>
+                        </button>
+                    </div>
+                    <div id="dcWorkPlacesList" class="dc-places-list"></div>
+                </div>
+
+            <div class="formgrid">
+                <div class="field">
+                    <label for="dcNightSurchargeInput">Recargo nocturnidad (%)</label>
+                    <input id="dcNightSurchargeInput" type="number" min="0" max="500" step="0.01" placeholder="Ej. 25">
+                </div>
+                <div class="field">
+                    <label for="dcIrpfDiscountInput">Descuento IRPF (%)</label>
+                    <input id="dcIrpfDiscountInput" type="number" min="0" max="100" step="0.01" placeholder="0">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="cancelarmovimiento" id="cancelDayCounterSettingsBtn">Cancelar</button>
+                <button type="submit" class="aceptarmovimiento">Guardar</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Modal: Crear / Editar Lugar de Trabajo -->
+    <dialog id="dcWorkPlaceEditDlg">
+        <form class="modal" id="dcWorkPlaceEditForm">
+            <h2 id="dcWorkPlaceDlgTitle">Nuevo lugar</h2>
+            <div class="formgrid">
+                <div class="field full">
+                    <label for="dcWorkPlaceNameInput">Nombre del lugar</label>
+                    <input id="dcWorkPlaceNameInput" placeholder="Ej. Parking Azuaga">
+                </div>
+                <div class="field full">
+                    <label for="dcWorkPlaceRateInput" id="dcWorkPlaceRateLabel">Pago por hora (opcional)</label>
+                    <input id="dcWorkPlaceRateInput" type="text" inputmode="decimal" placeholder="Sin tarifa">
+                </div>
+            </div>
+            <div class="modal-actions modal-actions-split" id="dcPlaceModalActionsSplit" style="display: none;">
+                <button type="button" class="large-delete-button" id="deleteWorkPlaceBtn" title="Eliminar lugar" aria-label="Eliminar lugar">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+                <div class="flex-center-gap">
+                    <button type="button" class="cancelarmovimiento" id="cancelWorkPlaceBtnSplit">Cancelar</button>
+                    <button type="submit" class="aceptarmovimiento">Guardar</button>
+                </div>
+            </div>
+            <div class="modal-actions" id="dcPlaceModalActionsNormal">
+                <button type="button" class="cancelarmovimiento" id="cancelWorkPlaceBtn">Cancelar</button>
+                <button type="submit" class="aceptarmovimiento">Guardar</button>
+            </div>
+        </form>
+    </dialog>
+
     <!-- Modal: Registrar / Editar Día Trabajado -->
     <dialog id="dayCounterDayDlg">
         <form class="modal" id="dayCounterDayForm">
@@ -799,7 +871,8 @@
                     <input id="dayExitTime" type="time">
                 </div>
                 <div class="field full">
-                    <label for="dayLocation">Lugar</label>
+                    <label for="dayLocationSelect">Lugar</label>
+                    <select id="dayLocationSelect" class="is-hidden"></select>
                     <input id="dayLocation" placeholder="Ej. Parking Azuaga">
                 </div>
             </div>
@@ -846,8 +919,8 @@
                         </label>
                         <label class="config-utility-option">
                             <input type="checkbox" id="expDayCounter">
-                            <span>Contador de días</span>
-                        </label>
+                            <span>Turnos trabajados</span>
+                        </label>    
                     </div>
                 </div>
             </div>
@@ -882,7 +955,7 @@
                         </label>
                         <label class="config-utility-option">
                             <input type="checkbox" id="impSelectDays" checked>
-                            <span>Contador de días (<span id="impDaysCount">0</span>)</span>
+                            <span>Turnos trabajados (<span id="impDaysCount">0</span>)</span>
                         </label>
                     </div>
                 </div>
