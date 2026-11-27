@@ -2377,7 +2377,7 @@ body.dark-mode .filter-cal-day.is-in-week {
     background: var(--fondo);
     color: var(--primario);
     font-weight: 600;
-    width: 50%;
+    width: 35%;
     text-align: right;
 }
 
