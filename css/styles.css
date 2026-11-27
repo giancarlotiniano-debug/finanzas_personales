@@ -1788,7 +1788,7 @@ dialog::backdrop {
     display: flex;
     justify-content: flex-end;
     gap: 5px;
-    margin-top: 20px;
+    margin-top: 25px;
 }
 
 .modal-actions-split {
@@ -2963,6 +2963,7 @@ body.dark-mode .filter-cal-day.is-in-week {
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+    margin-bottom: 10px;
 }
 
 .dc-place-add-btn {
