@@ -618,7 +618,7 @@ function openTargetConfigModal() {
     const registerExtras = record?.registerExtras === true;
     const showHours = record?.showHours === true;
 
-    if ($('targetDlgTitle')) $('targetDlgTitle').textContent = monthTitle;
+    if ($('targetDlgTitle')) $('targetDlgTitle').textContent = `Ver/ocultar`;
     if ($('monthTargetDaysInput')) $('monthTargetDaysInput').value = record?.targetDays ?? 0;
     clearValidationErrors($('dayCounterTargetForm'));
 
@@ -757,20 +757,12 @@ export function renderDayCounter() {
                 <div class="dc-cal-title-group">
                     <div class="dc-cal-title-row">
                         <h2 class="dc-cal-month-title">${SPANISH_MONTH_NAMES[viewMonth]} ${viewYear}</h2>
-                        <button type="button" class="dc-gear-btn" data-action="open-target-config" title="Configurar vista del mes" aria-label="Configurar vista del mes">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="7.5" cy="12" r="1.25" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.25" fill="currentColor" stroke="none"/><circle cx="16.5" cy="12" r="1.25" fill="currentColor" stroke="none"/></svg>
-                        </button>
                     </div>
                     ${statsHtml}
                 </div>
-                <div class="dc-cal-nav">
-                    <button type="button" class="dc-nav-circle-btn" data-action="prev-month" aria-label="Mes anterior">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3L8.2 10.8a1.7 1.7 0 0 0 0 2.4L16 21"/></svg>
-                    </button>
-                    <button type="button" class="dc-nav-circle-btn" data-action="next-month" aria-label="Mes siguiente">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3l7.8 7.8a1.7 1.7 0 0 1 0 2.4L8 21"/></svg>
-                    </button>
-                </div>
+                <button type="button" class="dc-gear-btn" data-action="open-target-config" title="Configurar vista del mes" aria-label="Configurar vista del mes">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
             </div>
             <div class="dc-weekdays-row">${weekdaysHeaderHtml}</div>
             <div class="dc-weeks-wrapper ${enterAnimClass}">${weekRowsHtml.join('')}</div>
@@ -887,11 +879,7 @@ export function initDayCounter() {
 
         const { action, iso, monthId, dayIndex } = target.dataset;
 
-        if (action === 'prev-month') {
-            changeCalendarMonth(-1, true);
-        } else if (action === 'next-month') {
-            changeCalendarMonth(1, true);
-        } else if (action === 'select-cal-day') {
+        if (action === 'select-cal-day') {
             selectedIsoDate = iso;
             renderDayCounter();
         } else if (action === 'open-target-config') {

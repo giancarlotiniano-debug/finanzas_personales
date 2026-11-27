@@ -2463,7 +2463,6 @@ body.dark-mode .filter-cal-day.is-in-week {
 
 .dc-cal-title-row {
     display: flex;
-    align-items: center;
     gap: 3px;
 }
 
@@ -2482,17 +2481,25 @@ body.dark-mode .filter-cal-day.is-in-week {
 }
 
 .dc-gear-btn {
+    width: 32px;
+    height: 45px;
     background: transparent;
     border: none;
-    padding: 3px;
+    padding: 2px 0 0 0;
     margin: 0;
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
     color: var(--primario);
     cursor: pointer;
     border-radius: 50%;
+    flex-shrink: 0;
     transition: background-color 0.15s ease;
+}
+
+.dc-gear-btn svg {
+    width: 20px;
+    height: 20px;
 }
 
 .dc-gear-btn:hover,
@@ -2551,22 +2558,27 @@ body.dark-mode .filter-cal-day.is-in-week {
 .dc-cal-stats-row {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
     flex-wrap: wrap;
 }
 
 .dc-info-btn {
     background: transparent;
     border: none;
-    padding: 2px;
     margin: 0;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center;;
     color: var(--primario);
+    opacity: 0.7;
     cursor: pointer;
     border-radius: 50%;
     line-height: 1;
+}
+
+.dc-info-btn svg {
+    height: 14px;
+    width: 14px;
 }
 
 .dc-info-btn:active {
@@ -2579,33 +2591,6 @@ body.dark-mode .filter-cal-day.is-in-week {
     color: var(--texto);
     opacity: 0.65;
     text-align: center;
-}
-
-.dc-cal-nav {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-shrink: 0;
-}
-
-.dc-nav-circle-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: none;
-    background: transparent;
-    color: var(--primario);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-    transition: transform 0.12s ease, opacity 0.15s ease;
-}
-
-.dc-nav-circle-btn:active {
-    transform: scale(0.94);
-    opacity: 0.9;
 }
 
 .dc-weekdays-row {
