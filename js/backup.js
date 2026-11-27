@@ -1,5 +1,5 @@
 import {
-    $, state, today, persist, persistRemittancesList,
+    $, state, today, SPANISH_MONTH_NAMES, persist, persistRemittancesList,
     persistInstallments, persistDayCounter, persistConfigRaw,
     formatDateEs, openModal, closeModal
 } from './shared.js';
@@ -107,13 +107,14 @@ function executeCustomExport() {
             }
         });
 
-        csvRows.push('--- CONFIG_TURNOS ---', 'RECARGO_NOCTURNO_PCT,IRPF_PCT,LUGAR_TRABAJO,TARIFA_HORA');
+        csvRows.push('--- CONFIG_TURNOS ---', 'RECARGO_NOCTURNO_PCT,IRPF_PCT,LUGAR_TRABAJO,TARIFA_HORA,APLICA_NOCTURNIDAD');
         if (!places.length) {
-            csvRows.push(`${surcharge},${irpf},"",""`);
+            csvRows.push(`${surcharge},${irpf},"","",""`);
         } else {
             places.forEach(p => {
                 const rateVal = (p.hourlyRate !== null && p.hourlyRate > 0) ? p.hourlyRate : '';
-                csvRows.push(`${surcharge},${irpf},${csvQuote(p.name)},${rateVal}`);
+                const nightVal = p.applyNightSurcharge !== false ? 'SI' : 'NO';
+                csvRows.push(`${surcharge},${irpf},${csvQuote(p.name)},${rateVal},${nightVal}`);
             });
         }
     }
@@ -221,11 +222,25 @@ function importMovementsCsv(event) {
                     }
 
                     const mName = unquoteCsv(rawMName);
-                    if (!mName) continue;
-                    if (!rawDaysMap[mName]) {
-                        rawDaysMap[mName] = {
-                            id: crypto.randomUUID(),
-                            name: mName,
+                    const formattedDate = normalizeDateToIso(dDate);
+                    let monthKey = formattedDate && /^\d{4}-\d{2}/.test(formattedDate) ? formattedDate.slice(0, 7) : null;
+                    if (!monthKey && mName) {
+                        const parts = mName.trim().split(/\s+/);
+                        const yr = parts[parts.length - 1];
+                        const mIdx = SPANISH_MONTH_NAMES.findIndex(m => m.toLowerCase() === parts.slice(0, -1).join(' ').toLowerCase());
+                        if (/^\d{4}$/.test(yr) && mIdx !== -1) monthKey = `${yr}-${String(mIdx + 1).padStart(2, '0')}`;
+                    }
+                    const mapKey = monthKey || mName;
+                    if (!mapKey) continue;
+
+                    const canonicalName = monthKey
+                        ? `${SPANISH_MONTH_NAMES[Number(monthKey.split('-')[1]) - 1]} ${monthKey.split('-')[0]}`
+                        : mName;
+
+                    if (!rawDaysMap[mapKey]) {
+                        rawDaysMap[mapKey] = {
+                            id: monthKey || crypto.randomUUID(),
+                            name: canonicalName,
                             showWorkedDays: !showWorkedStr.toUpperCase().includes('NO'),
                             registerExtras: regExtrasStr.toUpperCase().includes('SI'),
                             showHours: showHoursStr.toUpperCase().includes('SI'),
@@ -233,9 +248,8 @@ function importMovementsCsv(event) {
                             days: []
                         };
                     }
-                    const formattedDate = normalizeDateToIso(dDate);
                     if (formattedDate) {
-                        rawDaysMap[mName].days.push({
+                        rawDaysMap[mapKey].days.push({
                             date: formattedDate,
                             dayName: unquoteCsv(dName),
                             entryTime: unquoteCsv(entryT),
@@ -244,7 +258,7 @@ function importMovementsCsv(event) {
                         });
                     }
                 } else if (currentSection === 'CONFIG_TURNOS' && row.length >= 2) {
-                    const [surchargeStr, irpfStr, rawPlaceName = '', rawRateStr = ''] = row;
+                    const [surchargeStr, irpfStr, rawPlaceName = '', rawRateStr = '', rawNightStr = ''] = row;
                     if (!parsedDayCounterSettings) {
                         parsedDayCounterSettings = {
                             nightSurchargePercent: Math.max(0, parseFloat(surchargeStr.replace(',', '.')) || 0),
@@ -255,10 +269,12 @@ function importMovementsCsv(event) {
                     const cleanPlace = unquoteCsv(rawPlaceName).trim();
                     if (cleanPlace) {
                         const parsedRate = parseFloat(unquoteCsv(rawRateStr).replace(',', '.'));
+                        const cleanNight = unquoteCsv(rawNightStr).trim().toUpperCase();
                         parsedDayCounterSettings.places.push({
                             id: crypto.randomUUID(),
                             name: cleanPlace,
-                            hourlyRate: (!isNaN(parsedRate) && parsedRate > 0) ? Math.round(parsedRate * 100) / 100 : null
+                            hourlyRate: (!isNaN(parsedRate) && parsedRate > 0) ? Math.round(parsedRate * 100) / 100 : null,
+                            applyNightSurcharge: cleanNight !== 'NO'
                         });
                     }
                 }
@@ -283,6 +299,7 @@ function importMovementsCsv(event) {
             });
 
             pendingParsedSections = {
+                detectedSections,
                 movements: tempMovements,
                 remittances: parsedRemit,
                 installments: parsedInst,
@@ -312,23 +329,25 @@ function applyImportSelection(selection) {
     if (!pendingParsedSections) return;
     const importedSummary = [];
 
-    if (selection.movements && pendingParsedSections.movements.length > 0) {
+    const secs = pendingParsedSections.detectedSections || new Set();
+
+    if (selection.movements && (pendingParsedSections.movements.length > 0 || secs.has('MOVIMIENTOS'))) {
         state.movements = pendingParsedSections.movements;
         persist();
         importedSummary.push(`• Movimientos: ${state.movements.length}`);
     }
-    if (selection.remittances && pendingParsedSections.remittances.length > 0) {
+    if (selection.remittances && (pendingParsedSections.remittances.length > 0 || secs.has('REMESAS'))) {
         state.remittancesList = pendingParsedSections.remittances;
         persistRemittancesList();
         importedSummary.push(`• Cálculos de remesas: ${state.remittancesList.length}`);
     }
-    if (selection.installments && pendingParsedSections.installments.length > 0) {
+    if (selection.installments && (pendingParsedSections.installments.length > 0 || secs.has('CUOTAS'))) {
         state.installmentsPurchases = pendingParsedSections.installments;
         persistInstallments();
         importedSummary.push(`• Gestores de cuotas: ${state.installmentsPurchases.length}`);
     }
-    if (selection.dayCounter && (pendingParsedSections.dayCounter.length > 0 || pendingParsedSections.dayCounterSettings)) {
-        if (pendingParsedSections.dayCounter.length > 0) {
+    if (selection.dayCounter && (pendingParsedSections.dayCounter.length > 0 || pendingParsedSections.dayCounterSettings || secs.has('DIAS'))) {
+        if (pendingParsedSections.dayCounter.length > 0 || secs.has('DIAS')) {
             state.dayCounterMonths = pendingParsedSections.dayCounter;
             persistDayCounter();
         }

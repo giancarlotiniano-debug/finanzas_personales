@@ -75,6 +75,17 @@ input[type="number"] {
     appearance: textfield;
 }
 
+button:focus,
+button:focus-visible,
+dialog:focus,
+dialog:focus-visible,
+[role="button"]:focus,
+[role="button"]:focus-visible,
+[tabindex]:focus,
+[tabindex]:focus-visible {
+    outline: none;
+}
+
 .is-hidden { display: none !important; }
 .text-right { text-align: right; }
 .text-center { text-align: center; }
@@ -374,7 +385,7 @@ header {
 }
 
 .nav-backup-btn {
-    width: 80%;
+    width: 100%;
     height: 44px;
     border-radius: 25px;
     background: var(--primario);
@@ -2430,10 +2441,10 @@ body.dark-mode .filter-cal-day.is-in-week {
 
 .dc-cal-card,
 .dc-detail-card {
-    background: var(--tarjetas);
+    background: var(--fondo);
     border: none;
     border-radius: 22px;
-    padding: 20px;
+    padding: 0px;
 }
 
 .dc-cal-header {
@@ -2459,8 +2470,8 @@ body.dark-mode .filter-cal-day.is-in-week {
 .dc-cal-month-title {
     margin: 0;
     font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--primario);
+    font-weight: 650;
+    color: var(--texto);
     line-height: 1.2;
 }
 
@@ -2622,23 +2633,63 @@ body.dark-mode .filter-cal-day.is-in-week {
 .dc-weeks-wrapper {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    touch-action: pan-x;
+    will-change: transform, opacity;
+}
+
+.dc-weeks-wrapper.is-animating-out-up {
+    transform: translateY(-22px);
+    opacity: 0;
+    transition: transform 0.14s ease-in, opacity 0.14s ease-in;
+}
+
+.dc-weeks-wrapper.is-animating-out-down {
+    transform: translateY(22px);
+    opacity: 0;
+    transition: transform 0.14s ease-in, opacity 0.14s ease-in;
+}
+
+@keyframes dcWeeksEnterFromBottom {
+    from {
+        opacity: 0;
+        transform: translateY(22px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes dcWeeksEnterFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-22px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dc-weeks-wrapper.is-entering-from-bottom {
+    animation: dcWeeksEnterFromBottom 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dc-weeks-wrapper.is-entering-from-top {
+    animation: dcWeeksEnterFromTop 0.18s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .dc-week-row {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    padding: 6px 2px;
+    padding: 4px 2px;
     border-bottom: 1px solid var(--calendarline);
-}
-
-.dc-week-row:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
 }
 
 .dc-week-row.is-first-week {
     background: transparent;
-    padding: 4px 2px 6px;
+    padding: 4px 2px;
 }
 
 .dc-day-cell {
@@ -2651,12 +2702,6 @@ body.dark-mode .filter-cal-day.is-in-week {
     background: transparent;
     border: none;
     cursor: pointer;
-}
-
-.dc-week-row:last-child .dc-day-cell:not(.is-empty) {
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--calendarline);
-    border-radius: 0;
 }
 
 .dc-day-cell.is-empty {
@@ -2708,10 +2753,6 @@ body.dark-mode .filter-cal-day.is-in-week {
     background: var(--primario);
 }
 
-.dc-day-cell.has-shift .dc-day-bar {
-    background: var(--primario);
-}
-
 .dc-selected-card-container {
     display: flex;
     flex-direction: column;
@@ -2719,7 +2760,34 @@ body.dark-mode .filter-cal-day.is-in-week {
 }
 
 .dc-detail-card {
-    padding: 12px;
+    padding: 0px;
+    background-color: var(--fondo);
+    margin-top: 0px;
+}
+
+.dc-detail-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 2px 12px;
+}
+
+.dc-detail-date-heading {
+    font-size: 0.9rem;
+    font-weight: 650;
+    color: var(--texto);
+    padding: 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dc-detail-new-btn {
+    height: 36px;
+    padding: 0 14px;
+    flex-shrink: 0;
 }
 
 .dc-shift-detail-row {
@@ -2729,7 +2797,15 @@ body.dark-mode .filter-cal-day.is-in-week {
     gap: 12px;
     background: var(--fondo);
     border-radius: 14px;
-    padding: 12px 14px;
+    padding: 4px 0 4px 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.12s ease, opacity 0.15s ease;
+}
+
+.dc-shift-detail-row:active {
+    transform: scale(0.99);
+    opacity: 0.85;
 }
 
 .dc-shift-detail-row + .dc-shift-detail-row {
@@ -2770,50 +2846,8 @@ body.dark-mode .filter-cal-day.is-in-week {
 .dc-shift-date-sub {
     font-size: 0.8rem;
     color: var(--texto);
-    opacity: 0.5;
+    opacity: 0.7;
     margin-top: -1px;
-}
-
-.dc-shift-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-}
-
-.dc-shift-times {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    line-height: 1.25;
-}
-
-.dc-time-entry {
-    color: var(--texto);
-}
-
-.dc-time-exit {
-    color: var(--texto);
-    opacity: 0.5;
-}
-
-.dc-shift-edit-btn {
-    background: transparent;
-    border: none;
-    padding: 6px;
-    color: var(--primario);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-.dc-shift-edit-btn:active {
-    background: var(--fondo);
 }
 
 .dc-empty-state {
@@ -2821,12 +2855,11 @@ body.dark-mode .filter-cal-day.is-in-week {
     align-items: center;
     justify-content: center;
     background: var(--fondo);
-    min-height: 68px;
+    min-height: 160px;
     border-radius: 14px;
     padding: 14px 12px;
     font-size: 0.86rem;
     color: var(--texto);
-    opacity: 0.7;
 }
 
 /* Popover: sección adicional en 3 puntos */
@@ -2838,9 +2871,7 @@ body.dark-mode .filter-cal-day.is-in-week {
     border-top: 1px solid var(--tarjetas);
 }
 
-.nav-backup-btn {
-    width: 100%;
-}
+
 
 /* Pestañas y tarjetas de detalle de horas */
 
@@ -2857,7 +2888,6 @@ body.dark-mode .filter-cal-day.is-in-week {
     font-size: 13px;
     font-weight: 700;
     color: var(--texto);
-    opacity: 0.75;
     padding: 0 2px;
     margin-bottom: -4px;
 }
@@ -3020,8 +3050,8 @@ body.dark-mode .filter-cal-day.is-in-week {
     width: 54px;
     height: 54px;
     border-radius: 15px;
-    background: var(--primario);
-    color: var(--blanco);
+    background: transparent;
+    color: var(--primario);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -3032,11 +3062,7 @@ body.dark-mode .filter-cal-day.is-in-week {
 .dc-open-settings-inline-btn svg {
     height: 30px;
     width: 30px;
-}
-
-.dc-open-settings-inline-btn:hover {
-    background: var(--primario);
-    color: var(--blanco);
+    stroke-width: 1.5;
 }
 
 /* ==========================================

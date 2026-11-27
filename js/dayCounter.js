@@ -16,6 +16,37 @@ let selectedIsoDate = toIsoDateLocal(today);
 let editingDayMonthId = null;
 let editingDayIndex = null;
 
+let pendingWeeksEnterClass = '';
+let isMonthTransitioning = false;
+
+function changeCalendarMonth(delta, animate = true) {
+    if (isMonthTransitioning) return;
+
+    const applyMonthStep = () => {
+        const d = new Date(viewYear, viewMonth + delta, 1);
+        viewYear = d.getFullYear();
+        viewMonth = d.getMonth();
+        renderDayCounter();
+    };
+
+    const weeksEl = $('dayCounterCalendarContainer')?.querySelector('.dc-weeks-wrapper');
+    if (!animate || !weeksEl) {
+        pendingWeeksEnterClass = '';
+        applyMonthStep();
+        return;
+    }
+
+    isMonthTransitioning = true;
+    const outClass = delta > 0 ? 'is-animating-out-up' : 'is-animating-out-down';
+    pendingWeeksEnterClass = delta > 0 ? 'is-entering-from-bottom' : 'is-entering-from-top';
+
+    weeksEl.classList.add(outClass);
+    setTimeout(() => {
+        applyMonthStep();
+        isMonthTransitioning = false;
+    }, 135);
+}
+
 let draftNightSurchargePercent = 0;
 let draftIrpfDiscountPercent = 0;
 let draftWorkPlaces = [];
@@ -160,6 +191,14 @@ function getDayNameFromDate(dateStr) {
     if (!dateStr) return '';
     const name = new Date(dateStr + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long' });
     return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
+function formatSelectedDateHeading(isoDate) {
+    const parts = parseIsoParts(isoDate);
+    if (!parts) return '';
+    const weekday = getDayNameFromDate(isoDate);
+    const monthName = SPANISH_MONTH_NAMES[parts.m - 1].toLowerCase();
+    return `${weekday}, ${parts.d} de ${monthName}`;
 }
 
 function formatTime12h(time24) {
@@ -471,7 +510,7 @@ function openWorkPlaceFormModal(placeIndex = null) {
 
     const currSymbol = getCurrencySymbol(state.appConfig.currency);
     if ($('dcWorkPlaceRateLabel')) {
-        $('dcWorkPlaceRateLabel').textContent = `Pago por hora en ${currSymbol} (opcional)`;
+        $('dcWorkPlaceRateLabel').textContent = `Tarifa/h (${currSymbol})`;
     }
 
     const isEditing = placeIndex !== null && draftWorkPlaces[placeIndex];
@@ -516,9 +555,9 @@ function setupLocationFieldForModal(currentValue = '') {
     }
 
     const optionsHtml = [
-        `<option value="">Selecciona un lugar...</option>`,
+        `<option value="">Selecciona un lugar</option>`,
         ...places.map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.name)}</option>`),
-        `<option value="${CUSTOM_LOCATION_VALUE}">Otro lugar...</option>`
+        `<option value="${CUSTOM_LOCATION_VALUE}">Otro</option>`
     ].join('');
 
     selectEl.innerHTML = optionsHtml;
@@ -709,6 +748,9 @@ export function renderDayCounter() {
         `<span class="dc-weekday-cell ${idx === 6 ? 'is-sunday' : ''}">${letter}</span>`
     ).join('');
 
+    const enterAnimClass = pendingWeeksEnterClass;
+    pendingWeeksEnterClass = '';
+
     calContainer.innerHTML = `
         <div class="dc-cal-card">
             <div class="dc-cal-header">
@@ -731,7 +773,7 @@ export function renderDayCounter() {
                 </div>
             </div>
             <div class="dc-weekdays-row">${weekdaysHeaderHtml}</div>
-            <div class="dc-weeks-wrapper">${weekRowsHtml.join('')}</div>
+            <div class="dc-weeks-wrapper ${enterAnimClass}">${weekRowsHtml.join('')}</div>
         </div>
     `;
 
@@ -739,9 +781,22 @@ export function renderDayCounter() {
         .map((day, idx) => ({ day, idx }))
         .filter(({ day }) => day.date === selectedIsoDate);
 
+    
+    const selectedDateTitle = formatSelectedDateHeading(selectedIsoDate);
+    const detailHeaderHtml = `
+        <div class="dc-detail-header-row">
+            <div class="dc-detail-date-heading">${escapeHtml(selectedDateTitle)}</div>
+            <button type="button" class="pill-new-btn dc-detail-new-btn" data-action="new-day" aria-label="Nuevo turno">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Nuevo</span>
+            </button>
+        </div>
+    `;
+
     if (!matchingEntries.length) {
         detailsContainer.innerHTML = `
             <div class="dc-detail-card">
+                ${detailHeaderHtml}
                 <div class="dc-empty-state">No hay turnos registrados.</div>
             </div>
         `;
@@ -749,27 +804,23 @@ export function renderDayCounter() {
     }
 
     const shiftsHtml = matchingEntries.map(({ day, idx }) => `
-        <div class="dc-shift-detail-row">
+        <div class="dc-shift-detail-row" role="button" tabindex="0" data-action="edit-day" data-month-id="${monthKey}" data-day-index="${idx}" aria-label="Editar turno en ${escapeHtml(day.location)}">
             <div class="dc-shift-left">
                 <span class="dc-shift-accent-bar"></span>
                 <div class="dc-shift-info">
                     <span class="dc-shift-location">${escapeHtml(day.location)}</span>
-                    <span class="dc-shift-date-sub">${escapeHtml(day.dayName)} ${formatDateEs(day.date)}</span>
+                    <span class="dc-shift-date-sub">${escapeHtml(formatTime12h(day.entryTime))} - ${escapeHtml(formatTime12h(day.exitTime))}</span>
                 </div>
-            </div>
-            <div class="dc-shift-right">
-                <div class="dc-shift-times">
-                    <span class="dc-time-entry">${escapeHtml(formatTime12h(day.entryTime))}</span>
-                    <span class="dc-time-exit">${escapeHtml(formatTime12h(day.exitTime))}</span>
-                </div>
-                <button type="button" class="dc-shift-edit-btn" data-action="edit-day" data-month-id="${monthKey}" data-day-index="${idx}" title="Editar turno" aria-label="Editar turno">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 4.2a2.5 2.5 0 0 1 3.5 3.5L7.6 20.1 3.2 21l.9-4.4L16.5 4.2zM14.3 6.4l3.5 3.5"/></svg>
-                </button>
             </div>
         </div>
     `).join('');
 
-    detailsContainer.innerHTML = `<div class="dc-detail-card">${shiftsHtml}</div>`;
+    detailsContainer.innerHTML = `
+        <div class="dc-detail-card">
+            ${detailHeaderHtml}
+            ${shiftsHtml}
+        </div>
+    `;
 }
 
 function openDayCounterDayModal(monthId, dayIndex = null, prefillDate = null) {
@@ -837,15 +888,9 @@ export function initDayCounter() {
         const { action, iso, monthId, dayIndex } = target.dataset;
 
         if (action === 'prev-month') {
-            const d = new Date(viewYear, viewMonth - 1, 1);
-            viewYear = d.getFullYear();
-            viewMonth = d.getMonth();
-            renderDayCounter();
+            changeCalendarMonth(-1, true);
         } else if (action === 'next-month') {
-            const d = new Date(viewYear, viewMonth + 1, 1);
-            viewYear = d.getFullYear();
-            viewMonth = d.getMonth();
-            renderDayCounter();
+            changeCalendarMonth(1, true);
         } else if (action === 'select-cal-day') {
             selectedIsoDate = iso;
             renderDayCounter();
@@ -853,9 +898,73 @@ export function initDayCounter() {
             openTargetConfigModal();
         } else if (action === 'open-hours-info') {
             openHoursInfoModal();
+        } else if (action === 'new-day') {
+            openNewDayCounterMonthModal();
         } else if (action === 'edit-day') {
             openDayCounterDayModal(monthId, Number(dayIndex));
         }
+    });
+
+    /* Gesto vertical (arriba/abajo) sobre los números del calendario para cambiar de mes */
+    const calContainer = $('dayCounterCalendarContainer');
+    let calTouchStartX = 0;
+    let calTouchStartY = 0;
+    let calTouchInGrid = false;
+    let calSwipingVertical = false;
+
+    calContainer?.addEventListener('touchstart', (e) => {
+        const weeksWrapper = e.target.closest('.dc-weeks-wrapper');
+        if (!weeksWrapper || e.touches.length !== 1) {
+            calTouchInGrid = false;
+            return;
+        }
+        calTouchInGrid = true;
+        calSwipingVertical = false;
+        calTouchStartX = e.touches[0].clientX;
+        calTouchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    calContainer?.addEventListener('touchmove', (e) => {
+        if (!calTouchInGrid || e.touches.length !== 1) return;
+        const dx = e.touches[0].clientX - calTouchStartX;
+        const dy = e.touches[0].clientY - calTouchStartY;
+
+        if (!calSwipingVertical) {
+            if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)) {
+                calTouchInGrid = false;
+                return;
+            }
+            if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) {
+                calSwipingVertical = true;
+            }
+        }
+
+        if (calSwipingVertical && e.cancelable) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    calContainer?.addEventListener('touchend', (e) => {
+        if (!calTouchInGrid) return;
+        const touch = e.changedTouches[0];
+        const dx = touch.clientX - calTouchStartX;
+        const dy = touch.clientY - calTouchStartY;
+        const wasSwiping = calSwipingVertical;
+
+        calTouchInGrid = false;
+        calSwipingVertical = false;
+
+        if (wasSwiping && Math.abs(dy) >= 36 && Math.abs(dy) > Math.abs(dx)) {
+            changeCalendarMonth(dy < 0 ? 1 : -1, true);
+        }
+    }, { passive: true });
+
+    $('dayCounterCard')?.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const card = e.target.closest('.dc-shift-detail-row[data-action="edit-day"]');
+        if (!card) return;
+        e.preventDefault();
+        openDayCounterDayModal(card.dataset.monthId, Number(card.dataset.dayIndex));
     });
 
     /* Modal de desglose de horas (pestañas General / Por lugar) */
@@ -1099,13 +1208,6 @@ export function initDayCounter() {
 
         if (editingDayIndex !== null && editingDayMonthId) {
             const originRecord = state.dayCounterMonths.find(m => m.id === editingDayMonthId);
-            const duplicateOnEdit = targetRecord.days.some((d, idx) =>
-                !(editingDayMonthId === targetMonthKey && idx === editingDayIndex) && d.date === dayData.date
-            );
-            if (duplicateOnEdit) {
-                const ok = confirm(`El día ${formatDateEs(dayData.date)} ya tiene un turno registrado. ¿Deseas registrarlo nuevamente?`);
-                if (!ok) return;
-            }
 
             if (editingDayMonthId === targetMonthKey && originRecord?.days[editingDayIndex]) {
                 originRecord.days[editingDayIndex] = dayData;
@@ -1116,7 +1218,7 @@ export function initDayCounter() {
         } else {
             const alreadyRegistered = targetRecord.days.some(d => d.date === dayData.date);
             if (alreadyRegistered) {
-                const ok = confirm(`El día ${formatDateEs(dayData.date)} ya tiene un turno registrado. ¿Deseas registrarlo nuevamente?`);
+                const ok = confirm(`El día ${formatDateEs(dayData.date)} ya tiene un turno registrado. ¿Deseas registrar otro?`);
                 if (!ok) return;
             }
             targetRecord.days.push(dayData);

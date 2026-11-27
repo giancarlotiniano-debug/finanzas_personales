@@ -5,8 +5,7 @@ import { initFinance, renderFinance, updateFinanceCurrencyLabels } from './finan
 import { initRemittances, renderRemittancesList, openNewRemittanceModal } from './remittances.js';
 import { initInstallments, renderInstallments, openNewInstallmentPurchaseModal } from './installments.js';
 import {
-    initDayCounter, renderDayCounter,
-    openNewDayCounterMonthModal, openDayCounterSettingsModal
+    initDayCounter, renderDayCounter, openDayCounterSettingsModal
 } from './dayCounter.js';
 import { initBackup } from './backup.js';
 
@@ -89,12 +88,11 @@ function updateUserDisplay() {
 
     const btn = $('headerSectionNewBtn');
     if (btn) {
-        const showForSection = ['remittances', 'installments', 'dayCounter'].includes(state.activeAppSection);
+        const showForSection = ['remittances', 'installments'].includes(state.activeAppSection);
         btn.classList.toggle('is-hidden', !showForSection);
         const ariaMap = {
             remittances: 'Nueva remesa',
-            installments: 'Nueva compra en cuotas',
-            dayCounter: 'Nuevo turno'
+            installments: 'Nueva compra en cuotas'
         };
         btn.setAttribute('aria-label', ariaMap[state.activeAppSection] || 'Nuevo');
     }
@@ -175,12 +173,15 @@ function selectAppSection(section, options = {}) {
     if (options.expandActiveUtility) {
         if (normalized === 'remittances') {
             state.remittancesList = state.remittancesList.map(r => ({ ...r, expanded: false }));
-            renderRemittancesList();
         } else if (normalized === 'installments') {
             state.installmentsPurchases = state.installmentsPurchases.map(p => ({ ...p, expanded: false }));
-            renderInstallments();
-        } 
+        }
     }
+
+    if (normalized === 'financeManager') renderFinance();
+    else if (normalized === 'remittances') renderRemittancesList();
+    else if (normalized === 'installments') renderInstallments();
+    else if (normalized === 'dayCounter') renderDayCounter();
     if (options.closeDrawer) closeNavDrawer();
 }
 
@@ -309,10 +310,10 @@ function bindShellEvents() {
     $('currencySelect')?.addEventListener('change', (e) => {
         state.appConfig.currency = e.target.value;
         persistConfig();
-        renderFinance();
-        renderRemittancesList();
-        renderInstallments();
-        renderDayCounter();
+        if (state.activeAppSection === 'financeManager') renderFinance();
+        else if (state.activeAppSection === 'remittances') renderRemittancesList();
+        else if (state.activeAppSection === 'installments') renderInstallments();
+        else if (state.activeAppSection === 'dayCounter') renderDayCounter();
     });
 
     document.querySelectorAll('[data-theme-value]').forEach(btn => {
@@ -325,7 +326,6 @@ function bindShellEvents() {
     $('headerSectionNewBtn')?.addEventListener('click', () => {
         if (state.activeAppSection === 'remittances') openNewRemittanceModal();
         else if (state.activeAppSection === 'installments') openNewInstallmentPurchaseModal();
-        else if (state.activeAppSection === 'dayCounter') openNewDayCounterMonthModal();
     });
 
     document.addEventListener('keydown', (e) => {

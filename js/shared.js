@@ -166,11 +166,12 @@ export function setBeforeOpenModalHook(fn) {
 
 export function openModal(dialog) {
   if (!dialog) return;
+  onBeforeOpenModalHook?.();
   if (!dialog.open) dialog.showModal();
   if (document.activeElement instanceof HTMLElement && dialog.contains(document.activeElement)) {
     document.activeElement.blur();
   }
-  document.body.classList.add('no-scroll');
+  lockBodyScroll();
 }
 
 export function closeModal(dialogEl) {
